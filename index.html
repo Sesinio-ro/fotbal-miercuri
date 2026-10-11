@@ -251,6 +251,23 @@ button.pchip:hover { border-color: var(--lime); color: var(--lime); }
 .rules li .cell { width: 34px; height: 20px; font-size: 10px; }
 .rules .plain li { grid-template-columns: 1fr auto; }
 .pill { --tc: var(--t-bronz); display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; color: #11130c; background: var(--tc); }
+/* bandă de știri */
+.ticker { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; min-width: 0; }
+.ticker[hidden] { display: none; }
+.ticker .tl { flex: none; display: flex; align-items: center; gap: 6px; padding: 0 12px; background: var(--lime); color: var(--lime-ink); font-family: var(--f-display); font-weight: 800; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
+.ticker .tl i { width: 7px; height: 7px; border-radius: 50%; background: var(--lime-ink); }
+@media (prefers-reduced-motion: no-preference) { .ticker .tl i { animation: blink 1.4s ease-in-out infinite; } }
+@keyframes blink { 50% { opacity: .2; } }
+.ticker .vp { flex: 1; min-width: 0; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
+.ticker .track { display: flex; width: max-content; }
+@media (prefers-reduced-motion: no-preference) { .ticker .track { animation: tick var(--dur, 60s) linear infinite; } .ticker:hover .track, .ticker:focus-within .track { animation-play-state: paused; } }
+@media (prefers-reduced-motion: reduce) { .ticker .vp { overflow-x: auto; } }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker .it { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; white-space: nowrap; font-size: 13px; font-weight: 600; border: 0; border-right: 1px solid var(--line); background: none; color: var(--ink); }
+.ticker button.it:hover { color: var(--lime); }
+.ticker .it .e { font-size: 14px; }
+.ticker .it.up b { color: var(--lime); } .ticker .it.down b { color: var(--c-NS); } .ticker .it.warn b { color: var(--c-XT); } .ticker .it.admin { color: var(--t-platina); }
+.ticker .it b { font-weight: 800; }
 footer { color: var(--mute); font-size: 12px; text-align: center; }
 
 /* profil */
@@ -294,6 +311,7 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
   </aside>
 
   <main>
+    <div class="ticker" id="ticker" hidden aria-label="Știri din grup"><span class="tl"><i></i>Știri</span><div class="vp"><div class="track" id="track"></div></div></div>
     <section id="prezentare" class="top" aria-labelledby="h-top">
       <div class="titlerow">
         <div><span class="eyebrow">Sezonul <span id="seasonlbl"></span></span><h1 id="h-top">Fotbal Miercuri <span>20:00</span></h1></div>
@@ -566,6 +584,85 @@ function renderSeasons() {
   $("seasons").querySelectorAll("button").forEach(b => b.onclick = () => { season = b.dataset.s; at = null; stopPlay(); try { localStorage.setItem("fm-season", season); } catch (e) {} render(); });
 }
 
+/* ===== bandă de știri: automate din clasament + manuale din foaia separată "Fotbal Miercuri 20:00 - Stiri" ===== */
+let MANUAL_NEWS = [];
+const NEWS_SHEET = "1i3vj0ESDR2LX7G6ThOgVxSg5x_KOo6jzc_yQz54-Pis"; /* foaia "Fotbal Miercuri 20:00 - Stiri" */
+function loadNews() {
+  return new Promise((ok, no) => {
+    const cb = "__fmn" + Date.now(), sc = document.createElement("script"), t = setTimeout(() => { delete window[cb]; sc.remove(); no(new Error("timeout")); }, 8000);
+    window[cb] = res => { clearTimeout(t); delete window[cb]; sc.remove();
+      try { if (res.status === "error") throw new Error("sheet");
+        const rows = res.table.rows.map(r => (r.c || []).map(c => c == null || c.v == null ? "" : String(c.v)));
+        if (!rows.length || !/^(știre|stire|știri|stiri|text)/i.test((rows[0][0] || "").trim())) throw new Error("foaia de știri nu are antetul așteptat");
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const until = s => { if (!s) return null; let m = s.match(/Date\((\d+),(\d+),(\d+)/); if (m) return new Date(+m[1], +m[2], +m[3]);
+          m = s.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]); return null; };
+        ok(rows.slice(1).filter(r => (r[0] || "").trim()).filter(r => { const u = until(r[1]); return !u || u >= today; }).map(r => r[0].trim()));
+      } catch (e) { no(e); } };
+    sc.onerror = () => { clearTimeout(t); delete window[cb]; no(new Error("net")); };
+    sc.src = `https://docs.google.com/spreadsheets/d/${NEWS_SHEET}/gviz/tq?tqx=responseHandler:${cb}&headers=0&_=${Date.now()}`;
+    document.head.appendChild(sc);
+  });
+}
+function autoNews(S) {
+  const N = [], sn = S.snaps, k = sn.length - 1, W = S.weeks, P = S.players;
+  if (k < 0) return N;
+  const cur = sn[k], prev = k > 0 ? sn[k - 1] : null, w = W[k];
+  const row = Object.fromEntries(cur.map(r => [r[0], r])), prk = prev ? Object.fromEntries(prev.map(r => [r[0], r[1]])) : {};
+  const loc = n => n === 1 ? "un loc" : `${n} locuri`, PL = c => c === "J" || c === "J+";
+  const add = (e, html, o = {}) => N.push({ e, html, ...o });
+  const B = s => `<b>${esc(s)}</b>`;
+  // ultima miercuri
+  if (w.status !== "Jucat") add("📅", `Miercuri ${w.label}: meci anulat${w.note ? " · " + esc(w.note) : ""}`);
+  else add("📅", `Miercuri ${w.label}: ${B(w.played)} au jucat din ${w.signed} înscriși${w.guests ? `, ${w.guests} ${w.guests === 1 ? "invitat" : "invitați"}` : ""}`);
+  // liderul
+  const lead = cur[0][0]; let lw = 0; for (let i = k; i >= 0 && sn[i][0][0] === lead; i--) lw++;
+  const gap = cur.length > 1 ? cur[0][2] - cur[1][2] : 0;
+  if (prev && prev[0][0] !== lead) add("👑", `Lider nou: ${B(lead)}, ${cur[0][2]} puncte`, { cls: "up", p: lead });
+  else add("👑", `${B(lead)} rămâne lider${lw > 1 ? ` de ${lw} săptămâni` : ""}${cur.length > 1 ? (gap ? ` · ${gap} p avans față de ${esc(cur[1][0])}` : ` · la egalitate cu ${esc(cur[1][0])}`) : ""}`, { p: lead });
+  // urcări, coborâri, intrări în lot
+  if (prev) {
+    const mv = cur.filter(r => prk[r[0]] != null).map(r => ({ n: r[0], r: r[1], pr: prk[r[0]], d: prk[r[0]] - r[1] }));
+    mv.filter(x => x.pr > 12 && x.r <= 12).forEach(x => add("🟢", `${B(x.n)} intră în lotul de 12, pe locul ${x.r}`, { cls: "up", p: x.n }));
+    mv.filter(x => x.d > 0 && !(x.pr > 12 && x.r <= 12) && (x.d >= 2 || x.r <= 12)).sort((a, b) => b.d - a.d || a.r - b.r).slice(0, 5)
+      .forEach(x => add("▲", `${B(x.n)} urcă ${loc(x.d)}, pe locul ${x.r}`, { cls: "up", p: x.n }));
+    mv.filter(x => x.pr <= 12 && x.r > 12).forEach(x => add("🔻", `${B(x.n)} iese din lotul de 12 (locul ${x.r})`, { cls: "down", p: x.n }));
+    mv.filter(x => x.d <= -2 && x.pr <= 12 && x.r <= 12).sort((a, b) => a.d - b.d).slice(0, 3)
+      .forEach(x => add("▼", `${B(x.n)} coboară ${loc(-x.d)}, pe locul ${x.r}`, { cls: "down", p: x.n }));
+  }
+  // ce s-a întâmplat miercuri, jucător cu jucător
+  P.forEach(p => { const c = p.codes[k], r = row[p.name]; if (!r) return;
+    if (c === "J+") add("🦸", `${B(p.name)} a intrat de pe rezervă și a salvat meciul`, { cls: "up", p: p.name });
+    if (c === "NS") add("⚠️", `Absență neașteptată: ${B(p.name)} s-a înscris și n-a mai venit`, { cls: "warn", p: p.name });
+    if (c === "XT") add("⏰", `${B(p.name)} s-a retras în ultimul moment`, { cls: "warn", p: p.name });
+    if (!PL(c)) return;
+    const games = r[3], streak = r[5];
+    if (games === 1) add("🆕", `Prima prezență în sezon: ${B(p.name)}`, { cls: "up", p: p.name });
+    if ([10, 20, 25, 30, 40, 50].includes(games)) add("🏅", `${B(p.name)} a ajuns la ${games} de meciuri jucate`, { cls: "up", p: p.name });
+    if (streak >= 4 && streak % 4 === 0) add("🔥", `${B(p.name)}: ${streak} meciuri la rând, încă un bonus de serie`, { cls: "up", p: p.name });
+    let g = 0, seen = false; for (let i = k - 1; i >= 0; i--) { if (W[i].status !== "Jucat") continue; const ci = p.codes[i]; if (PL(ci)) { seen = true; break; } if (ci !== "M") g++; }
+    if (seen && g >= 4) add("👋", `${B(p.name)} revine după ${g} miercuri de pauză`, { cls: "up", p: p.name });
+  });
+  // cea mai lungă serie activă
+  const top = [...cur].sort((a, b) => b[5] - a[5])[0];
+  if (top && top[5] >= 5) add("🔥", `Cea mai lungă serie activă: ${B(top[0])}, ${top[5]} meciuri la rând`, { p: top[0] });
+  // lupta pentru lot
+  if (cur.length > 12) { const a = cur[11], b = cur[12]; add("🎯", `Lupta pentru lot: ${B(a[0])} (12) are ${a[2] - b[2]} p avans față de ${esc(b[0])} (13)`, { p: a[0] }); }
+  // următorul meci
+  const nx = new Date(); nx.setHours(0, 0, 0, 0); const dw = (3 - nx.getDay() + 7) % 7; nx.setDate(nx.getDate() + (dw === 0 && new Date().getHours() >= 21 ? 7 : dw));
+  add("⏭️", `Următorul meci: miercuri ${String(nx.getDate()).padStart(2, "0")}.${String(nx.getMonth() + 1).padStart(2, "0")}, ora 20:00 · înscrieri de marți, 9:30`);
+  return N;
+}
+function renderTicker() {
+  const S = S_(); if (!S || !S.snaps || !S.snaps.length) return;
+  const items = [...MANUAL_NEWS.map(t => ({ e: "📣", html: esc(t), cls: "admin" })), ...autoNews(S)];
+  const box = $("ticker"); if (!items.length) { box.hidden = true; return; }
+  const one = items.map(x => x.p ? `<button class="it ${x.cls || ""}" data-p="${esc(x.p)}"><span class="e" aria-hidden="true">${x.e}</span><span>${x.html}</span></button>`
+    : `<span class="it ${x.cls || ""}"><span class="e" aria-hidden="true">${x.e}</span><span>${x.html}</span></span>`).join("");
+  const track = $("track"); track.innerHTML = one + `<span style="display:contents" aria-hidden="true">${one}</span>`;
+  box.hidden = false;
+  requestAnimationFrame(() => { track.style.setProperty("--dur", Math.max(25, Math.round(track.scrollWidth / 2 / 55)) + "s"); });
+}
 function render() {
   const S = S_(), P = S.players, W = S.weeks, K = S.kpi;
   renderSeasons();
@@ -603,6 +700,7 @@ function render() {
     <div class="chips">${m.names.length ? m.names.map(n => `<button class="pchip" data-p="${esc(n)}">${esc(n)}</button>`).join("") : '<span class="muted" style="font-size:12px">nimeni la toate</span>'}</div></div>`).join("");
   renderTable();
   renderHeat(P, W);
+  renderTicker();
   $("foot").textContent = `${DATA.group} · sezonul ${season} · date din grupul de WhatsApp, verificate de admin`;
 }
 
@@ -925,6 +1023,7 @@ renderStatic();
 render();
 stopPlay();
 fromHash();
+loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
 </script>
 
 </html>
