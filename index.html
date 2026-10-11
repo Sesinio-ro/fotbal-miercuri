@@ -482,6 +482,7 @@ function loadLive() {
 }
 const TIERS = { "Bronz": "--t-bronz", "Argint": "--t-argint", "Aur": "--t-aur", "Platină": "--t-platina", "Diamant": "--t-diamant" };
 const CLS = { "J": "J", "J+": "JP", "R": "R", "AN": "AN", "X": "X", "XT": "XT", "NS": "NS", "ABS": "ABS", "M": "M" };
+const vis = c => c === "ABS" ? "" : c; // ABS arată la fel ca neînscris (ambele 0 puncte)
 const CODE_TXT = { "J": "a jucat", "J+": "intrat de pe rezervă", "R": "rezervă", "AN": "meci anulat", "X": "retras din timp", "XT": "retras târziu", "NS": "neprezentat", "ABS": "a anunțat că lipsește", "M": "motivat" };
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -641,7 +642,7 @@ let _rw = 0, _rt = null; window.addEventListener("resize", () => { clearTimeout(
 
 function form(p, k) {
   const codes = k == null ? p.codes : p.codes.slice(0, k + 1);
-  return `<span class="form" aria-label="ultimele 8 miercuri">${codes.slice(-8).map(c => `<i style="background:var(--c-${CLS[c] || "ABS"})${c ? "" : ";opacity:.35"}" title="${c ? CODE_TXT[c] : "neînscris"}"></i>`).join("")}</span>`;
+  return `<span class="form" aria-label="ultimele 8 miercuri">${codes.slice(-8).map(vis).map(c => `<i style="background:var(--c-${CLS[c] || "ABS"})${c ? "" : ";opacity:.35"}" title="${c ? CODE_TXT[c] : "n-a fost înscris"}"></i>`).join("")}</span>`;
 }
 const who = p => `<span class="who"><span class="av" style="${tierStyle(p.tier)}">${esc(p.name.charAt(0))}</span>${esc(p.name)}</span>`;
 
@@ -680,13 +681,13 @@ function renderTable0() {
   const codesBy = Object.fromEntries(P.map(p => [p.name, p]));
   const rows2 = snapAt(S, at), before = {};
   document.querySelectorAll("#table tbody tr[data-k]").forEach(tr => before[tr.dataset.k] = tr.getBoundingClientRect().top);
-  head = `<tr><th>#</th><th class="c">±</th><th>Jucător</th><th class="c">Puncte</th><th class="c">OVR</th><th class="c">Meciuri</th><th>Prezență</th><th class="c">Serie</th><th class="c">Record</th><th>Forma</th><th class="c">Retras</th><th class="c">Retras târziu</th><th class="c">Absent</th></tr>`;
+  head = `<tr><th>#</th><th class="c">±</th><th>Jucător</th><th class="c">Puncte</th><th class="c">OVR</th><th class="c">Meciuri</th><th>Prezență</th><th class="c">Serie</th><th class="c">Record</th><th>Forma</th><th class="c">Retras</th><th class="c">Retras târziu</th></tr>`;
   $("table").innerHTML = `<thead>${head}</thead><tbody>${lim(rows2).map(p => `<tr data-k="${esc(p.name)}" data-p="${esc(p.name)}" class="${p.rank <= 3 ? "top" + p.rank : ""}">
     <td class="rk">${p.rank}</td><td class="c">${moveOf(S, at, p.name, p.rank)}</td><td>${who(p)}</td><td class="c big">${p.pts}</td><td class="c"><span class="ovr" style="${tierStyle(p.tier)}">${p.rating}</span></td>
     <td class="c">${p.games}</td>
     <td><span class="pbar"><i style="width:${pct(p.rate)}%"></i></span>${pct(p.rate)}%</td>
     <td class="c ${p.cur >= 4 ? "streak" : ""}">${p.cur}</td><td class="c muted">${p.best}</td><td>${codesBy[p.name] ? form(codesBy[p.name], at) : ""}</td>
-    <td class="c muted">${p.X}</td><td class="c ${p.XT ? "neg" : "muted"}">${p.XT}</td><td class="c muted">${p.ABS}</td></tr>`).join("")}</tbody>`;
+    <td class="c muted">${p.X}</td><td class="c ${p.XT ? "neg" : "muted"}">${p.XT}</td></tr>`).join("")}</tbody>`;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("#table tbody tr[data-k]").forEach(tr => {
     const b = before[tr.dataset.k]; if (b == null) return;
@@ -833,15 +834,15 @@ function renderChart(W) {
 
 function renderHeat(P, W) {
   const head = `<tr><th></th>${W.map(w => `<th class="w ${w.status !== "Jucat" ? "an" : ""}" title="${esc(w.note || "")}">${w.label}</th>`).join("")}</tr>`;
-  const body = P.map(p => `<tr data-p="${esc(p.name)}"><td class="n">${esc(p.name)}</td>${p.codes.map((c, i) => {
+  const body = P.map(p => `<tr data-p="${esc(p.name)}"><td class="n">${esc(p.name)}</td>${p.codes.map(vis).map((c, i) => {
     const an = W[i].status !== "Jucat", k = c ? CLS[c] : (an ? "dash" : "");
-    return `<td><span class="cell ${k}" title="${W[i].label}: ${c ? CODE_TXT[c] : (an ? "anulat" : "neînscris")}">${c && c !== "J" ? c : ""}</span></td>`;
+    return `<td><span class="cell ${k}" title="${W[i].label}: ${c ? CODE_TXT[c] : (an ? "anulat" : "n-a fost înscris")}">${c && c !== "J" ? c : ""}</span></td>`;
   }).join("")}</tr>`).join("");
   $("heat").innerHTML = `<table class="num"><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 
 function renderStatic() {
-  $("legend").innerHTML = DATA.legend.map(([c, l, p]) => `<li><span class="cell ${CLS[c]}">${c}</span><span>${esc(l)}</span><b>${esc(p)}</b></li>`).join("");
+  $("legend").innerHTML = DATA.legend.map(([c, l, p]) => c === "ABS" ? ["", "Neînscris sau a anunțat că lipsește", "0"] : [c, l, p]).map(([c, l, p]) => `<li><span class="cell ${CLS[c] || ""}">${c}</span><span>${esc(l)}</span><b>${esc(p)}</b></li>`).join("");
   const st = DATA.settings;
   $("bonus").innerHTML = `<li><span class="cell J"></span><span>La fiecare ${st.streak_every} meciuri jucate la rând</span><b>+${st.streak_bonus}</b></li>
     <li><span class="cell JP"></span><span>Invitat adus când nu ne strângeam</span><b>+${st.guest_points}</b></li>`;
@@ -887,8 +888,8 @@ function openProfile(name, push = true) {
     <div class="grid2">
       <div class="panel"><h3>Locul în clasament</h3><div class="chartbox" id="pfrank"></div></div>
       <div class="panel"><h3>Puncte față de lider</h3><div class="chartbox" id="pfpts"></div></div></div>
-    <div class="panel"><span class="eyebrow">Toate miercurile</span><div class="strip">${p.codes.map((c, i) => { const an = W[i].status !== "Jucat";
-      return `<span class="cell ${c ? CLS[c] : (an ? "dash" : "")}" title="${W[i].label}: ${c ? CODE_TXT[c] : (an ? "anulat" : "neînscris")}">${c && c !== "J" ? c : ""}</span>`; }).join("")}</div></div>
+    <div class="panel"><span class="eyebrow">Toate miercurile</span><div class="strip">${p.codes.map(vis).map((c, i) => { const an = W[i].status !== "Jucat";
+      return `<span class="cell ${c ? CLS[c] : (an ? "dash" : "")}" title="${W[i].label}: ${c ? CODE_TXT[c] : (an ? "anulat" : "n-a fost înscris")}">${c && c !== "J" ? c : ""}</span>`; }).join("")}</div></div>
     <div class="grid2">
       <div class="panel"><span class="eyebrow">Premii și insigne</span>${aw.length || bd.length ? `<div class="badges" style="grid-template-columns:1fr">${aw.map(a => `<div class="badge"><span class="ic">${ICON[AWARD_ICON[a[0]] || "trophy"]}</span><span class="bn">${esc(a[0])}</span><span></span><span class="bd">${esc(a[2])}</span></div>`).join("")}${bd.map(b => `<div class="badge"><span class="ic">${ICON[BADGE_ICON[b[0]] || "trophy"]}</span><span class="bn">${esc(b[1])}</span><span></span><span class="bd">${esc(b[2])}</span></div>`).join("")}</div>` : '<p class="note">Încă nicio insignă. Prima e la 2 salvări sau 3 liste de rezerve.</p>'}</div>
       <div class="panel"><span class="eyebrow">Luni cu prezență la toate meciurile</span>${months.length ? `<div class="chips">${months.map(m => `<span class="pchip">${m}</span>`).join("")}</div>` : '<p class="note">Încă nicio lună cu toate meciurile jucate.</p>'}</div></div>`;
