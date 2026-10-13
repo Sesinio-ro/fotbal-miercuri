@@ -291,6 +291,18 @@ button.pchip:hover { border-color: var(--lime); color: var(--lime); }
 .totop svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 @media (max-width: 960px) { .totop { right: 16px; bottom: 16px; width: 44px; height: 44px; } }
 @media (prefers-reduced-motion: reduce) { .totop { transition: none; } }
+/* viteza de înscriere */
+.sgrid { display: grid; grid-template-columns: minmax(240px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .sgrid { grid-template-columns: 1fr; } }
+.sbox { border: 1px solid color-mix(in oklab, var(--lime) 35%, var(--line)); border-radius: 16px; padding: 16px; display: grid; gap: 6px; align-content: start;
+  background: linear-gradient(150deg, color-mix(in oklab, var(--lime) 18%, var(--panel)), var(--panel) 60%); }
+.sbox .v { font-family: var(--f-display); font-size: 50px; font-weight: 800; line-height: 1; }
+.sbox .v small { font-size: 24px; color: var(--mute); font-weight: 700; }
+.sbox .mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.sbox .mini div { background: var(--panel-2); border-radius: 10px; padding: 8px 10px; }
+.sbox .mini b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 800; }
+.sbox .mini span { font-size: 11px; color: var(--mute); }
+#sigch rect.b { cursor: default; }
 footer { color: var(--mute); font-size: 12px; text-align: center; }
 
 /* profil */
@@ -385,6 +397,9 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
         <div class="racelegend" id="racelegend"></div><div class="chartbox" id="race"></div></div>
       <div class="panel"><h3>Miercuri de miercuri</h3><p class="note">Câți s-au înscris și câți au jucat în fiecare miercuri. Linia albă = 12 locuri.</p><div class="chartbox" id="chart"></div>
         <div class="legend"><span><i style="background:var(--lime)"></i>Au jucat</span><span><i style="background:var(--line)"></i>Înscriși</span><span><i style="background:#fff"></i>12 locuri</span><span><i style="background:var(--c-AN)"></i>Anulat</span></div></div>
+      <div class="panel" id="sigpanel" hidden><div><h3>Cât de repede ne strângem</h3><p class="note">De la start (marți dimineață, când se deschide lista) până apare al 12-lea pe listă. Doar o statistică de curiozitate: nu contează la puncte, la rating sau la cota de titular.</p></div>
+        <div class="sgrid"><div class="sbox num" id="sigbox"></div><div><div class="chartbox" id="sigch"></div>
+        <div class="legend"><span><i style="background:var(--lime)"></i>sub o oră</span><span><i style="background:#6f8f2b"></i>în aceeași zi</span><span><i style="background:var(--c-XT)"></i>abia a doua zi</span><span><i style="background:repeating-linear-gradient(45deg,#3a3f36 0 3px,transparent 3px 6px)"></i>lista n-a ajuns la 12</span></div></div></div></div>
         <div class="panel"><h3>Cine se înscrie</h3><p class="note">Lotul de 12: a jucat, a intrat de pe rezervă sau a stat pe bancă.</p><div class="chartbox" id="act"></div>
           <div class="legend"><span><i style="background:#199e70"></i>A jucat</span><span><i style="background:#c98500"></i>Intrat de pe rezervă</span><span><i style="background:#9085e9"></i>Rezervă</span></div></div>
     </section>
@@ -556,11 +571,12 @@ const ICON = {
   hand: P_('<path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v8a7 7 0 0 1-7 7 6 6 0 0 1-5-3l-2.5-4.5a1.6 1.6 0 0 1 2.7-1.7L8 14"/>'),
   back: P_('<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>'),
   close: P_('<path d="M6 6l12 12M18 6 6 18"/>'),
+  bolt: P_('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),
   play: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>',
   pause: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>'
 };
 const AWARD_ICON = { "Nelipsitul": "medal", "Ironman": "iron", "Seria sezonului": "flame", "Salvatorul": "life", "Al 13-lea jucător": "shirt" };
-const BADGE_ICON = { maraton: "watch", foc: "flame", salvator: "life", gata: "bench", cuvant: "hand", revenire: "back" };
+const BADGE_ICON = { faza: "bolt", maraton: "watch", foc: "flame", salvator: "life", gata: "bench", cuvant: "hand", revenire: "back" };
 const NAV = [["prezentare", "Prezentare", "home"], ["lot", "Lotul de 12", "pitch"], ["clasament", "Clasament", "table"], ["statistici", "Statistici", "stats"], ["premii", "Premii și insigne", "trophy"], ["harta", "Harta prezenței", "heat"], ["regulament", "Regulament", "book"]];
 const UP = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1 9 8H1z" fill="currentColor"/></svg>';
 const DOWN = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 9 1 2h8z" fill="currentColor"/></svg>';
@@ -672,6 +688,10 @@ function autoNews(S) {
   if (top && top[5] >= 5) add("🔥", `Cea mai lungă serie activă: ${B(top[0])}, ${top[5]} meciuri la rând`, { p: top[0] });
   // lupta pentru lot
   if (cur.length > 12) { const a = cur[11], b = cur[12]; add("🎯", `Lupta pentru lot: ${B(a[0])} (12) are ${a[2] - b[2]} p avans față de ${esc(b[0])} (13)`, { p: a[0] }); }
+  // viteza de înscriere
+  const sg = sigStats(S); if (sg) { const lw = sg.rows.find(r => r.w.date === w.date);
+    if (lw && lw.m != null && lw.m >= 1) add("⏱️", `Lotul de miercuri ${w.label} s-a strâns în ${B(fmtMin(lw.m))}${lw.m === sg.rec ? " · record!" : lw.m <= sg.med ? " · mai repede ca de obicei" : ""}`, { cls: lw.m <= 60 ? "up" : "" });
+    add("⚡", `Recordul de înscriere: lot complet în ${B(fmtMin(sg.rec))} (${sg.recW[0]})`); }
   // următorul meci
   const nx = new Date(); nx.setHours(0, 0, 0, 0); const dw = (3 - nx.getDay() + 7) % 7; nx.setDate(nx.getDate() + (dw === 0 && new Date().getHours() >= 21 ? 7 : dw));
   add("⏭️", `Următorul meci: miercuri ${String(nx.getDate()).padStart(2, "0")}.${String(nx.getMonth() + 1).padStart(2, "0")}, ora 20:00 · înscrieri de marți, 9:30`);
@@ -687,7 +707,57 @@ function renderTicker() {
   box.hidden = false;
   requestAnimationFrame(() => { track.style.setProperty("--dur", Math.max(25, Math.round(track.scrollWidth / 2 / 55)) + "s"); });
 }
+/* ===== viteza de înscriere (din exportul WhatsApp; doar statistică, nu intră în puncte) ===== */
+const SIGNUP = { "2026": {"weeks": {"2026-01-07": 1920, "2026-01-14": 543, "2026-01-21": 760, "2026-01-28": 259, "2026-02-04": null, "2026-02-11": 1589, "2026-02-18": 246, "2026-02-25": 95, "2026-03-04": 194, "2026-03-11": 231, "2026-03-18": 283, "2026-03-25": 76, "2026-04-01": 109, "2026-04-08": 13, "2026-04-15": 289, "2026-04-22": 9, "2026-04-29": 31, "2026-05-06": 233, "2026-05-13": null, "2026-05-20": 802, "2026-05-27": 34, "2026-06-03": 141, "2026-06-10": 3, "2026-06-17": 8, "2026-06-24": 172, "2026-07-01": null, "2026-07-08": 282, "2026-07-15": 53, "2026-07-22": 105, "2026-07-29": 4, "2026-08-05": 9, "2026-08-12": 3, "2026-08-19": 1643, "2026-08-26": 9, "2026-09-02": 29, "2026-09-09": 385, "2026-09-16": 6, "2026-09-23": 1462, "2026-09-30": null, "2026-10-07": 632, "2026-10-14": 448}, "players": {"Alin": [53.8, 3, 1], "Adi (Boss)": [1.1, 33, 25], "Silviu": [6.8, 29, 17], "Călin Tautan": [258.8, 5, 1], "Rareș Mihaila": [271.1, 3, 1], "Lucian": [12.7, 34, 16], "Andrei Sabau": [0.5, 30, 26], "Linu": [14.7, 3, 1], "Tudor Cosmulescu": [0.8, 31, 27], "Micu": [9.4, 29, 16], "Marius": [1.3, 30, 22], "Sergiu (Pacu)": [276.0, 11, 0], "Mihai (Misu)": [11.9, 17, 8], "Mircea": [12.2, 20, 10], "Gabi": [0.0, 14, 13], "Vasile T": [10.0, 7, 4], "Adi Ielciu": [3.5, 20, 13], "Paul": [15.7, 14, 7], "Rareș Baciu": [28.0, 8, 2], "Savu": [176.5, 8, 1], "Mihali": [4.7, 13, 7], "Dezső": [104.8, 5, 2], "Mihai M": [231.4, 7, 0], "Giurgiu": [194.2, 3, 0], "Călin (Scuty)": [3.3, 23, 17], "Andrei M": [919.2, 2, 0], "Vasi": [4.9, 4, 3], "Bogdan Talos (Bogdy)": [149.8, 3, 0], "Andrei C": [31.1, 8, 3], "Ianis": [765.5, 2, 0], "Felix": [53.0, 1, 0]}} };
+const fmtMin = m => m < 1 ? "sub 1 min" : m < 60 ? `${Math.round(m)} min` : m < 1440 ? `${Math.floor(m / 60)}h ${String(Math.round(m % 60)).padStart(2, "0")}m` : `${Math.floor(m / 1440)} zi ${Math.floor(m % 1440 / 60)}h`;
+function sigStats(S) {
+  const G = SIGNUP[season]; if (!G) return null;
+  const rows = S.weeks.map(w => ({ w, m: w.date in G.weeks ? G.weeks[w.date] : undefined })).filter(r => r.m !== undefined);
+  const ok = rows.filter(r => r.m != null && r.m >= 1).map(r => r.m).sort((a, b) => a - b);
+  if (!ok.length) return null;
+  const med = ok[Math.floor((ok.length - 1) / 2)], rec = ok[0], recW = rows.filter(r => r.m === rec).map(r => r.w.label);
+  return { G, rows, med, rec, recW, hour: ok.filter(m => m <= 60).length, total: rows.length };
+}
+function applySignup() {
+  const S = S_(), G = SIGNUP[season];
+  if (!DATA.badges.some(b => b[0] === "faza")) DATA.badges.push(["faza", "Pe fază", "De obicei e pe listă în primele 3 minute de la start (din cel puțin 8 înscrieri)"]);
+  if (!G) return;
+  S.players.forEach(p => { const g = G.players[p.name]; p.badges = (p.badges || []).filter(b => b !== "faza"); if (g && g[0] <= 3 && g[1] >= 8) p.badges.push("faza"); });
+}
+function renderSignup(S) {
+  const st = sigStats(S), panel = $("sigpanel"); if (!st) { panel.hidden = true; return; } panel.hidden = false;
+  const h = Math.floor(st.med / 60), m = Math.round(st.med % 60);
+  $("sigbox").innerHTML = `<span class="eyebrow">Lotul de 12 se strânge în</span><span class="v">${h ? `${h}<small>h</small> ` : ""}${String(m).padStart(h ? 2 : 1, "0")}<small>m</small></span>
+    <span class="s muted" style="font-size:12px">de obicei (jumătate din miercuri au fost mai rapide)</span>
+    <div class="mini"><div><b>${st.hour}/${st.total}</b><span>miercuri cu lotul plin în prima oră</span></div><div><b>${fmtMin(st.rec)}</b><span>recordul · ${st.recW.slice(0, 2).join(", ")}</span></div></div>`;
+  const R = st.rows, w = Math.max(320, $("sigch").clientWidth || 700), H = 230, pl = 40, pr = 8, pt = 16, pb = 30, CAP = 15 * 60;
+  const bw = (w - pl - pr) / R.length, Y = v => pt + (H - pt - pb) * (1 - Math.min(v, CAP) / CAP);
+  let g = "";
+  [0, 3, 6, 9, 12, 15].forEach(hh => { const y = Y(hh * 60); g += `<line x1="${pl}" x2="${w - pr}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${pl - 8}" y="${y + 4}" fill="var(--mute)" font-size="11" text-anchor="end">${hh}${hh === 15 ? "h+" : "h"}</text>`; });
+  const step = Math.ceil(R.length / Math.max(4, Math.floor((w - pl) / 52)));
+  R.forEach((r, i) => { const x = pl + i * bw + 1.5, bwid = Math.max(2, bw - 3), v = r.m;
+    const tip = `${r.w.label}: ${v == null ? (r.w.status !== "Jucat" ? "meci anulat" : "lista n-a ajuns la 12") : "lot complet în " + fmtMin(v)}`;
+    if (v == null) g += `<rect class="b" x="${x}" y="${Y(CAP)}" width="${bwid}" height="${Y(0) - Y(CAP)}" fill="url(#sighatch)" rx="2"><title>${tip}</title></rect>`;
+    else { const c = v <= 60 ? "var(--lime)" : v < 870 ? "#6f8f2b" : "var(--c-XT)", y = Y(Math.max(v, 6));
+      g += `<rect class="b" x="${x}" y="${y}" width="${bwid}" height="${Y(0) - y}" fill="${c}" rx="2"><title>${tip}</title></rect>`;
+      if (v >= 870 && bw > 14) g += `<text x="${x + bwid / 2}" y="${Y(CAP) - 4}" fill="var(--c-XT)" font-size="10" text-anchor="middle">+1z</text>`; }
+    if (i % step === 0) g += `<text x="${x + bwid / 2}" y="${H - pb + 16}" fill="var(--mute)" font-size="10" text-anchor="middle">${r.w.label}</text>`; });
+  g += `<line x1="${pl}" x2="${w - pr}" y1="${Y(st.med)}" y2="${Y(st.med)}" stroke="var(--ink)" stroke-dasharray="5 4"/><text x="${pl + 6}" y="${Y(st.med) - 6}" fill="var(--ink)" font-size="11" paint-order="stroke" stroke="var(--panel)" stroke-width="4">de obicei: ${fmtMin(st.med)}</text>`;
+  $("sigch").innerHTML = `<svg viewBox="0 0 ${w} ${H}" role="img" aria-label="În cât timp s-a umplut lotul în fiecare miercuri"><defs><pattern id="sighatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="#3a3f36"/></pattern></defs>${g}</svg>`;
+}
+function sigProfile(p) {
+  const G = SIGNUP[season]; if (!G) return "";
+  if (p.name === "Sese") return `<div class="panel"><span class="eyebrow">Înscrierea</span><p class="note" style="color:var(--ink)">Deschide lista în fiecare marți dimineață 😎</p></div>`;
+  const g = G.players[p.name]; if (!g) return "";
+  const [med, n, f10] = g, t = new Date(2026, 0, 6, 9, 30 + Math.round(med));
+  const when = med < 1440 ? `marți, ${t.getHours()}:${String(t.getMinutes()).padStart(2, "0")}` : "miercuri";
+  return `<div class="panel"><span class="eyebrow">Înscrierea · doar statistică, nu intră în puncte</span><div class="tiles num" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    <div class="tile"><b>${when.replace("marți, ", "")}</b><span>ora lui obișnuită de înscriere${med < 1440 ? ", marți" : ""}</span></div>
+    <div class="tile"><b>${f10}/${n}</b><span>${f10 === 1 ? "dată" : "dăți"} în primele 10 minute</span></div>
+    <div class="tile"><b>${med <= 3 && n >= 8 ? "⚡" : "⏱️"}</b><span>${med <= 3 && n >= 8 ? "insigna „Pe fază”" : "fără grabă, dar ajunge pe listă"}</span></div></div></div>`;
+}
 function render() {
+  applySignup();
   const S = S_(), P = S.players, W = S.weeks, K = S.kpi;
   renderSeasons();
   $("seasonlbl").textContent = season;
@@ -712,6 +782,7 @@ function render() {
   renderRace(S);
   renderActivity(P.slice(0, 12));
   renderChart(W);
+  renderSignup(S);
   $("awards").innerHTML = S.awards.map(([k, n, d, r]) => `<div class="award"><span class="ic">${ICON[AWARD_ICON[k] || "trophy"]}</span><span class="k">${esc(k)}</span>
     <button class="n" data-p="${esc(n)}">${esc(n)}</button><span class="d">${esc(d)}</span><span class="r">${esc(r || "")}</span></div>`).join("");
   $("badges").innerHTML = DATA.badges.map(([id, n, d]) => {
@@ -1007,6 +1078,7 @@ function openProfile(name, push = true) {
       <div class="tile"><b>${p.JP + p.guests}</b><span>salvări (${p.JP} de pe rezervă, ${p.guests} invitați)</span></div>
       <div class="tile"><b>${p.R}</b><span>ori rezervă fără să intre</span></div>
       <div class="tile"><b>${p.X + p.XT}</b><span>retrageri (${p.XT} târzii)${p.NS ? ` · ${p.NS} neprezentări` : ""}</span></div></div>
+    ${sigProfile(p)}
     <div class="grid2">
       <div class="panel"><h3>Locul în clasament</h3><div class="chartbox" id="pfrank"></div></div>
       <div class="panel"><h3>Puncte față de lider</h3><div class="chartbox" id="pfpts"></div></div></div>
