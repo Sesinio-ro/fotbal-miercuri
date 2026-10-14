@@ -1254,10 +1254,10 @@ loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
     document.getElementById("wxic").textContent = ICON(code);
     document.getElementById("wxwhen").textContent = `Miercuri ${pad(nx.getDate())}.${pad(nx.getMonth() + 1)} · 20:00–21:00`;
     document.getElementById("wxgrid").innerHTML =
-      `<div><b>${Math.round(at("temperature_2m"))}°</b><span>temperatură, se simte ${Math.round(at("apparent_temperature"))}°</span></div>` +
+      `<div><b>${Math.round(at("temperature_2m"))}°</b><span>se simte ca ${Math.round(at("apparent_temperature"))}°</span></div>` +
       `<div><b>${Math.round(at("relative_humidity_2m"))}%</b><span>umiditate</span></div>` +
-      `<div><b>${prob}%</b><span>șansă de ploaie, ${mmM.toFixed(1)} mm</span></div>` +
-      `<div><b>${Math.round(wind)} km/h</b><span>vânt ${dir}, rafale ${Math.round(gust)}</span></div>`;
+      (prob === 0 && mmM < 0.1 ? `<div><b>Fără ploaie</b><span>în intervalul meciului</span></div>` : `<div><b>${prob}%</b><span>șansă de ploaie${mmM >= 0.1 ? ", " + mmM.toFixed(1).replace(".", ",") + " mm" : ""}</span></div>`) +
+      `<div><b>${Math.round(wind)} km/h</b><span>vânt ${dir}, rafale până la ${Math.round(gust)} km/h</span></div>`;
     document.getElementById("wxterr").textContent = terr;
     el.hidden = false;
   } catch (e) { /* fără date: widgetul rămâne ascuns */ }
