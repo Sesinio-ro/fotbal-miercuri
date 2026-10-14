@@ -362,6 +362,21 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
   .pf { padding: 14px; } .hero { grid-template-columns: 1fr; justify-items: start; padding: 14px; }
   .hero .card { width: 120px; } .facts, .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .attrs { grid-template-columns: 1fr; }
 }
+
+.wx{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px 14px;margin:12px 0}
+.wx[hidden]{display:none}
+.wx .ic{font-size:30px;line-height:1}
+.wx .wxt{display:grid;gap:2px;min-width:150px}
+.wx .wxt b{font-family:var(--f-display);font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.wx .wxt span{font-size:11px;color:var(--mute)}
+.wx .wxgrid{flex:1 1 320px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.wx .wxgrid div{background:var(--panel-2);border-radius:10px;padding:6px 8px;display:grid;gap:2px}
+.wx .wxgrid b{font-family:var(--f-display);font-size:19px;font-weight:800;line-height:1.1}
+.wx .wxgrid span{font-size:11px;color:var(--mute);line-height:1.25}
+.wx .wxterr{display:grid;gap:2px;justify-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:10px}
+.wx .wxterr span{font-size:11px;color:var(--mute)}
+.wx .wxterr b{font-family:var(--f-display);font-size:17px;font-weight:800;text-transform:uppercase}
+@media (max-width:640px){.wx .wxgrid{grid-template-columns:repeat(2,minmax(0,1fr));flex-basis:100%}}
 </style>
 
 <div class="app">
@@ -382,7 +397,12 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
         </div>
       </div>
       <div class="meta" id="meta"></div>
-      <div class="kpis num" id="kpis"></div>
+          <div class="wx" id="wx" hidden>
+      <div class="wxt"><span class="ic" id="wxic"></span><b>Vremea la meci</b><span id="wxwhen"></span></div>
+      <div class="wxgrid" id="wxgrid"></div>
+      <div class="wxterr"><span>teren</span><b id="wxterr"></b></div>
+    </div>
+    <div class="kpis num" id="kpis"></div>
     </section>
 
     <section id="lot" aria-labelledby="h-lot">
@@ -1202,4 +1222,45 @@ loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
 })();
 </script>
 
+<script>
+/* vremea la meci: Open-Meteo, fără cheie; ia orele 20:00–21:00 din următoarea miercuri */
+(async () => {
+  const el = document.getElementById("wx"); if (!el) return;
+  const LAT = 46.7585, LON = 23.5786; /* aproximativ, lângă Iulius Mall; de verificat cu terenul exact */
+  const DIR = ["N","NE","E","SE","S","SV","V","NV"];
+  const ICON = c => c == null ? "🌡️" : c === 0 ? "☀️" : c <= 2 ? "⛅" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 77 ? "🌨️" : c <= 82 ? "🌧️" : c <= 86 ? "🌨️" : "⛈️";
+  const pad = n => String(n).padStart(2, "0");
+  const now = new Date(); const nx = new Date(now); nx.setHours(0, 0, 0, 0);
+  const dw = (3 - nx.getDay() + 7) % 7; nx.setDate(nx.getDate() + (dw === 0 && now.getHours() >= 21 ? 7 : dw));
+  const D = `${nx.getFullYear()}-${pad(nx.getMonth() + 1)}-${pad(nx.getDate())}`;
+  try {
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation_probability,precipitation,snowfall,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code&past_days=1&forecast_days=10&timezone=Europe%2FBucharest`;
+    const r = await fetch(u); if (!r.ok) return; const j = await r.json(); const H = j.hourly;
+    const i20 = H.time.indexOf(`${D}T20:00`), i21 = H.time.indexOf(`${D}T21:00`); if (i20 < 0 || i21 < 0) return;
+    const at = k => H[k][i20] ?? 0;
+    const win = k => [H[k][i20], H[k][i21]].map(v => v ?? 0);
+    const max = a => Math.max(0, ...a); const sum = a => a.reduce((s, v) => s + v, 0);
+    const back = k => H[k].slice(Math.max(0, i20 - 24), i20).map(v => v ?? 0);
+    const rain24 = sum(back("precipitation")), snow24 = sum(back("snowfall"));
+    const mmM = sum(win("precipitation")), snowM = sum(win("snowfall"));
+    const prob = max(win("precipitation_probability")), code = max(win("weather_code"));
+    const wind = max(win("wind_speed_10m")), gust = max(win("wind_gusts_10m"));
+    const dir = DIR[Math.round(at("wind_direction_10m") / 45) % 8];
+    let terr;
+    if (snow24 > 0 || snowM > 0) terr = "Zăpadă";
+    else if (rain24 > 2 || mmM >= 0.1) terr = "Ud";
+    else if (rain24 > 0 || mmM > 0) terr = "Umed";
+    else terr = "Uscat";
+    document.getElementById("wxic").textContent = ICON(code);
+    document.getElementById("wxwhen").textContent = `Miercuri ${pad(nx.getDate())}.${pad(nx.getMonth() + 1)} · 20:00–21:00`;
+    document.getElementById("wxgrid").innerHTML =
+      `<div><b>${Math.round(at("temperature_2m"))}°</b><span>temperatură, se simte ${Math.round(at("apparent_temperature"))}°</span></div>` +
+      `<div><b>${Math.round(at("relative_humidity_2m"))}%</b><span>umiditate</span></div>` +
+      `<div><b>${prob}%</b><span>șansă de ploaie, ${mmM.toFixed(1)} mm</span></div>` +
+      `<div><b>${Math.round(wind)} km/h</b><span>vânt ${dir}, rafale ${Math.round(gust)}</span></div>`;
+    document.getElementById("wxterr").textContent = terr;
+    el.hidden = false;
+  } catch (e) { /* fără date: widgetul rămâne ascuns */ }
+})();
+</script>
 </html>
