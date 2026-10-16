@@ -421,6 +421,13 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
 .card .adm { position: absolute; left: 9%; top: 41%; z-index: 3; font-family: var(--f-body); font-weight: 800; font-size: 5.2cqw; letter-spacing: .1em; line-height: 1; padding: 1.4cqw 2.4cqw; border-radius: 99px; background: #0B1018; color: #C8F03C; border: 1px solid rgba(200,240,60,.6); }
 .card.full .adm { top: 38%; font-size: 4.6cqw; }
 .admt { margin-left: 8px; font-size: 10px; font-weight: 800; letter-spacing: .1em; padding: 2px 7px; border-radius: 99px; background: #0B1018; color: #C8F03C; border: 1px solid rgba(200,240,60,.6); vertical-align: 2px; }
+.kpi.lead .lpic { position: absolute; right: -4px; bottom: 0; height: 100%; width: auto; z-index: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 35%), linear-gradient(to bottom, #000 70%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 35%); opacity: .95; }
+.kpi.lead .lpic.pl { display: none; }
+@media (max-width: 560px) { .kpi.lead .lpic { height: 62%; opacity: .6; } .kpi.lead.haspic .v.name, .kpi.lead.haspic .s { max-width: none; } }
+.kpi.lead > :not(.lpic) { position: relative; z-index: 1; }
+.kpi.lead.haspic .v.name, .kpi.lead.haspic .s { max-width: 68%; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .kpi.lead .lpic.pd { display: none; } :root:not([data-theme="dark"]) .kpi.lead .lpic.pl { display: block; } }
+:root[data-theme="light"] .kpi.lead .lpic.pd { display: none; } :root[data-theme="light"] .kpi.lead .lpic.pl { display: block; }
 .pf .x { position: sticky; top: 0; justify-self: end; margin-bottom: -48px; z-index: 3; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); display: grid; place-items: center; }
 .hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; padding: 20px; border-radius: 18px; border: 1px solid var(--line);
   background: radial-gradient(70% 120% at 0% 0%, color-mix(in oklab, var(--tc) 22%, transparent), transparent 70%), var(--panel); }
@@ -1032,7 +1039,7 @@ function render() {
       <div class="bar"><i style="width:${pct(active / K.members)}%"></i></div><span class="s">au jucat cel puțin 35% din meciuri</span></div>
     <div class="kpi"><span class="ic">${ICON.full}</span><span class="eyebrow">Meciuri cu 12/12</span><span class="v">${full}<small>/${K.played}</small></span>
       <div class="bar"><i style="width:${pct(full / Math.max(1, K.played))}%"></i></div><span class="s">miercuri cu lotul complet</span></div>
-    <div class="kpi lead"><span class="ic">${ICON.crown}</span><span class="eyebrow">Lider</span><span class="v name">${esc(lead.name)}</span><span class="s">${lead.pts} puncte · ${lead.games} meciuri · ${pct(lead.rate)}% prezență</span></div>`;
+    <div class="kpi lead${hasPhoto(lead) ? " haspic" : ""}" data-p="${esc(lead.name)}" style="cursor:pointer">${hasPhoto(lead) ? `<img class="lpic pd" src="${PHOTOS[lead.name].d}" alt=""><img class="lpic pl" src="${PHOTOS[lead.name].l}" alt="">` : ""}<span class="ic">${ICON.crown}</span><span class="eyebrow">Lider</span><span class="v name">${esc(lead.name)}</span><span class="s">${lead.pts} puncte · ${lead.games} meciuri · ${pct(lead.rate)}% prezență</span></div>`;
 
   const lastK = S.snaps.length - 1;
   const cw = p => `<button class="cw" data-p="${esc(p.name)}" title="${esc(p.name)}: locul ${p.rank}, ${p.pts} puncte, ${p.games} meciuri, ${pct(p.rate)}% prezență">${moveOf(S, lastK, p.name, p.rank)}${card(p)}</button>`;
@@ -1061,7 +1068,7 @@ function render() {
 
 
 /* teren izometric: proiecție în perspectivă (u = lățime 0..1, v = 0 poarta din fund .. 1 poarta din față) */
-const SLOTS = [[.2, .07], [.5, .04], [.8, .07], [.1, .39], [.37, .42], [.63, .42], [.9, .39], [.12, .69], [.37, .72], [.63, .72], [.88, .69], [.5, .96]];
+const SLOTS = [[.5, .04], [.2, .07], [.8, .07], [.1, .39], [.37, .42], [.63, .42], [.9, .39], [.12, .69], [.37, .72], [.63, .72], [.88, .69], [.5, .96]];
 function renderPitch(T, cw) {
   const box = $("pitch"), W = 1000, mob = box.clientWidth < 620, Hv = mob ? 1450 : 760;
   const ZF = 1.32, Yf = Hv * (mob ? .15 : .17), Yn = Hv * .93, D = (Yn - Yf) / (1 - 1 / ZF), yh = Yn - D, spread = mob ? 1.0 : .86;
