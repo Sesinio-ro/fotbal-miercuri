@@ -70,6 +70,8 @@ select { width: 100%; height: 46px; border-radius: 12px; border: 1px solid var(-
 .send:disabled { opacity: .45; cursor: not-allowed; }
 .done { text-align: center; padding: 40px 16px; }
 .done h2 { font-size: 30px; }
+tr.flash td { animation: fl 1.8s ease; }
+@keyframes fl { 0%,60% { background: color-mix(in oklab, var(--warn) 25%, transparent); } 100% { background: transparent; } }
 [hidden] { display: none !important; }
 .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 table.v { border-collapse: separate; border-spacing: 0; width: 100%; }
@@ -183,7 +185,7 @@ function render() {
   $("pager").innerHTML = `<button type="button" data-pg="${page - 1}" ${page ? "" : "disabled"} aria-label="Pagina anterioară">‹</button>` +
     Array.from({ length: pages }, (_, k) => `<button type="button" data-pg="${k}" aria-current="${k === page}">${k + 1}</button>`).join("") +
     `<button type="button" data-pg="${page + 1}" ${page < pages - 1 ? "" : "disabled"} aria-label="Pagina următoare">›</button><span class="cnt">Colegii ${page * PER + 1}–${Math.min(O.length, page * PER + PER)} din ${O.length}</span>`;
-  $("pagesend").textContent = page < pages - 1 ? "Trimite și mergi mai departe" : "Trimite ce ai notat";
+  $("pagesend").textContent = page < pages - 1 ? "Trimite și mergi mai departe" : "Trimite și termină";
   paint();
 }
 function paint() {
@@ -198,7 +200,23 @@ function paint() {
   const half = all.filter(n => status(n) === "half");
   $("prog").innerHTML = `<div class="t">Ai rezolvat ${S + D + K} din ${T}<span>${S} trimiși · ${D} de trimis · ${K} săriți</span></div><div class="b"><i style="width:${S / T * 100}%;background:var(--lime)"></i><i style="width:${D / T * 100}%;background:color-mix(in oklab, var(--lime) 45%, var(--panel-2))"></i><i style="width:${K / T * 100}%;background:var(--line)"></i></div>`;
   $("msg").textContent = half.length ? `Mai ai de completat: ${half.join(", ")}` : D ? `${D} de trimis` : S ? "Ce ai notat e trimis. Poți continua cu ceilalți oricând." : "Începe cu rândul tău, apoi colegii.";
-  $("send").disabled = !!half.length || !D; $("pagesend").disabled = !!half.length || !D;
+  const left = all.filter(n => !status(n)).length;
+  $("send").disabled = false; $("pagesend").disabled = false;
+  $("send").textContent = half.length ? "Completează" : D ? "Trimite voturile" : "Am terminat";
+  if (!half.length && !D && left) $("msg").textContent = S ? `Ce ai notat e trimis. Pe ceilalți ${left} îi poți nota acum sau apeși „Am terminat”.` : "Începe cu rândul tău, apoi colegii.";
+}
+function goHalf(n) { const O = others(), k = O.indexOf(n); if (k >= 0) page = Math.floor(k / PER); render();
+  const tr = [...document.querySelectorAll("#tbd tr")].find(t => t.dataset.n === n);
+  const v = votes[n] || []; const miss = v.findIndex(x => !x); if (miss >= 0) { crit = miss; $("tbl").dataset.c = crit; $("ctabs").querySelectorAll("button").forEach((x, i) => x.setAttribute("aria-selected", String(i === crit))); }
+  if (tr) { tr.scrollIntoView({ behavior: "smooth", block: "center" }); tr.classList.add("flash"); setTimeout(() => tr.classList.remove("flash"), 1800); }
+  toast(`${n}: mai ai ${6 - cnt(n)} ${6 - cnt(n) === 1 ? "notă" : "note"} de dat sau apasă „Sar peste”`); }
+function finish() { $("steps").hidden = true; $("sendbar").hidden = true; $("who").hidden = true; document.querySelector("header").hidden = true; $("done").hidden = false; scrollTo(0, 0); }
+async function act(next) { const me = $("me").value, all = [me, ...others()], half = all.filter(n => status(n) === "half");
+  if (half.length) return goHalf(half[0]);
+  const last = page >= Math.ceil(others().length / PER) - 1;
+  if (all.some(n => status(n) === "todo")) { await send(next && !last); if (next && last && $("done").hidden && !all.some(n => ["todo", "half"].includes(status(n)))) finish(); return; }
+  if (next) { const pages = Math.ceil(others().length / PER); if (page < pages - 1) { page++; render(); $("steps").scrollIntoView({ behavior: "smooth", block: "start" }); return; } }
+  if (all.some(n => sent[n])) finish(); else toast("Dă note cel puțin la un coleg");
 }
 let tt; const toast = m => { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2600); };
 async function send(next) {
@@ -211,13 +229,13 @@ async function send(next) {
     names.forEach(n => { sent[n] = votes[n]; delete votes[n]; }); save();
     toast(`Trimis ✓ ${rows.length} ${rows.length === 1 ? "vot" : "voturi"}`);
     const all = [me, ...others()];
-    if (all.every(n => ["sent", "sk"].includes(status(n)))) { $("steps").hidden = true; $("sendbar").hidden = true; $("who").hidden = true; document.querySelector("header").hidden = true; $("done").hidden = false; scrollTo(0, 0); return; }
+    if (all.every(n => ["sent", "sk"].includes(status(n)))) return finish();
     if (next) page++; render(); if (next) $("steps").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (e) { $("msg").textContent = "N-a mers trimiterea. Verifică netul și încearcă din nou. Notele tale sunt salvate."; }
-  finally { $("send").textContent = "Trimite voturile"; paint(); }
+  finally { paint(); }
 }
-$("send").addEventListener("click", () => send(false));
-$("pagesend").addEventListener("click", () => send(true));
+$("send").addEventListener("click", () => act(false));
+$("pagesend").addEventListener("click", () => act(true));
 document.addEventListener("click", e => {
   const ct = e.target.closest(".ctabs button"); if (ct) { crit = +ct.dataset.ct; $("tbl").dataset.c = crit; $("ctabs").querySelectorAll("button").forEach(x => x.setAttribute("aria-selected", String(x === ct))); return; }
   const pg = e.target.closest(".pager button"); if (pg && !pg.disabled) { page = +pg.dataset.pg; render(); $("steps").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
