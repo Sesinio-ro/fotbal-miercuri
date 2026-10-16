@@ -356,6 +356,28 @@ footer { color: var(--mute); font-size: 12px; text-align: center; }
 dialog#prof { width: min(980px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--bg); color: var(--ink); }
 dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px); }
 .pf { display: grid; gap: 18px; padding: 22px; }
+.rad { position: relative; display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 18px; align-items: center; }
+.rad svg { width: 100%; height: auto; display: block; overflow: visible; }
+.rad .g { fill: none; stroke: var(--line); stroke-width: 1; }
+.rad .sh { fill: var(--lime); fill-opacity: .22; stroke: var(--lime); stroke-width: 2.5; stroke-linejoin: round; }
+.rad .dt { fill: var(--lime); }
+.rad .lb { fill: var(--ink); font: 800 12px var(--f-body); }
+.rad .lv { fill: var(--lime); font: 800 12px var(--f-body); }
+.rad .rsc b { font-family: var(--f-display); font-size: 46px; color: var(--lime); line-height: 1; display: block; }
+.rad .rsc span { color: var(--mute); font-size: 13px; }
+.rad.lock .art { filter: blur(7px); opacity: .55; pointer-events: none; user-select: none; }
+.rad .lk { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 12px; }
+.rad .lk div { background: color-mix(in oklab, var(--panel) 88%, transparent); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; max-width: 320px; display: grid; gap: 6px; justify-items: center; }
+.rad .lk svg { width: 26px; height: 26px; fill: none; stroke: var(--lime); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rad .lk b { font-size: 15px; } .rad .lk span { font-size: 13px; color: var(--mute); }
+.tag.votd { color: var(--lime); border-color: color-mix(in oklab, var(--lime) 45%, var(--line)); }
+.lockline { display: none; }
+@media (max-width: 700px) { .lockp { display: none !important; }
+  .lockline { display: flex; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 12px 14px; }
+  .lockline .lk2 { font-size: 22px; } .lockline b { display: block; font-size: 14px; }
+  .dots5 { display: flex; align-items: center; gap: 5px; margin-top: 6px; } .dots5 i { width: 18px; height: 6px; border-radius: 3px; background: var(--line); } .dots5 i.on { background: var(--lime); }
+  .dots5 em { font-style: normal; font-size: 12px; color: var(--mute); font-weight: 700; margin-left: 4px; } }
+@media (max-width: 640px) { .rad { grid-template-columns: 1fr; justify-items: center; } .rad svg { max-width: 300px; } }
 .pf .x { position: sticky; top: 0; justify-self: end; margin-bottom: -48px; z-index: 3; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); display: grid; place-items: center; }
 .hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; padding: 20px; border-radius: 18px; border: 1px solid var(--line);
   background: radial-gradient(70% 120% at 0% 0%, color-mix(in oklab, var(--tc) 22%, transparent), transparent 70%), var(--panel); }
@@ -667,7 +689,22 @@ try { const s = localStorage.getItem("fm-season"); if (s && DATA.seasons[s]) sea
 const tierStyle = t => `--tc: var(${TIERS[t] || "--t-bronz"})`;
 /* în previzualizarea de pe claude.ai (iframe) adresa nu se poate schimba; acolo ignorăm */
 function safeRS(...a) { try { history.replaceState(...a); } catch (e) {} }
-const S_ = () => DATA.seasons[season];
+const VOTE_BONUS = 5, VOTE_MIN = 10; /* +5 o singură dată pentru cine notează minimum 10 colegi */
+function applyVoteBonus() {
+  if (!HEX_ON || DATA._vb) return; DATA._vb = 1;
+  const keys = Object.keys(DATA.seasons).sort(), S = DATA.seasons[keys[keys.length - 1]]; if (!S || !S.players) return;
+  const ok = n => RATINGS[n] && RATINGS[n].rated >= VOTE_MIN;
+  if (!S.players.some(p => ok(p.name))) return;
+  const TB = [[3, "Diamant"], [7, "Platină"], [12, "Aur"], [17, "Argint"], [1e9, "Bronz"]], tier = i => TB.find(t => i <= t[0])[1];
+  const rnd = x => { const r = Math.round(x); return Math.abs(x % 1) === .5 && r % 2 ? r - 1 : r; };
+  S.players.forEach(p => { if (ok(p.name)) { p.pts += VOTE_BONUS; p.bonus = (p.bonus || 0) + VOTE_BONUS; p.voteBonus = VOTE_BONUS; } });
+  S.players.sort((a, b) => b.pts - a.pts || b.games - a.games || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  const top = Math.max(1, ...S.players.map(p => p.pts));
+  S.players.forEach((p, i) => { p.rank = i + 1; p.tier = tier(i + 1); p.rating = Math.max(40, Math.min(99, rnd(50 + 49 * p.pts / top))); });
+  const sn = S.snaps && S.snaps[S.snaps.length - 1];
+  if (sn) { const by = Object.fromEntries(S.players.map(p => [p.name, p])); sn.forEach(r => { const p = by[r[0]]; if (p) { r[1] = p.rank; r[2] = p.pts; r[7] = p.rating; r[8] = p.tier; } }); sn.sort((a, b) => a[1] - b[1]); }
+}
+const S_ = () => { applyVoteBonus(); return DATA.seasons[season]; };
 const byName = name => S_().players.find(p => p.name === name);
 
 function snapAt(S, k) { return S.snaps[k].map(r => ({ name: r[0], rank: r[1], pts: r[2], games: r[3], rate: r[4], cur: r[5], best: r[6], rating: r[7], tier: r[8], X: r[9], XT: r[10], ABS: r[11] })); }
@@ -776,6 +813,12 @@ function autoNews(S) {
     add("⚡", `Recordul de înscriere: lot complet în ${B(fmtMin(sg.rec))} (${sg.recW[0]})`); }
   // următorul meci
   const nx = new Date(); nx.setHours(0, 0, 0, 0); const dw = (3 - nx.getDay() + 7) % 7; nx.setDate(nx.getDate() + (dw === 0 && new Date().getHours() >= 21 ? 7 : dw));
+  // notează-ți colegii
+  if (HEX_ON) { const H = Object.entries(RATINGS), nv = H.filter(([, r]) => r.voted).length;
+    if (nv) add("🗳️", `${B(nv)} din ${H.length} și-au notat colegii · hexagonul se deblochează la 5 voturi`, { cls: "up" });
+    H.filter(([, r]) => r.n >= 5 && r.peer).sort((a, b) => b[1].n - a[1].n).slice(0, 6).forEach(([n]) => add("🔓", `${B(n)} și-a deblocat hexagonul`, { cls: "up", p: n }));
+    H.filter(([, r]) => r.rated >= VOTE_MIN).slice(0, 6).forEach(([n]) => add("🗳️", `${B(n)} și-a notat colegii · +${VOTE_BONUS} puncte`, { cls: "up", p: n }));
+    H.filter(([, r]) => r.n === 4).slice(0, 4).forEach(([n]) => add("⏳", `${B(n)} mai are nevoie de un singur vot ca să-și vadă hexagonul`, { cls: "warn", p: n })); }
   add("⏭️", `Următorul meci: miercuri ${String(nx.getDate()).padStart(2, "0")}.${String(nx.getMonth() + 1).padStart(2, "0")}, ora 20:00 · înscrieri de marți, 9:30`);
   return N;
 }
@@ -842,6 +885,36 @@ function renderSignup(S) {
       if (v >= 870 && bw > 14) g += `<text x="${x + bwid / 2}" y="${Y(CAP) - 4}" fill="var(--c-XT)" font-size="10" text-anchor="middle">+1z</text>`; } });
   g += `<line x1="${pl}" x2="${w - pr}" y1="${Y(st.med)}" y2="${Y(st.med)}" stroke="var(--ink)" stroke-dasharray="5 4"/><text x="${pl + 6}" y="${Y(st.med) - 6}" fill="var(--ink)" font-size="11" paint-order="stroke" stroke="var(--panel)" stroke-width="4">de obicei: ${fmtMin(st.med)}</text>`;
   $("sigch").innerHTML = `<svg viewBox="0 0 ${w} ${H}" role="img" aria-label="În cât timp s-a umplut lotul în fiecare miercuri, pe luni"><defs><pattern id="sighatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="#3a3f36"/></pattern></defs>${g}</svg>`;
+}
+let RATINGS = {}, HEX_ON = false;
+function loadHex() {
+  return new Promise((ok, no) => {
+    const cb = "__fmh" + Date.now(), sc = document.createElement("script"), t = setTimeout(() => { delete window[cb]; sc.remove(); no(new Error("timeout")); }, 8000);
+    window[cb] = res => { clearTimeout(t); delete window[cb]; sc.remove();
+      try { if (res.status === "error") throw new Error("sheet");
+        const rows = res.table.rows.map(r => (r.c || []).map(c => c == null || c.v == null ? "" : String(c.v)));
+        const R = {}; rows.slice(1).forEach(r => { const n = (r[0] || "").trim(); if (!n) return; const v = r.slice(2, 8).map(x => parseFloat(String(x).replace(",", ".")));
+          R[n] = { n: parseInt(r[1]) || 0, peer: v.every(x => x > 0) ? v : null, voted: /^da$/i.test((r[8] || "").trim()), rated: parseInt(r[9]) || 0 }; });
+        ok(R); } catch (e) { no(e); } };
+    sc.onerror = () => { clearTimeout(t); delete window[cb]; no(new Error("net")); };
+    sc.src = `https://docs.google.com/spreadsheets/d/${LIVE_SHEET}/gviz/tq?tqx=responseHandler:${cb}&headers=0&sheet=hexagon&_=${Date.now()}`;
+    document.head.appendChild(sc);
+  });
+}
+function radarPanel(p) {
+  const r = RATINGS[p.name], n = r ? r.n : 0, ok = !!(r && n >= 5 && r.peer);
+  const K = ["Viteză", "Șut", "Pase", "Apărare", "Condiție", "Bere"], v = ok ? r.peer : [3.6, 3.2, 4.1, 3.4, 3.8, 4.3];
+  const cx = 150, cy = 140, R = 92, pt = (i, s) => { const a = -Math.PI / 2 + i * Math.PI / 3; return [cx + Math.cos(a) * R * s / 5, cy + Math.sin(a) * R * s / 5]; };
+  const poly = f => K.map((_, i) => f(i).map(x => x.toFixed(1)).join(",")).join(" "), f1 = x => x.toFixed(1).replace(".", ",");
+  let g = ""; for (let k = 1; k <= 5; k++) g += `<polygon class="g" points="${poly(i => pt(i, k))}"/>`;
+  K.forEach((_, i) => { const [x, y] = pt(i, 5); g += `<line class="g" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; });
+  g += `<polygon class="sh" points="${poly(i => pt(i, v[i]))}"/>` + K.map((_, i) => { const [x, y] = pt(i, v[i]); return `<circle class="dt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5"/>`; }).join("");
+  K.forEach((k, i) => { const [x, y] = pt(i, 6.3); g += `<text class="lb" x="${x.toFixed(1)}" y="${(y - 3).toFixed(1)}" text-anchor="middle">${k}</text><text class="lv" x="${x.toFixed(1)}" y="${(y + 12).toFixed(1)}" text-anchor="middle">${ok ? f1(v[i]) : "?"}</text>`; });
+  const ovr = ok ? v.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : 0;
+  const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Se deblochează la 5 voturi de la colegi</b><span>${n ? `Are ${n} din 5 voturi până acum. Mai ${5 - n === 1 ? "lipsește unul" : `lipsesc ${5 - n}`}!` : "Colegii votează din linkul personal primit pe WhatsApp."}</span></div></div>`;
+  return `<div class="panel${ok ? "" : " lockp"}"><span class="eyebrow">Cum îl văd colegii${ok ? ` · din ${n} voturi` : ""}</span>
+    <div class="rad ${ok ? "" : "lock"}"><svg class="art" viewBox="0 0 300 290" role="img" aria-label="${ok ? "Notele de la colegi pe 6 criterii" : "Încă blocat"}">${g}</svg>
+      <div class="art rsc"><b>${ok ? f1(ovr) : "3,6"}</b><span>nota pe teren de la colegi, din 5 (fără bere)</span></div>${ok ? "" : lock}</div></div>${ok ? "" : `<div class="lockline"><span class="lk2">🔒</span><div><b>Hexagonul se deblochează la 5 voturi de la colegi</b><span class="dots5">${[0, 1, 2, 3, 4].map(i => `<i class="${i < n ? "on" : ""}"></i>`).join("")}<em>${Math.min(n, 5)} din 5</em></span></div></div>`}`;
 }
 function sigProfile(p) {
   const G = SIGNUP[season]; if (!G) return "";
@@ -1142,7 +1215,8 @@ function renderStatic() {
   $("legend").innerHTML = DATA.legend.map(([c, l, p]) => c === "ABS" ? ["", "Neînscris sau a anunțat că lipsește", "0"] : [c, l, p]).map(([c, l, p]) => `<li><span class="cell ${CLS[c] || ""}">${c}</span><span>${esc(l)}</span><b>${esc(p)}</b></li>`).join("");
   const st = DATA.settings;
   $("bonus").innerHTML = `<li><span class="cell J"></span><span>La fiecare ${st.streak_every} meciuri jucate la rând</span><b>+${st.streak_bonus}</b></li>
-    <li><span class="cell JP"></span><span>Invitat adus când nu ne strângeam</span><b>+${st.guest_points}</b></li>`;
+    <li><span class="cell JP"></span><span>Invitat adus când nu ne strângeam</span><b>+${st.guest_points}</b></li>
+    <li><span class="cell J">🗳️</span><span>Ți-ai notat minimum ${VOTE_MIN} colegi la „Notează-ți colegii” (o singură dată, nu contează la cota de titular)</span><b>+${VOTE_BONUS}</b></li>`;
   $("tiers").innerHTML = [["Diamant", "locurile 1–3"], ["Platină", "4–7"], ["Aur", "8–12"], ["Argint", "13–17 (rezerve)"], ["Bronz", "18+"]]
     .map(([t, r]) => `<li><span><span class="pill" style="${tierStyle(t)}">${t}</span></span><b>${r}</b></li>`).join("");
   $("rules").innerHTML = ["Înscrierile încep marți la 9:30. Primii 12 joacă, restul sunt rezerve în ordinea înscrierii.",
@@ -1173,10 +1247,11 @@ function openProfile(name, push = true) {
   $("pf").innerHTML = `<button class="x" id="pfx" aria-label="Închide profilul">${ICON.close}</button>
     <div class="hero" style="${tierStyle(p.tier)}">${card(p, true)}
       <div><span class="eyebrow">Locul ${p.rank} din ${P.length} · cel mai bun loc: ${bestRank}</span><h2>${esc(p.name)}</h2>
-        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" style="${tierStyle(p.tier)}">${esc(p.tier)}</span><span class="tag">${p.rank <= 12 ? "În lotul de 12" : p.rank <= 17 ? "Rezervă" : "În afara lotului"}</span><span class="tag">Prioritate: locul ${p.cotaRank}</span></div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" style="${tierStyle(p.tier)}">${esc(p.tier)}</span><span class="tag">${p.rank <= 12 ? "În lotul de 12" : p.rank <= 17 ? "Rezervă" : "În afara lotului"}</span><span class="tag">Prioritate: locul ${p.cotaRank}</span>${RATINGS[p.name] && RATINGS[p.name].voted ? `<span class="tag votd">🗳️ A votat${p.voteBonus ? ` · +${p.voteBonus}p` : ""}</span>` : ""}</div>
         <div class="facts num"><div><b>${p.pts}</b><span>Puncte</span></div><div><b>${p.games}</b><span>Meciuri</span></div><div><b>${pct(p.rate)}%</b><span>Prezență</span></div><div><b>${p.cota}</b><span>Cota ${DATA.settings.cota_weeks} săpt.</span></div></div>
       </div></div>
     <div class="panel"><span class="eyebrow">Atribute · de la 20 la 99</span><div class="attrs">${attrs.map(([k, d, v]) => `<div class="attr"><span class="av2 num ${v >= 85 ? "hi" : ""}">${v}</span><div><b>${k}</b><span class="ad">${esc(d)}</span><span class="ab"><i style="width:${v}%"></i></span></div></div>`).join("")}</div></div>
+    ${radarPanel(p)}
     <div class="tiles num">
       <div class="tile"><b class="${p.cur >= 4 ? "streak" : ""}">${p.cur}</b><span>serie curentă (record ${p.best})</span></div>
       <div class="tile"><b>${p.JP + p.guests}</b><span>salvări (${p.JP} de pe rezervă, ${p.guests} invitați)</span></div>
@@ -1229,6 +1304,7 @@ fromHash();
   let raf = 0; const tog = () => { raf = 0; b.classList.toggle("on", window.scrollY > 600); };
   window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tog); }, { passive: true }); tog(); })();
 loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
+loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); const d = $("prof"); if (d.open) { const h = decodeURIComponent(location.hash); const p = S_().players.find(x => slug(x.name) === h.slice(3)); if (p) openProfile(p.name, false); } }).catch(() => {});
 /* contor de vizualizări (abacus, fără cont; numără o dată pe sesiune de browser, nu se resetează la update-uri) */
 (() => { if (!/github\.io$/.test(location.hostname)) return;
   const NS = "sesinio-fotbal-miercuri", K = "views"; let first = true;

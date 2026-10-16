@@ -72,6 +72,12 @@ select { width: 100%; height: 46px; border-radius: 12px; border: 1px solid var(-
 .done h2 { font-size: 30px; }
 tr.flash td { animation: fl 1.8s ease; }
 @keyframes fl { 0%,60% { background: color-mix(in oklab, var(--warn) 25%, transparent); } 100% { background: transparent; } }
+.unlock { display: grid; gap: 6px; justify-items: center; margin: 18px auto; max-width: 440px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel-2); padding: 16px; }
+.unlock span { color: var(--mute); font-size: 14px; }
+.wabtn { margin-top: 6px; display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: #25D366; color: #06210f; font-weight: 800; text-decoration: none; }
+.bonus { margin: 10px 0 0; display: inline-block; font-size: 14px; border: 1px solid color-mix(in oklab, var(--lime) 45%, var(--line)); border-radius: 999px; padding: 6px 14px; }
+.bonus b, .prog .bn b { color: var(--lime); }
+.prog .bn { font-size: 13px; margin-bottom: 6px; color: var(--mute); } .prog .bn.ok { color: var(--ink); font-weight: 700; }
 [hidden] { display: none !important; }
 .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 table.v { border-collapse: separate; border-spacing: 0; width: 100%; }
@@ -128,6 +134,7 @@ td.stc.sent { color: var(--lime); } td.stc.todo { color: var(--ink); } td.stc.sk
   <header>
     <h1>Notează-ți <span>colegii</span></h1>
     <p class="lead">Dă note de la 1 la 5 colegilor cu care ai jucat, pe 6 criterii, inclusiv berea de după. Compară-i cu grupul nostru. Votul e anonim. Dă-ți și ție note: nu intră la medie, dar o să vedem cât de bine te cunoști.</p>
+    <p class="bonus">🗳️ Notezi minimum 10 colegi și primești <b>+5 puncte</b> în clasament, o singură dată.</p>
   </header>
   <div class="box" id="who">
     <input type="hidden" id="me">
@@ -152,7 +159,9 @@ td.stc.sent { color: var(--lime); } td.stc.todo { color: var(--ink); } td.stc.sk
       <div class="pager" id="pager"></div>
       <button class="pagesend" id="pagesend" type="button">Trimite și mergi mai departe</button></div>
   </div>
-  <div class="done box" id="done" hidden><h2>Mersi! 🍺</h2><p class="lead" style="margin:6px auto 0">Voturile au plecat. Rezultatele apar pe site când fiecare jucător strânge minimum 5 voturi de la colegi. Dacă vrei să schimbi ceva, poți vota din nou: contează ultimul vot.</p><a class="back" href="./">← Înapoi la clasament</a></div>
+  <div class="done box" id="done" hidden><h2>Mersi! 🍺</h2><p class="lead" style="margin:6px auto 0">Voturile au plecat. Rezultatele apar pe site când fiecare jucător strânge minimum 5 voturi de la colegi. Dacă vrei să schimbi ceva, poți vota din nou: contează ultimul vot.</p>
+    <div class="unlock"><b id="bonusdone"></b><b>🔒 Hexagonul tău se deblochează când te notează 5 colegi.</b><span>Zi-le în grup să voteze. Fiecare are linkul lui de la Sese.</span>
+      <a class="wabtn" href="https://wa.me/?text=Am%20votat%20la%20Noteaz%C4%83-%C8%9Bi%20colegii%20%F0%9F%8D%BA%20Intra%C8%9Bi%20%C8%99i%20voi%20pe%20linkul%20personal%20primit%20de%20la%20Sese%2C%20c%C4%83%20vreau%20s%C4%83-mi%20v%C4%83d%20hexagonul%20%28se%20deblocheaz%C4%83%20la%205%20voturi%29.%20Nota%C8%9Bi%20minimum%2010%20colegi%20%C8%99i%20lua%C8%9Bi%20%2B5%20puncte%20%C3%AEn%20clasament%3A%20https%3A//sesinio-ro.github.io/fotbal-miercuri/" target="_blank" rel="noopener">Scrie în grup pe WhatsApp</a></div><a class="back" href="./">← Înapoi la clasament</a></div>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <div class="sendbar" id="sendbar" hidden><div class="in"><span class="msg" id="msg"></span><button class="send" id="send" type="button" disabled>Trimite voturile</button></div></div>
@@ -198,7 +207,8 @@ function paint() {
   const me = $("me").value, all = [me, ...others()], T = all.length;
   const S = all.filter(n => status(n) === "sent").length, D = all.filter(n => status(n) === "todo").length, K = all.filter(n => status(n) === "sk").length;
   const half = all.filter(n => status(n) === "half");
-  $("prog").innerHTML = `<div class="t">Ai rezolvat ${S + D + K} din ${T}<span>${S} trimiși · ${D} de trimis · ${K} săriți</span></div><div class="b"><i style="width:${S / T * 100}%;background:var(--lime)"></i><i style="width:${D / T * 100}%;background:color-mix(in oklab, var(--lime) 45%, var(--panel-2))"></i><i style="width:${K / T * 100}%;background:var(--line)"></i></div>`;
+  const peers = others().filter(n => sent[n]).length, need = Math.max(0, 10 - peers);
+  $("prog").innerHTML = `<div class="bn ${need ? "" : "ok"}">${need ? `🗳️ Mai notează și trimite ${need} ${need === 1 ? "coleg" : "colegi"} pentru <b>+5 puncte</b>` : "🗳️ Ai bonusul de <b>+5 puncte</b> în clasament ✓"}</div><div class="t">Ai rezolvat ${S + D + K} din ${T}<span>${S} trimiși · ${D} de trimis · ${K} săriți</span></div><div class="b"><i style="width:${S / T * 100}%;background:var(--lime)"></i><i style="width:${D / T * 100}%;background:color-mix(in oklab, var(--lime) 45%, var(--panel-2))"></i><i style="width:${K / T * 100}%;background:var(--line)"></i></div>`;
   $("msg").textContent = half.length ? `Mai ai de completat: ${half.join(", ")}` : D ? `${D} de trimis` : S ? "Ce ai notat e trimis. Poți continua cu ceilalți oricând." : "Începe cu rândul tău, apoi colegii.";
   const left = all.filter(n => !status(n)).length;
   $("send").disabled = false; $("pagesend").disabled = false;
@@ -210,7 +220,7 @@ function goHalf(n) { const O = others(), k = O.indexOf(n); if (k >= 0) page = Ma
   const v = votes[n] || []; const miss = v.findIndex(x => !x); if (miss >= 0) { crit = miss; $("tbl").dataset.c = crit; $("ctabs").querySelectorAll("button").forEach((x, i) => x.setAttribute("aria-selected", String(i === crit))); }
   if (tr) { tr.scrollIntoView({ behavior: "smooth", block: "center" }); tr.classList.add("flash"); setTimeout(() => tr.classList.remove("flash"), 1800); }
   toast(`${n}: mai ai ${6 - cnt(n)} ${6 - cnt(n) === 1 ? "notă" : "note"} de dat sau apasă „Sar peste”`); }
-function finish() { $("steps").hidden = true; $("sendbar").hidden = true; $("who").hidden = true; document.querySelector("header").hidden = true; $("done").hidden = false; scrollTo(0, 0); }
+function finish() { const pe = others().filter(n => sent[n]).length; $("bonusdone").textContent = pe >= 10 ? "🗳️ Ai primit +5 puncte în clasament (apar pe site în cel mult o zi)." : `🗳️ ${pe ? `Ai notat ${pe === 1 ? "un coleg" : pe + " colegi"}. ` : ""}Mai notează ${10 - pe === 1 ? "un coleg" : (10 - pe) + " colegi"} și primești +5 puncte în clasament.`; $("steps").hidden = true; $("sendbar").hidden = true; $("who").hidden = true; document.querySelector("header").hidden = true; $("done").hidden = false; scrollTo(0, 0); }
 async function act(next) { const me = $("me").value, all = [me, ...others()], half = all.filter(n => status(n) === "half");
   if (half.length) return goHalf(half[0]);
   const last = page >= Math.ceil(others().length / PER) - 1;
