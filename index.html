@@ -429,6 +429,10 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
 .kpi.lead.haspic .v.name, .kpi.lead.haspic .s { max-width: 68%; }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .kpi.lead .lpic.pd { display: none; } :root:not([data-theme="dark"]) .kpi.lead .lpic.pl { display: block; } }
 :root[data-theme="light"] .kpi.lead .lpic.pd { display: none; } :root[data-theme="light"] .kpi.lead .lpic.pl { display: block; }
+.motiv { display: block; font-size: 13px; color: var(--mute); margin-top: 6px; line-height: 1.4; }
+.wabtn2 { display: inline-flex; align-items: center; justify-content: center; margin-top: 10px; height: 40px; padding: 0 18px; border-radius: 999px; background: #25D366; color: #06210f; font-weight: 800; font-size: 14px; text-decoration: none; }
+.rad .lk div { max-width: 360px; }
+.lockline { align-items: flex-start; }
 .pf .x { position: sticky; top: 0; justify-self: end; margin-bottom: -48px; z-index: 3; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); display: grid; place-items: center; }
 .hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; padding: 20px; border-radius: 18px; border: 1px solid var(--line);
   background: radial-gradient(70% 120% at 0% 0%, color-mix(in oklab, var(--tc) 22%, transparent), transparent 70%), var(--panel); }
@@ -1002,10 +1006,14 @@ function radarPanel(p) {
   g += `<polygon class="sh" points="${poly(i => pt(i, v[i]))}"/>` + K.map((_, i) => { const [x, y] = pt(i, v[i]); return `<circle class="dt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5"/>`; }).join("");
   K.forEach((k, i) => { const [x, y] = pt(i, 6.3); g += `<text class="lb" x="${x.toFixed(1)}" y="${(y - 3).toFixed(1)}" text-anchor="middle">${k}</text><text class="lv" x="${x.toFixed(1)}" y="${(y + 12).toFixed(1)}" text-anchor="middle">${ok ? f1(v[i]) : "?"}</text>`; });
   const ovr = ok ? v.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : 0;
-  const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Se deblochează la 5 voturi de la colegi</b><span>${n ? `Are ${n} din 5 voturi până acum. Mai ${5 - n === 1 ? "lipsește unul" : `lipsesc ${5 - n}`}!` : "Colegii votează din linkul personal primit pe WhatsApp."}</span></div></div>`;
+  const need = Math.max(0, 5 - n), plink = "https://sesinio-ro.github.io/fotbal-miercuri/#p-" + slug(p.name);
+  const wmsg = `🔒 Hexagonul meu de pe site e încă blocat: am ${n} din 5 voturi. Notează-mă și pe mine, durează 3 minute 🙏\nIntră pe linkul tău personal primit de la Sese pe WhatsApp.\n🗳️ Bonus: dacă notezi minimum 10 colegi, primești +5 puncte în clasament.\n👉 ${plink}`;
+  const wbtn = `<a class="wabtn2" href="https://wa.me/?text=${encodeURIComponent(wmsg)}" target="_blank" rel="noopener">Cere voturi pe WhatsApp</a>`;
+  const motiv = `<span class="motiv">${need === 1 ? "Mai trebuie un singur vot!" : n ? `Mai trebuie ${need} voturi.` : "Încă niciun vot."} E profilul tău? Cere-le colegilor să te noteze și notează-i și tu: la 10 colegi notați primești +5 puncte.</span>`;
+  const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Se deblochează la 5 voturi de la colegi</b><span>${n ? `Are ${n} din 5 voturi până acum. Mai ${5 - n === 1 ? "lipsește unul" : `lipsesc ${5 - n}`}!` : "Colegii votează din linkul personal primit pe WhatsApp."}</span>${motiv}${wbtn}</div></div>`;
   return `<div class="panel${ok ? "" : " lockp"}"><span class="eyebrow">Cum îl văd colegii${ok ? ` · din ${n} voturi` : ""}</span>
     <div class="rad ${ok ? "" : "lock"}"><svg class="art" viewBox="0 0 300 290" role="img" aria-label="${ok ? "Notele de la colegi pe 6 criterii" : "Încă blocat"}">${g}</svg>
-      <div class="art rsc"><b>${ok ? f1(ovr) : "3,6"}</b><span>nota pe teren de la colegi, din 5 (fără bere)</span></div>${ok ? "" : lock}</div></div>${ok ? "" : `<div class="lockline"><span class="lk2">🔒</span><div><b>Hexagonul se deblochează la 5 voturi de la colegi</b><span class="dots5">${[0, 1, 2, 3, 4].map(i => `<i class="${i < n ? "on" : ""}"></i>`).join("")}<em>${Math.min(n, 5)} din 5</em></span></div></div>`}`;
+      <div class="art rsc"><b>${ok ? f1(ovr) : "3,6"}</b><span>nota pe teren de la colegi, din 5 (fără bere)</span></div>${ok ? "" : lock}</div></div>${ok ? "" : `<div class="lockline"><span class="lk2">🔒</span><div><b>Hexagonul se deblochează la 5 voturi de la colegi</b><span class="dots5">${[0, 1, 2, 3, 4].map(i => `<i class="${i < n ? "on" : ""}"></i>`).join("")}<em>${Math.min(n, 5)} din 5</em></span>${motiv}${wbtn}</div></div>`}`;
 }
 function sigProfile(p) {
   const G = SIGNUP[season]; if (!G) return "";
