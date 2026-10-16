@@ -85,6 +85,7 @@ tr.flash td { animation: fl 1.8s ease; }
 @media (max-width: 640px) { table.v .nm { min-width: 0; max-width: 128px; padding-left: 8px; } .nmw { gap: 7px; } .av { width: 26px; height: 26px; } .av0 { font-size: 12px; } }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .av.pd { display: none; } :root:not([data-theme="dark"]) .av.pl { display: block; } }
 :root[data-theme="light"] .av.pd { display: none; } :root[data-theme="light"] .av.pl { display: block; }
+.wahint { display: block; font-size: 12px; color: var(--mute); margin-top: 6px; }
 [hidden] { display: none !important; }
 .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 table.v { border-collapse: separate; border-spacing: 0; width: 100%; }
@@ -168,13 +169,16 @@ td.stc.sent { color: var(--lime); } td.stc.todo { color: var(--ink); } td.stc.sk
   </div>
   <div class="done box" id="done" hidden><h2>Mersi! 🍺</h2><p class="lead" style="margin:6px auto 0">Voturile au plecat. Rezultatele apar pe site când fiecare jucător strânge minimum 5 voturi de la colegi. Dacă vrei să schimbi ceva, poți vota din nou: contează ultimul vot.</p>
     <div class="unlock"><b id="bonusdone"></b><b>🔒 Hexagonul tău se deblochează când te notează 5 colegi.</b><span>Zi-le în grup să voteze. Fiecare are linkul lui de la Sese.</span>
-      <a class="wabtn" href="https://wa.me/?text=Am%20votat%20la%20Noteaz%C4%83-%C8%9Bi%20colegii%20%F0%9F%8D%BA%20Intra%C8%9Bi%20%C8%99i%20voi%20pe%20linkul%20personal%20primit%20de%20la%20Sese%2C%20c%C4%83%20vreau%20s%C4%83-mi%20v%C4%83d%20hexagonul%20%28se%20deblocheaz%C4%83%20la%205%20voturi%29.%20Nota%C8%9Bi%20minimum%2010%20colegi%20%C8%99i%20lua%C8%9Bi%20%2B5%20puncte%20%C3%AEn%20clasament%3A%20https%3A//sesinio-ro.github.io/fotbal-miercuri/" target="_blank" rel="noopener">Scrie în grup pe WhatsApp</a></div><a class="back" href="./">← Înapoi la clasament</a></div>
+      <a class="wabtn" href="https://chat.whatsapp.com/JzsdEMX4ABS5bfCM09RgfA" target="_blank" rel="noopener" data-msg="Am votat la Notează-ți colegii 🍺 Intrați și voi pe linkul personal primit de la Sese, că vreau să-mi văd hexagonul (se deblochează la 5 voturi). Notați minimum 10 colegi și luați +5 puncte în clasament: https://sesinio-ro.github.io/fotbal-miercuri/" onclick="copyMsg(this)">Scrie în grup</a><span class="wahint">Mesajul se copiază singur. În grup ții apăsat, alegi „Lipește” și trimiți.</span></div><a class="back" href="./">← Înapoi la clasament</a></div>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <div class="sendbar" id="sendbar" hidden><div class="in"><span class="msg" id="msg"></span><button class="send" id="send" type="button" disabled>Trimite voturile</button></div></div>
 <script>
 const IDS = {"sese": "Sese", "tudor": "Tudor Cosmulescu", "andreis": "Andrei Sabau", "adia": "Adi (Boss)", "adii": "Adrian Ielciu", "calins": "Călin (Scuty)", "calint": "Călin Tautan", "marius": "Marius Neamtu", "silviu": "Silviu", "misu": "Mihai (Misu)", "vasi": "Vasi Zoltan", "gabi": "Gabi", "savu": "Savu", "micu": "Micu", "lucian": "Lucian", "rarese": "Rareș Baciu", "paul": "Paul", "mircea": "Mircea", "mihaim": "Mihai M", "vasilet": "Vasile Tamasan", "mihali": "Vasile Mihali", "bogdan": "Bogdan Talos (Bogdy)", "alin": "Vlad Alin", "linu": "Linu", "andreic": "Andrei Cristea", "andreim": "Andrei Muresan", "giurgiu": "Ionut Giurgiu", "dezso": "Dezső", "rares_s": "Rareș Mihaila", "sergiu": "Sergiu (Pacu)", "ianis": "Ianis", "felix": "Felix", "dragos": "Dragoș", "mihain": "Mihai N"};
 const NAMES = ["Tudor Cosmulescu", "Adi (Boss)", "Lucian", "Sese", "Andrei Sabau", "Micu", "Marius Neamtu", "Silviu", "Călin (Scuty)", "Mihai (Misu)", "Mircea", "Adrian Ielciu", "Gabi", "Paul", "Sergiu (Pacu)", "Vasile Mihali", "Andrei Cristea", "Vasi Zoltan", "Rareș Baciu", "Vasile Tamasan", "Savu", "Mihai M", "Dezső", "Călin Tautan", "Linu", "Bogdan Talos (Bogdy)", "Rareș Mihaila", "Vlad Alin", "Ionut Giurgiu", "Ianis", "Andrei Muresan", "Dragoș", "Felix", "Mihai N"];
+function copyMsg(a) { const m = a.dataset.msg || "";
+  try { navigator.clipboard.writeText(m).catch(() => {}); } catch (e) { try { const t = document.createElement("textarea"); t.value = m; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); } catch (e2) {} }
+  a.textContent = "Mesaj copiat ✓ Se deschide grupul…"; }
 const HOOK = "https://hook.eu1.make.com/mh45j7oo7tvkchhbvpti4ngptvqctbh8";
 const CRIT = [["Viteză", "cât de repede e pe teren"], ["Șut", "cât de bine dă la poartă"], ["Pase", "cât de bine dă mingea la coechipier"], ["Apărare", "cât de bine oprește atacurile"], ["Condiție", "cât rezistă tot meciul"], ["A treia repriză", "cât de des rămâne la bere după meci 🍺"]];
 const $ = id => document.getElementById(id), esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
