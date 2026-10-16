@@ -15,25 +15,39 @@
 <meta property="og:image:alt" content="Fotbal Miercuri 20:00, clasamentul grupului">
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0c0d0b">
+<meta name="theme-color" content="#0B1018">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
 :root {
   color-scheme: dark;
-  --bg: #0c0d0b; --panel: #151714; --panel-2: #1d201b; --line: #2a2e27;
-  --ink: #f2f4ee; --mute: #9aa194; --lime: #c4f042; --lime-ink: #142000;
+  --bg: #0B1018; --panel: #121A26; --panel-2: #182233; --line: #223044; --side: #0E1520;
+  --ink: #EEF2F7; --mute: #8A97AA; --lime: #C8F03C; --lime-ink: #0B1018; --lime-2: #6F8F2B; --volt: #C8F03C;
   --c-J: #3ec274; --c-JP: #2bb3a3; --c-R: #8d7bf2; --c-AN: #5b6158; --c-X: #4f8ff0; --c-XT: #f0a53b; --c-NS: #ef5b5b; --c-ABS: #23261f; --c-M: #7c837a;
-  --t-bronz: #c08a5e; --t-argint: #c9d1d6; --t-aur: #e8c35f; --t-platina: #b48cff; --t-diamant: #c4f042;
+  --t-bronz: #C48A5E; --t-argint: #C3CBD4; --t-aur: #D9B85A; --t-platina: #7FB3E6; --t-diamant: #C8F03C;
   --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
   --f-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+
+/* tema luminoasă: urmează setarea telefonului, dar butonul o poate forța */
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light;
+  --bg: #F3F5F8; --panel: #FFFFFF; --panel-2: #EDF1F5; --line: #D9DFE8; --side: #FFFFFF;
+  --ink: #0E1622; --mute: #5A6678; --lime: #4F7A00; --lime-ink: #FFFFFF; --lime-2: #A8C86A;
+  --c-ABS: #E3E8EE; --c-AN: #B8C0CB; --c-M: #8B95A3; --c-J: #23A35E;
+} }
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F3F5F8; --panel: #FFFFFF; --panel-2: #EDF1F5; --line: #D9DFE8; --side: #FFFFFF;
+  --ink: #0E1622; --mute: #5A6678; --lime: #4F7A00; --lime-ink: #FFFFFF; --lime-2: #A8C86A;
+  --c-ABS: #E3E8EE; --c-AN: #B8C0CB; --c-M: #8B95A3; --c-J: #23A35E;
 }
 * { box-sizing: border-box; }
 html { background: var(--bg); scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
-.num { font-variant-numeric: tabular-nums; }
+.num, table, .kpi .v, .sbox .v, .sbox .mini b, .wx b, .ovr, .rk { font-variant-numeric: tabular-nums; }
 h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
 h2 { font-size: 28px; font-weight: 700; text-transform: uppercase; }
 h3 { font-size: 20px; font-weight: 700; text-transform: uppercase; }
@@ -47,7 +61,7 @@ svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-widt
 
 /* schelet */
 .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
-.side { position: sticky; top: 0; height: 100vh; border-right: 1px solid var(--line); background: #10110f; padding: 22px 14px; display: flex; flex-direction: column; gap: 22px; }
+.side { position: sticky; top: 0; height: 100vh; border-right: 1px solid var(--line); background: var(--side); padding: 22px 14px; display: flex; flex-direction: column; gap: 22px; }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
 .brand .logo { width: 36px; height: 36px; border-radius: 10px; background: var(--lime); color: var(--lime-ink); display: grid; place-items: center; }
 .brand .logo svg { width: 22px; height: 22px; stroke-width: 2; }
@@ -64,7 +78,7 @@ section { display: grid; gap: 14px; scroll-margin-top: 20px; min-width: 0; }
 .panel { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
 @media (max-width: 960px) {
   .app { grid-template-columns: minmax(0, 1fr); }
-  .side { height: auto; flex-direction: row; align-items: center; padding: 8px 12px; gap: 10px; z-index: 20; border-right: 0; border-bottom: 1px solid var(--line); background: rgba(16,17,15,.94); backdrop-filter: blur(8px); }
+  .side { height: auto; flex-direction: row; align-items: center; padding: 8px 12px; gap: 10px; z-index: 20; border-right: 0; border-bottom: 1px solid var(--line); background: color-mix(in oklab, var(--side) 94%, transparent); backdrop-filter: blur(8px); }
   .brand { padding: 0; } .brand div, .side .foot { display: none; }
   .brand .logo { width: 32px; height: 32px; }
   .nav { display: flex; overflow-x: auto; scrollbar-width: none; min-width: 0; }
@@ -77,7 +91,7 @@ section { display: grid; gap: 14px; scroll-margin-top: 20px; min-width: 0; }
 /* antet */
 .top { display: grid; gap: 14px; position: relative; }
 .top::before { content: ""; position: absolute; inset: -60px 0 auto; height: 280px; pointer-events: none; z-index: -1;
-  background: radial-gradient(50% 90% at 90% 0%, rgba(196,240,66,.13), transparent 70%); }
+  background: radial-gradient(50% 90% at 90% 0%, color-mix(in oklab, var(--lime) 13%, transparent), transparent 70%); }
 .titlerow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
 h1 { font-size: clamp(36px, 6vw, 60px); line-height: .92; font-weight: 800; text-transform: uppercase; }
 h1 span { color: var(--lime); }
@@ -99,10 +113,11 @@ h1 span { color: var(--lime); }
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .kpi { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); padding: 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
-.kpi .ic { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in oklab, var(--lime) 14%, transparent); color: var(--lime); }
+.kpi .ic { display: none !important; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in oklab, var(--lime) 14%, transparent); color: var(--lime); }
 .kpi .v { font-family: var(--f-display); font-size: 42px; font-weight: 800; line-height: 1; }
 .kpi .v small { font-size: 22px; color: var(--mute); font-weight: 700; }
-.kpi .v.name { font-size: 28px; text-transform: uppercase; overflow-wrap: anywhere; }
+.kpi .v.name { font-size: 28px; text-transform: uppercase; overflow-wrap: normal; text-wrap: balance; }
+@media (max-width: 560px) { .kpi .v.name { font-size: 20px; } }
 .kpi .s { font-size: 12px; color: var(--mute); }
 .kpi .bar { height: 5px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
 .kpi .bar i { display: block; height: 100%; background: var(--lime); }
@@ -126,26 +141,32 @@ h1 span { color: var(--lime); }
 @media (max-width: 700px) { .slot .card { width: calc(18.5cqw * var(--s)); } }
 /* carte de jucător: design original - colțuri teșite sus, nivel = culoare */
 .cw { position: relative; border: 0; background: none; padding: 0; display: grid; justify-items: center; }
-.card { --tc: var(--t-aur); position: relative; width: clamp(64px, 19vw, 116px); aspect-ratio: 3 / 4.2; container-type: inline-size; color: #11130c;
-  clip-path: polygon(14% 0, 86% 0, 100% 8%, 100% 100%, 0 100%, 0 8%);
-  background: linear-gradient(165deg, color-mix(in oklab, var(--tc) 55%, #fff) 0%, var(--tc) 36%, color-mix(in oklab, var(--tc) 50%, #0c0d0b) 100%); }
-.card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 42%, transparent 52%), repeating-linear-gradient(135deg, rgba(0,0,0,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
-.card::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4%; background: #11130c; opacity: .55; }
-.card.t-Diamant { color: var(--ink); background: linear-gradient(165deg, #2b3318 0%, #151a0c 45%, #0b0d07 100%); box-shadow: none; }
-.card.t-Diamant::after { background: var(--lime); opacity: 1; }
-.card.t-Diamant .rt { color: var(--lime); } .card.t-Diamant .fig text { fill: #0b0d07; }
-.card.t-Diamant .nm { border-top-color: rgba(196,240,66,.4); }
-.card.t-Diamant .fig circle, .card.t-Diamant .fig path:first-of-type { fill: var(--lime); opacity: .9; }
-.card.t-Diamant .fig path:nth-of-type(2) { fill: #0b0d07; }
-.card.t-Diamant::before { background: linear-gradient(115deg, transparent 30%, rgba(196,240,66,.22) 42%, transparent 52%), repeating-linear-gradient(135deg, rgba(196,240,66,.05) 0 2px, transparent 2px 6px); }
-.card .rt { position: absolute; left: 9%; top: 9%; font-family: var(--f-display); font-weight: 800; font-size: 27cqw; line-height: .85; }
+.card { --tc: var(--t-aur); position: relative; width: clamp(64px, 19vw, 116px); aspect-ratio: 3 / 4.4; container-type: inline-size; color: #1a1408;
+  clip-path: polygon(0 5%, 14% 5%, 22% 0, 78% 0, 86% 5%, 100% 5%, 100% 89%, 50% 100%, 0 89%);
+  background: linear-gradient(160deg, color-mix(in oklab, var(--tc) 62%, #fff) 0%, var(--tc) 48%, color-mix(in oklab, var(--tc) 80%, #fff) 100%); }
+.card::before, .card::after { content: none; }
+.card.t-Diamant, .card.t-Platină { color: #EEF2F7; }
+.card.t-Diamant { background: linear-gradient(160deg, #24320f 0%, #121a08 55%, #1d2a10 100%); }
+.card.t-Platină { background: linear-gradient(160deg, #2c4360 0%, #16243a 58%, #253a54 100%); }
+.card.t-Diamant .rt { color: var(--volt); } .card.t-Platină .rt { color: #BFD9F2; }
+.card.t-Diamant .nm { border-top-color: rgba(200,240,60,.45); } .card.t-Platină .nm { border-top-color: rgba(191,217,242,.4); }
+.card.t-Diamant .fig circle, .card.t-Diamant .fig path:first-of-type { fill: #D6DCC8; opacity: .9; }
+.card.t-Platină .fig circle, .card.t-Platină .fig path:first-of-type { fill: #CFDDEB; opacity: .9; }
+.card.t-Diamant .fig path:nth-of-type(2), .card.t-Platină .fig path:nth-of-type(2) { fill: rgba(0,0,0,.35); }
+.card.t-Diamant .fig text, .card.t-Platină .fig text { fill: #0B1018; }
+.card .tr { position: absolute; left: 10%; top: 33%; width: 26%; text-align: center; font-size: 6.5cqw; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.card .sx { display: none; }
+.card.full .nm { top: 51%; font-size: 12cqw !important; } .card.full .st { display: none; }
+.card.full .sx { position: absolute; left: 13%; right: 13%; top: 63%; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 1.5cqw; text-align: center; font-size: 9cqw; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.card.full .sx i { display: block; font-style: normal; font-size: 5.5cqw; letter-spacing: .06em; opacity: .7; margin-bottom: .8cqw; }
+.card .rt { position: absolute; left: 10%; top: 12%; width: 26%; text-align: center; font-family: var(--f-display); font-weight: 800; font-size: 27cqw; line-height: .85; }
 .card .ps { position: absolute; left: 10%; top: 33%; font-family: var(--f-display); font-size: 11cqw; font-weight: 800; letter-spacing: .04em; }
 .card .fig { position: absolute; right: 2%; top: 7%; width: 62%; }
-.card .nm { position: absolute; left: 6%; right: 6%; top: 62%; text-align: center; font-family: var(--f-display); font-weight: 800; text-transform: uppercase; font-size: 14cqw; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 3%; border-top: 1px solid rgba(0,0,0,.28); }
-.card .st { position: absolute; left: 6%; right: 6%; top: 77%; text-align: center; font-size: 9cqw; font-weight: 800; letter-spacing: .02em; opacity: .85; white-space: nowrap; }
+.card .nm { position: absolute; left: 6%; right: 6%; top: 61%; text-align: center; font-family: var(--f-display); font-weight: 800; text-transform: uppercase; font-size: 14cqw; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 3%; border-top: 1px solid rgba(0,0,0,.22); }
+.card .st { position: absolute; left: 12%; right: 12%; top: 75%; text-align: center; font-size: 9cqw; font-weight: 800; letter-spacing: .02em; opacity: .85; white-space: nowrap; }
 .cw .mv { position: absolute; top: -6px; font-size: 11px; right: -4px; z-index: 2; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 1px 6px; }
 @media (prefers-reduced-motion: no-preference) { .cw { transition: transform .2s ease; } .cw:hover { transform: translateY(-5px); } }
-.benchwrap { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); padding: 14px; display: grid; gap: 10px; }
+.benchwrap { border-top: 1px solid var(--line); padding: 14px 0 0; display: grid; gap: 10px; }
 .bench { display: flex; justify-content: space-evenly; gap: 6px; }
 .bench .card { width: clamp(56px, 16vw, 96px); filter: saturate(.75); }
 
@@ -158,8 +179,8 @@ h1 span { color: var(--lime); }
 .more[hidden] { display: none; }
 .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); }
 table { border-collapse: collapse; width: 100%; min-width: 780px; font-size: 14px; }
-th { text-align: left; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); font-weight: 700; padding: 12px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-td { padding: 8px 10px; border-bottom: 1px solid color-mix(in oklab, var(--line) 60%, transparent); white-space: nowrap; }
+th { text-align: left; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--mute); font-weight: 700; padding: 12px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 8px 8px; border-bottom: 1px solid color-mix(in oklab, var(--line) 60%, transparent); white-space: nowrap; }
 tbody tr { cursor: pointer; }
 tbody tr:hover td { background: color-mix(in oklab, var(--lime) 5%, transparent); }
 tr:last-child td { border-bottom: 0; }
@@ -198,7 +219,7 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
 @media (max-width: 1100px) { .grid2 { grid-template-columns: 1fr; } }
 .chartbox { position: relative; }
 .chartbox svg { width: 100%; height: auto; display: block; overflow: visible; }
-.tip { position: absolute; pointer-events: none; background: #0a0b09; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 150px; box-shadow: 0 8px 22px rgba(0,0,0,.5); z-index: 5; }
+.tip { position: absolute; pointer-events: none; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 150px; box-shadow: 0 8px 22px rgba(0,0,0,.5); z-index: 5; }
 .tip[hidden] { display: none; }
 .tip .t { font-weight: 800; margin-bottom: 4px; }
 .tip .r { display: flex; justify-content: space-between; gap: 12px; } .tip .r i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
@@ -221,7 +242,7 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
 .award .k { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--lime); font-weight: 800; }
 .award .n { font-family: var(--f-display); font-size: 26px; font-weight: 800; text-transform: uppercase; line-height: 1; border: 0; background: none; padding: 0; text-align: left; }
 .award .n:hover { color: var(--lime); }
-.award .n { overflow-wrap: anywhere; } @media (max-width: 500px) { .award .n { font-size: 22px; } }
+.award .n { overflow-wrap: normal; word-break: normal; hyphens: manual; font-size: clamp(18px, 1.6vw, 22px); text-wrap: balance; } @media (max-width: 500px) { .award .n { font-size: 22px; } }
 #act svg { max-width: 760px; }
 .award .d { font-weight: 700; font-size: 14px; }
 .award .r { font-size: 12px; color: var(--mute); }
@@ -284,7 +305,7 @@ button.pchip:hover { border-color: var(--lime); color: var(--lime); }
 .brand { text-decoration: none; color: inherit; border-radius: 12px; }
 .brand:hover .logo { filter: brightness(1.08); }
 .totop { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 48px; height: 48px; border-radius: 50%; border: 1px solid color-mix(in oklab, var(--lime) 50%, transparent);
-  background: rgba(21,23,20,.82); color: var(--lime); display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  background: color-mix(in oklab, var(--panel) 85%, transparent); color: var(--lime); display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 10px 26px rgba(0,0,0,.45); opacity: 0; transform: translateY(14px) scale(.9); pointer-events: none; transition: opacity .25s ease, transform .25s ease, background .15s; }
 .totop.on { opacity: 1; transform: none; pointer-events: auto; }
 .totop:hover { background: var(--lime); color: var(--lime-ink); }
@@ -299,7 +320,7 @@ button.pchip:hover { border-color: var(--lime); color: var(--lime); }
 .sbox .v { font-family: var(--f-display); font-size: 50px; font-weight: 800; line-height: 1; }
 .sbox .v small { font-size: 24px; color: var(--mute); font-weight: 700; }
 .sbox .mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
-.sbox .mini div { background: var(--panel-2); border-radius: 10px; padding: 8px 10px; }
+.sbox .mini div { padding: 8px 0 0; border-top: 1px solid var(--line); }
 .sbox .mini b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 800; }
 .sbox .mini span { font-size: 11px; color: var(--mute); }
 .scol { display: grid; gap: 12px; align-content: start; }
@@ -365,18 +386,24 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
 
 .wx{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px 14px;margin:12px 0}
 .wx[hidden]{display:none}
-.wx .ic{font-size:30px;line-height:1}
+.wx .ic{display:block;width:30px;height:30px;color:var(--lime)}.wx .ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .wx .wxt{display:grid;gap:2px;min-width:150px}
 .wx .wxt b{font-family:var(--f-display);font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
 .wx .wxt span{font-size:11px;color:var(--mute)}
 .wx .wxgrid{flex:1 1 320px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.wx .wxgrid div{background:var(--panel-2);border-radius:10px;padding:6px 8px;display:grid;gap:2px}
+.wx .wxgrid div{padding:2px 0 2px 12px;border-left:1px solid var(--line);display:grid;gap:2px}
 .wx .wxgrid b{font-family:var(--f-display);font-size:19px;font-weight:800;line-height:1.1}
 .wx .wxgrid span{font-size:11px;color:var(--mute);line-height:1.25}
 .wx .wxterr{display:grid;gap:2px;justify-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:10px}
 .wx .wxterr span{font-size:11px;color:var(--mute)}
 .wx .wxterr b{font-family:var(--f-display);font-size:17px;font-weight:800;text-transform:uppercase}
 @media (max-width:640px){.wx .wxgrid{grid-template-columns:repeat(2,minmax(0,1fr));flex-basis:100%}}
+
+.themebtn { order: 2; display: inline-grid; place-items: center; width: 42px; height: 42px; flex: none; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 50%; padding: 0; }
+.themebtn span { display: none; }
+.themebtn:hover { border-color: var(--lime); color: var(--lime); }
+.themebtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 960px) { .titlerow .tools { width: 100%; flex-wrap: nowrap; } .titlerow .search { flex: 1; min-width: 0; } .themebtn { width: 40px; padding: 0; justify-content: center; flex: none; } .themebtn span { display: none; } }
 </style>
 
 <div class="app">
@@ -392,6 +419,7 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
       <div class="titlerow">
         <div><span class="eyebrow">Sezonul <span id="seasonlbl"></span></span><h1 id="h-top">Fotbal Miercuri <span>20:00</span></h1></div>
         <div class="tools">
+          <button class="themebtn" id="themebtn" type="button" aria-label="Schimbă tema" title="Schimbă tema"></button>
           <div class="search"><span id="sicon"></span><input id="q" type="search" placeholder="Caută un jucător" autocomplete="off" aria-label="Caută un jucător"><div class="sugg" id="sugg" hidden></div></div>
           <div class="chips" id="seasons" role="group" aria-label="Sezon"></div>
         </div>
@@ -421,7 +449,7 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
       <div class="sechead"><h2 id="h-ins">Cât de repede ne strângem</h2><p class="note">De marți dimineață, când se deschide lista, până apare al 12-lea. Doar o statistică de curiozitate: nu contează la puncte, la rating sau la cota de titular.</p></div>
       <div class="sgrid"><div class="scol"><div class="sbox num" id="sigbox"></div><div class="sbox wk" id="sigwk"></div></div>
         <div class="panel"><h3>Miercuri de miercuri: în cât timp s-a umplut lotul</h3><p class="note">Fiecare bară e o miercuri. Cu cât e mai scurtă, cu atât ne-am strâns mai repede. Treci peste o bară pentru dată.</p><div class="chartbox" id="sigch"></div>
-          <div class="legend"><span><i style="background:var(--lime)"></i>sub o oră</span><span><i style="background:#6f8f2b"></i>în aceeași zi</span><span><i style="background:var(--c-XT)"></i>abia a doua zi</span><span><i style="background:repeating-linear-gradient(45deg,#3a3f36 0 3px,transparent 3px 6px)"></i>lista n-a ajuns la 12</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>meci anulat</span></div></div></div>
+          <div class="legend"><span><i style="background:var(--lime)"></i>sub o oră</span><span><i style="background:var(--lime-2)"></i>în aceeași zi</span><span><i style="background:var(--c-XT)"></i>abia a doua zi</span><span><i style="background:repeating-linear-gradient(45deg,#3a3f36 0 3px,transparent 3px 6px)"></i>lista n-a ajuns la 12</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>meci anulat</span></div></div></div>
     </section>
 
     <section id="clasament" aria-labelledby="h-cls">
@@ -451,7 +479,7 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
       <div class="panel"><h3>Miercuri de miercuri</h3><p class="note">Câți s-au înscris și câți au jucat în fiecare miercuri. Linia albă = 12 locuri.</p><div class="chartbox" id="chart"></div>
         <div class="legend"><span><i style="background:var(--lime)"></i>Au jucat</span><span><i style="background:var(--line)"></i>Înscriși</span><span><i style="background:#fff"></i>12 locuri</span><span><i style="background:var(--c-AN)"></i>Anulat</span></div></div>
         <div class="panel"><h3>Cine se înscrie</h3><p class="note">Lotul de 12: a jucat, a intrat de pe rezervă sau a stat pe bancă.</p><div class="chartbox" id="act"></div>
-          <div class="legend"><span><i style="background:#199e70"></i>A jucat</span><span><i style="background:#c98500"></i>Intrat de pe rezervă</span><span><i style="background:#9085e9"></i>Rezervă</span></div></div>
+          <div class="legend"><span><i style="background:var(--c-J)"></i>A jucat</span><span><i style="background:var(--c-JP)"></i>Intrat de pe rezervă</span><span><i style="background:var(--c-R)"></i>Rezervă</span></div></div>
     </section>
 
     <section id="premii" aria-labelledby="h-aw">
@@ -637,6 +665,8 @@ let seasons = Object.keys(DATA.seasons).sort();
 let season = seasons[seasons.length - 1], view = "pts", at = null, timer = null;
 try { const s = localStorage.getItem("fm-season"); if (s && DATA.seasons[s]) season = s; const v = localStorage.getItem("fm-view"); if (v) view = v; } catch (e) {}
 const tierStyle = t => `--tc: var(${TIERS[t] || "--t-bronz"})`;
+/* în previzualizarea de pe claude.ai (iframe) adresa nu se poate schimba; acolo ignorăm */
+function safeRS(...a) { try { history.replaceState(...a); } catch (e) {} }
 const S_ = () => DATA.seasons[season];
 const byName = name => S_().players.find(p => p.name === name);
 
@@ -656,8 +686,9 @@ const FIG = n => `<svg class="fig" viewBox="0 0 100 100" aria-hidden="true">
   <path d="M38 52 L50 61 L62 52 L58 50 L50 56 L42 50 Z" fill="rgba(255,255,255,.6)"/>
   <text x="50" y="88" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="22" fill="rgba(255,255,255,.88)">${n}</text></svg>`;
 const cardName = n => { const m = n.match(/\(([^)]+)\)/); if (m) return m[1]; const w = n.split(" "); return n.length > 10 && w.length > 1 ? `${w[0]} ${w[1][0]}.` : n; };
-const card = p => `<span class="card t-${p.tier}" style="${tierStyle(p.tier)}"><span class="rt num">${p.rating}</span>${FIG(p.rank)}
-  <span class="nm" style="font-size:${Math.min(14, 128 / Math.max(1, p.name.length)).toFixed(1)}cqw">${esc(p.name)}</span><span class="st num">${p.pts}p · ${p.games}m</span></span>`;
+const TIER_LBL = { Diamant: "Top 3", "Platină": "Platină", Aur: "Aur", Argint: "Argint", Bronz: "Bronz" };
+const card = (p, full) => `<span class="card t-${p.tier}${full ? " full" : ""}" style="${tierStyle(p.tier)}"><span class="rt num">${p.rating}</span><span class="tr">${TIER_LBL[p.tier] || ""}</span>${FIG(p.rank)}
+  <span class="nm" style="font-size:${Math.min(14, 128 / Math.max(1, p.name.length)).toFixed(1)}cqw">${esc(p.name)}</span><span class="st num">${p.pts}p · ${p.games}m</span><span class="sx">${[["PCT", p.pts], ["MEC", p.games], ["PRZ", Math.round((p.rate || 0) * 100) + "%"], ["SER", p.cur ?? 0], ["REC", p.best ?? 0], ["RTR", (p.X || 0) + (p.XT || 0)]].map(([k, v]) => `<span><i>${k}</i>${v}</span>`).join("")}</span></span>`;
 
 function renderNav() {
   $("logo").innerHTML = ICON.ball; $("sicon").innerHTML = ICON.search;
@@ -806,7 +837,7 @@ function renderSignup(S) {
     const tip = `Miercuri ${r.w.label}: ${r.w.status !== "Jucat" ? "meci anulat" : v == null ? "lista n-a ajuns la 12" : "lot complet în " + fmtMin(v)}`;
     if (r.w.status !== "Jucat") g += `<rect class="b" x="${x}" y="${Y(CAP)}" width="${bwid}" height="${Y(0) - Y(CAP)}" fill="var(--panel-2)" stroke="var(--line)" stroke-dasharray="3 3" rx="2"><title>${tip}</title></rect>`;
     else if (v == null) g += `<rect class="b" x="${x}" y="${Y(CAP)}" width="${bwid}" height="${Y(0) - Y(CAP)}" fill="url(#sighatch)" rx="2"><title>${tip}</title></rect>`;
-    else { const c = v <= 60 ? "var(--lime)" : v < 870 ? "#6f8f2b" : "var(--c-XT)", y = Y(Math.max(v, 6));
+    else { const c = v <= 60 ? "var(--lime)" : v < 870 ? "var(--lime-2)" : "var(--c-XT)", y = Y(Math.max(v, 6));
       g += `<rect class="b" x="${x}" y="${y}" width="${bwid}" height="${Y(0) - y}" fill="${c}" rx="2"><title>${tip}</title></rect>`;
       if (v >= 870 && bw > 14) g += `<text x="${x + bwid / 2}" y="${Y(CAP) - 4}" fill="var(--c-XT)" font-size="10" text-anchor="middle">+1z</text>`; } });
   g += `<line x1="${pl}" x2="${w - pr}" y1="${Y(st.med)}" y2="${Y(st.med)}" stroke="var(--ink)" stroke-dasharray="5 4"/><text x="${pl + 6}" y="${Y(st.med) - 6}" fill="var(--ink)" font-size="11" paint-order="stroke" stroke="var(--panel)" stroke-width="4">de obicei: ${fmtMin(st.med)}</text>`;
@@ -1070,7 +1101,7 @@ function renderActivity(P) {
   const max = Math.max(1, ...P.map(p => p.games + p.R)), x = v => (w - pl - pr) * v / max;
   let g = "";
   P.forEach((p, i) => {
-    const y = i * rowH + 4, segs = [[p.games - p.JP, "#199e70", "a jucat"], [p.JP, "#c98500", "intrat de pe rezervă"], [p.R, "#9085e9", "rezervă"]];
+    const y = i * rowH + 4, segs = [[p.games - p.JP, "var(--c-J)", "a jucat"], [p.JP, "var(--c-JP)", "intrat de pe rezervă"], [p.R, "var(--c-R)", "rezervă"]];
     g += `<text x="${pl - 10}" y="${y + 13}" text-anchor="end" font-size="12" fill="var(--ink)">${esc(p.name)}</text>`;
     let cx = pl;
     segs.forEach(([v, c, l]) => { if (!v) return; g += `<rect x="${cx}" y="${y}" width="${Math.max(2, x(v) - 2)}" height="${rowH - 10}" rx="2" fill="${c}"><title>${esc(p.name)}: ${v} × ${l}</title></rect>`; cx += x(v); });
@@ -1140,7 +1171,7 @@ function openProfile(name, push = true) {
   const ptsS = S.snaps.map(sn => { const r = sn.find(x => x[0] === p.name); return r ? r[2] : null; });
   const bestRank = Math.min(...ranks.filter(r => r != null));
   $("pf").innerHTML = `<button class="x" id="pfx" aria-label="Închide profilul">${ICON.close}</button>
-    <div class="hero" style="${tierStyle(p.tier)}">${card(p)}
+    <div class="hero" style="${tierStyle(p.tier)}">${card(p, true)}
       <div><span class="eyebrow">Locul ${p.rank} din ${P.length} · cel mai bun loc: ${bestRank}</span><h2>${esc(p.name)}</h2>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" style="${tierStyle(p.tier)}">${esc(p.tier)}</span><span class="tag">${p.rank <= 12 ? "În lotul de 12" : p.rank <= 17 ? "Rezervă" : "În afara lotului"}</span><span class="tag">Prioritate: locul ${p.cotaRank}</span></div>
         <div class="facts num"><div><b>${p.pts}</b><span>Puncte</span></div><div><b>${p.games}</b><span>Meciuri</span></div><div><b>${pct(p.rate)}%</b><span>Prezență</span></div><div><b>${p.cota}</b><span>Cota ${DATA.settings.cota_weeks} săpt.</span></div></div>
@@ -1160,13 +1191,13 @@ function openProfile(name, push = true) {
     <div class="grid2">
       <div class="panel"><span class="eyebrow">Premii și insigne</span>${aw.length || bd.length ? `<div class="badges" style="grid-template-columns:1fr">${aw.map(a => `<div class="badge"><span class="ic">${ICON[AWARD_ICON[a[0]] || "trophy"]}</span><span class="bn">${esc(a[0])}</span><span></span><span class="bd">${esc(a[2])}</span></div>`).join("")}${bd.map(b => `<div class="badge"><span class="ic">${ICON[BADGE_ICON[b[0]] || "trophy"]}</span><span class="bn">${esc(b[1])}</span><span></span><span class="bd">${esc(b[2])}</span></div>`).join("")}</div>` : '<p class="note">Încă nicio insignă. Prima e la 2 salvări sau 3 liste de rezerve.</p>'}</div>
       <div class="panel"><span class="eyebrow">Luni cu prezență la toate meciurile</span>${months.length ? `<div class="chips">${months.map(m => `<span class="pchip">${m}</span>`).join("")}</div>` : '<p class="note">Încă nicio lună cu toate meciurile jucate.</p>'}</div></div>`;
-  lineChart($("pfrank"), labels, [{ name: p.name, label: "locul", color: "#c4f042", vals: ranks }], { invert: true, min: 1, max: Math.max(12, ...ranks.filter(r => r != null)), pr: 60, aria: "Locul în clasament pe săptămâni", tipTitle: i => `După ${labels[i]}` });
-  lineChart($("pfpts"), labels, [{ name: "Liderul", label: "lider", color: "#9aa194", dash: "4 4", vals: leader }, { name: p.name, label: p.name.split(" ")[0], color: "#c4f042", vals: ptsS }], { pr: 80, aria: "Puncte cumulate față de lider", tipTitle: i => `După ${labels[i]}` });
+  lineChart($("pfrank"), labels, [{ name: p.name, label: "locul", color: "var(--lime)", vals: ranks }], { invert: true, min: 1, max: Math.max(12, ...ranks.filter(r => r != null)), pr: 60, aria: "Locul în clasament pe săptămâni", tipTitle: i => `După ${labels[i]}` });
+  lineChart($("pfpts"), labels, [{ name: "Liderul", label: "lider", color: "var(--mute)", dash: "4 4", vals: leader }, { name: p.name, label: p.name.split(" ")[0], color: "var(--lime)", vals: ptsS }], { pr: 80, aria: "Puncte cumulate față de lider", tipTitle: i => `După ${labels[i]}` });
   $("pfx").onclick = () => $("prof").close();
   const d = $("prof"); if (!d.open) d.showModal(); d.scrollTop = 0;
-  if (push) history.replaceState(null, "", "#p-" + slug(p.name));
+  if (push) safeRS(null, "", "#p-" + slug(p.name));
 }
-$("prof").addEventListener("close", () => { if (location.hash.startsWith("#p-")) history.replaceState(null, "", location.pathname + location.search); });
+$("prof").addEventListener("close", () => { if (location.hash.startsWith("#p-")) safeRS(null, "", location.pathname + location.search); });
 $("prof").addEventListener("click", e => { if (e.target === $("prof")) $("prof").close(); });
 document.addEventListener("click", e => { const t = e.target.closest("[data-p]"); if (!t || t.closest("#prof .strip")) return; openProfile(t.dataset.p); $("sugg").hidden = true; });
 function fromHash() { const h = decodeURIComponent(location.hash); if (!h.startsWith("#p-")) return; const p = S_().players.find(x => slug(x.name) === h.slice(3)); if (p) openProfile(p.name, false); }
@@ -1193,7 +1224,7 @@ render();
 stopPlay();
 fromHash();
 /* sus pe pagină: logo + buton */
-(() => { const up = e => { if (e) e.preventDefault(); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); if (location.hash && !location.hash.startsWith("#p-")) history.replaceState(null, "", location.pathname + location.search); };
+(() => { const up = e => { if (e) e.preventDefault(); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); if (location.hash && !location.hash.startsWith("#p-")) safeRS(null, "", location.pathname + location.search); };
   const b = $("totop"); b.addEventListener("click", up); document.querySelector(".brand").addEventListener("click", up);
   let raf = 0; const tog = () => { raf = 0; b.classList.toggle("on", window.scrollY > 600); };
   window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tog); }, { passive: true }); tog(); })();
@@ -1226,9 +1257,18 @@ loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
 /* vremea la meci: Open-Meteo, fără cheie; ia orele 20:00–21:00 din următoarea miercuri */
 (async () => {
   const el = document.getElementById("wx"); if (!el) return;
-  const LAT = 46.7585, LON = 23.5786; /* aproximativ, lângă Iulius Mall; de verificat cu terenul exact */
+  const LAT = 46.7715, LON = 23.6265; /* Gheorgheni, lângă Iulius Mall (aproximativ) */
   const DIR = ["N","NE","E","SE","S","SV","V","NV"];
-  const ICON = c => c == null ? "🌡️" : c === 0 ? "☀️" : c <= 2 ? "⛅" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 77 ? "🌨️" : c <= 82 ? "🌧️" : c <= 86 ? "🌨️" : "⛈️";
+  const CL = '<path d="M7 18h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 11.2 3.5 3.5 0 0 0 7 18z"/>';
+  const SV = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    part: '<path d="M8 3v1.5M3.5 7.5H5M4.6 4.6l1 1M11.4 4.6l-1 1"/><path d="M5.6 9.6A3.5 3.5 0 0 1 11.5 7"/>' + '<path d="M9 20h8a3.5 3.5 0 0 0 .5-6.96A5 5 0 0 0 8 14.2 3 3 0 0 0 9 20z"/>',
+    cloud: CL, fog: '<path d="M4 9h16M4 13h16M6 17h12"/>',
+    drizzle: CL.replace('18h10', '15h10').replace('18z', '15z') + '<path d="M9 19l-.5 1.5M13 19l-.5 1.5"/>',
+    rain: '<path d="M7 14h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 7.2 3.5 3.5 0 0 0 7 14z"/><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>',
+    snow: '<path d="M7 14h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 7.2 3.5 3.5 0 0 0 7 14z"/><path d="M8 18h.01M12 20h.01M16 18h.01"/>',
+    storm: '<path d="M7 14h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 7.2 3.5 3.5 0 0 0 7 14z"/><path d="M12.5 15l-2 3.5h3l-2 3.5"/>' };
+  const ICON = c => `<svg viewBox="0 0 24 24" aria-hidden="true">${SV[c == null ? "cloud" : c === 0 ? "sun" : c <= 2 ? "part" : c === 3 ? "cloud" : c <= 48 ? "fog" : c <= 57 ? "drizzle" : c <= 67 ? "rain" : c <= 77 ? "snow" : c <= 82 ? "rain" : c <= 86 ? "snow" : "storm"]}</svg>`;
   const pad = n => String(n).padStart(2, "0");
   const now = new Date(); const nx = new Date(now); nx.setHours(0, 0, 0, 0);
   const dw = (3 - nx.getDay() + 7) % 7; nx.setDate(nx.getDate() + (dw === 0 && now.getHours() >= 21 ? 7 : dw));
@@ -1251,16 +1291,31 @@ loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
     else if (rain24 > 2 || mmM >= 0.1) terr = "Ud";
     else if (rain24 > 0 || mmM > 0) terr = "Umed";
     else terr = "Uscat";
-    document.getElementById("wxic").textContent = ICON(code);
+    document.getElementById("wxic").innerHTML = ICON(code);
     document.getElementById("wxwhen").textContent = `Miercuri ${pad(nx.getDate())}.${pad(nx.getMonth() + 1)} · 20:00–21:00`;
     document.getElementById("wxgrid").innerHTML =
       `<div><b>${Math.round(at("temperature_2m"))}°</b><span>se simte ca ${Math.round(at("apparent_temperature"))}°</span></div>` +
       `<div><b>${Math.round(at("relative_humidity_2m"))}%</b><span>umiditate</span></div>` +
       (prob === 0 && mmM < 0.1 ? `<div><b>Fără ploaie</b><span>în intervalul meciului</span></div>` : `<div><b>${prob}%</b><span>șansă de ploaie${mmM >= 0.1 ? ", " + mmM.toFixed(1).replace(".", ",") + " mm" : ""}</span></div>`) +
-      `<div><b>${Math.round(wind)} km/h</b><span>vânt ${dir}, rafale până la ${Math.round(gust)} km/h</span></div>`;
+      `<div><b>${Math.round(wind)} km/h</b><span>vânt ${dir}, rafale ${Math.round(gust)} km/h</span></div>`;
     document.getElementById("wxterr").textContent = terr;
     el.hidden = false;
   } catch (e) { /* fără date: widgetul rămâne ascuns */ }
+})();
+</script>
+<script>
+/* tema: întunecat / luminos; implicit după setarea telefonului; alegerea se ține minte în browser */
+(() => {
+  const b = document.getElementById("themebtn"), root = document.documentElement, mq = matchMedia("(prefers-color-scheme: light)");
+  let saved = null; try { saved = localStorage.getItem("fm-theme"); } catch (e) {}
+  if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+  const cur = () => root.dataset.theme || (mq.matches ? "light" : "dark");
+  const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
+  const paint = () => { const t = cur(); if (b) b.innerHTML = t === "dark" ? `${SUN}<span>Luminos</span>` : `${MOON}<span>Întunecat</span>`;
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0B1018" : "#F3F5F8"; };
+  if (b) b.addEventListener("click", () => { const t = cur() === "dark" ? "light" : "dark"; root.dataset.theme = t; try { localStorage.setItem("fm-theme", t); } catch (e) {} paint(); });
+  mq.addEventListener?.("change", paint); paint();
 })();
 </script>
 </html>
