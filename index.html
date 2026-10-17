@@ -417,7 +417,10 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
 .who .av.avp .ph.pl { display: none; }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .who .av.avp .ph.pd { display: none; } :root:not([data-theme="dark"]) .who .av.avp .ph.pl { display: block; } }
 :root[data-theme="light"] .who .av.avp .ph.pd { display: none; } :root[data-theme="light"] .who .av.avp .ph.pl { display: block; }
-.sharebtn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: #25D366; color: #06210f; font-weight: 800; font-size: 14px; cursor: pointer; }
+.sharebtn { display: inline-grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; border: 1px solid color-mix(in oklab, var(--lime) 55%, var(--line)); background: var(--panel); color: var(--lime); cursor: pointer; flex: none; transition: background .15s, color .15s, transform .15s; }
+.sht { display: flex; align-items: center; gap: 14px; }
+.sharebtn:hover { background: var(--lime); color: var(--lime-ink); transform: translateY(-1px); }
+.sharebtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .sharebtn[hidden] { display: none; }
 .card .adm { position: absolute; left: 9%; top: 41%; z-index: 3; font-family: var(--f-body); font-weight: 800; font-size: 5.2cqw; letter-spacing: .1em; line-height: 1; padding: 1.4cqw 2.4cqw; border-radius: 99px; background: #0B1018; color: #C8F03C; border: 1px solid rgba(200,240,60,.6); }
 .card.full .adm { top: 38%; font-size: 4.6cqw; }
@@ -524,7 +527,7 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
     </section>
 
     <section id="inscrieri" aria-labelledby="h-ins" hidden>
-      <div class="sechead"><h2 id="h-ins">Cât de repede ne strângem</h2><button class="sharebtn" id="sigshare" type="button" hidden onclick="shareSignup()">Trimite pe WhatsApp</button><p class="note">De marți dimineață, când se deschide lista, până apare al 12-lea. Doar o statistică de curiozitate: nu contează la puncte, la rating sau la cota de titular.</p></div>
+      <div class="sechead"><div class="sht"><h2 id="h-ins">Cât de repede ne strângem</h2><button class="sharebtn" id="sigshare" type="button" hidden onclick="shareSignup()" aria-label="Distribuie" title="Distribuie"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button></div><p class="note">De marți dimineață, când se deschide lista, până apare al 12-lea. Doar o statistică de curiozitate: nu contează la puncte, la rating sau la cota de titular.</p></div>
       <div class="sgrid"><div class="scol"><div class="sbox num" id="sigbox"></div><div class="sbox wk" id="sigwk"></div></div>
         <div class="panel"><h3>Miercuri de miercuri: în cât timp s-a umplut lotul</h3><p class="note">Fiecare bară e o miercuri. Cu cât e mai scurtă, cu atât ne-am strâns mai repede. Treci peste o bară pentru dată.</p><div class="chartbox" id="sigch"></div>
           <div class="legend"><span><i style="background:var(--lime)"></i>sub o oră</span><span><i style="background:var(--lime-2)"></i>în aceeași zi</span><span><i style="background:var(--c-XT)"></i>abia a doua zi</span><span><i style="background:repeating-linear-gradient(45deg,#3a3f36 0 3px,transparent 3px 6px)"></i>lista n-a ajuns la 12</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>meci anulat</span></div></div></div>
@@ -943,10 +946,11 @@ async function shareSignup() {
   const blob = await new Promise(r => c.toBlob(r, "image/png")), file = new File([blob], `fotbal-${d}.png`, { type: "image/png" });
   try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: txt }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
-  window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+  try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) {}
+  window.open(WA_GROUP, "_blank", "noopener");
 }
 function renderSignup(S) {
-  const st = sigStats(S), sec = $("inscrieri"); if (!st) { sec.hidden = true; return; } sec.hidden = false; $("sigshare").hidden = !IS_ADMIN;
+  const st = sigStats(S), sec = $("inscrieri"); if (!st) { sec.hidden = true; return; } sec.hidden = false; $("sigshare").hidden = false;
   const h = Math.floor(st.med / 60), m = Math.round(st.med % 60);
   $("sigbox").innerHTML = `<span class="eyebrow">Lotul de 12 se strânge în</span><span class="v">${h ? `${h}<small>h</small> ` : ""}${String(m).padStart(h ? 2 : 1, "0")}<small>m</small></span>
     <span class="s muted" style="font-size:12px">de obicei (jumătate din miercuri au fost mai rapide)</span>
@@ -1016,7 +1020,7 @@ function radarPanel(p) {
   const VOTE_OPEN = false; /* pune true când trimite Sese linkurile de vot */
   const wbtn = !VOTE_OPEN ? "" : `<a class="wabtn2" href="${WA_GROUP}" target="_blank" rel="noopener" data-msg="${esc(wmsg)}" onclick="askVotes(this)">Cere voturi în grup</a><span class="wahint">Mesajul se copiază singur. În grup ții apăsat, alegi „Lipește” și trimiți.</span>`;
   const motiv = !VOTE_OPEN ? `<span class="motiv">Votul se deschide în curând: fiecare primește de la Sese un link personal pe WhatsApp. Fii pe fază, că primii 5 colegi care te notează îți deblochează hexagonul.</span>` : `<span class="motiv">${need === 1 ? "Mai trebuie un singur vot!" : n ? `Mai trebuie ${need} voturi.` : "Încă niciun vot."} E profilul tău? Cere-le colegilor să te noteze și notează-i și tu: la 10 colegi notați primești +5 puncte.</span>`;
-  const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Se deblochează la 5 voturi de la colegi</b><span>${n ? `Are ${n} din 5 voturi până acum. Mai ${5 - n === 1 ? "lipsește unul" : `lipsesc ${5 - n}`}!` : "Colegii votează din linkul personal primit pe WhatsApp."}</span>${motiv}${wbtn}</div></div>`;
+  const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Se deblochează la 5 voturi de la colegi</b><span>${n ? `Are ${n} din 5 voturi până acum. Mai ${5 - n === 1 ? "lipsește unul" : `lipsesc ${5 - n}`}!` : VOTE_OPEN ? "Colegii votează din linkul personal primit pe WhatsApp." : ""}</span>${motiv}${wbtn}</div></div>`;
   return `<div class="panel${ok ? "" : " lockp"}"><span class="eyebrow">Cum îl văd colegii${ok ? ` · din ${n} voturi` : ""}</span>
     <div class="rad ${ok ? "" : "lock"}"><svg class="art" viewBox="0 0 300 290" role="img" aria-label="${ok ? "Notele de la colegi pe 6 criterii" : "Încă blocat"}">${g}</svg>
       <div class="art rsc"><b>${ok ? f1(ovr) : "3,6"}</b><span>nota pe teren de la colegi, din 5 (fără bere)</span></div>${ok ? "" : lock}</div></div>${ok ? "" : `<div class="lockline"><span class="lk2">🔒</span><div><b>Hexagonul se deblochează la 5 voturi de la colegi</b><span class="dots5">${[0, 1, 2, 3, 4].map(i => `<i class="${i < n ? "on" : ""}"></i>`).join("")}<em>${Math.min(n, 5)} din 5</em></span>${motiv}${wbtn}</div></div>`}`;
