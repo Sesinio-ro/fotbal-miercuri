@@ -379,6 +379,11 @@ dialog#prof::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px);
 .rad .lb { fill: var(--ink); font: 800 12px var(--f-body); }
 .rad .lv { fill: var(--lime); font: 800 12px var(--f-body); }
 .rad .rsc b { font-family: var(--f-display); font-size: 46px; color: var(--lime); line-height: 1; display: block; }
+.rhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.ravg { display: flex; align-items: center; gap: 9px; padding: 6px 12px 6px 10px; border-radius: 14px; background: color-mix(in oklab, var(--lime) 12%, var(--panel-2)); border: 1px solid color-mix(in oklab, var(--lime) 45%, var(--line)); flex: none; }
+.ravg b { font-family: var(--f-display); font-size: 34px; line-height: 1; color: var(--lime); }
+.ravg span { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; line-height: 1.25; color: var(--ink); }
+@media (max-width: 460px) { .rhead { flex-direction: column-reverse; align-items: stretch; } .ravg { justify-self: start; align-self: flex-start; } }
 .rad .cmp { display: grid; gap: 9px; align-content: center; }
 .cmp .cmph b { font-size: 14px; display: block; } .cmp .cmph span { font-size: 12px; color: var(--mute); display: block; margin-top: 2px; }
 .cmp u { display: inline-block; text-decoration: none; vertical-align: middle; } .cmp .lg1 { width: 14px; height: 7px; border-radius: 3px; background: var(--lime); } .cmp .lg2 { width: 3px; height: 13px; background: var(--ink); }
@@ -1067,7 +1072,8 @@ function radarPanel(p) {
   const lock = `<div class="lk"><div><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><b>Încă niciun vot de la colegi</b><span>Hexagonul apare de la primul vot primit.</span>${motiv}${wbtn}</div></div>`;
   const rows = K.map((k, i) => `<div class="cr"><div class="ch"><span>${k}</span><b>${ok ? f1(v[i]) : "?"} <i>vs ${T.length ? f1(avg[i]) : "?"}</i></b></div><div class="ct"><span class="cf" style="width:${(v[i] / 5 * 100).toFixed(1)}%"></span>${T.length ? `<span class="cm" style="left:${(avg[i] / 5 * 100).toFixed(1)}%"></span>` : ""}</div></div>`).join("");
   const few = ok && n < 5 ? `<span class="few">⚠️ Doar ${n} ${n === 1 ? "vot" : "voturi"} până acum, nota se poate schimba.</span>` : "";
-  return `<div class="panel"><span class="eyebrow">Cum îl văd colegii · nota e din ${n} ${n === 1 ? "vot" : "voturi"}</span>
+  const pavg = ok ? v.slice(0, 5).reduce((x, y) => x + y, 0) / 5 : null;
+  return `<div class="panel"><div class="rhead"><span class="eyebrow">Cum îl văd colegii · nota e din ${n} ${n === 1 ? "vot" : "voturi"}</span>${pavg != null ? `<div class="ravg" title="Media celor 5 criterii de pe teren, fără bere"><b class="num">${f1(pavg)}</b><span>nota medie<br>din 5 · fără bere</span></div>` : ""}</div>
     <div class="rad ${ok ? "" : "lock"}"><svg class="art" viewBox="0 0 300 290" role="img" aria-label="${ok ? "Notele de la colegi pe 6 criterii" : "Încă niciun vot"}">${g}</svg>
       <div class="art cmp"><div class="cmph"><b>Nota lui vs media top 20</b><span><u class="lg1"></u> el · <u class="lg2"></u> media primilor ${T.length} din clasament · scara 1–5</span></div>${rows}${few}</div>${ok ? "" : lock}</div></div>`;
 }
