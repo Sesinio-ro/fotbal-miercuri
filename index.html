@@ -1471,6 +1471,13 @@ fromHash();
   window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tog); }, { passive: true }); tog(); })();
 loadNews().then(n => { MANUAL_NEWS = n; renderTicker(); }).catch(() => {});
 loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); const d = $("prof"); if (d.open) { const h = decodeURIComponent(location.hash); const p = S_().players.find(x => slug(x.name) === h.slice(3)); if (p) openProfile(p.name, false); } }).catch(() => {});
+/* contor de vizualizări (abacus, fără cont; numără o dată pe sesiune de browser, nu se resetează la update-uri) */
+(() => { if (!/github\.io$/.test(location.hostname)) return;
+  const NS = "sesinio-fotbal-miercuri", K = "views"; let first = true;
+  try { first = !sessionStorage.getItem("fm-viewed"); sessionStorage.setItem("fm-viewed", "1"); } catch (e) {}
+  fetch(`https://abacus.jasoncameron.dev/${first ? "hit" : "get"}/${NS}/${K}`).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d || typeof d.value !== "number") return; const el = $("views");
+    el.textContent = `👀 ${d.value.toLocaleString("ro-RO")} ${d.value === 1 ? "vizualizare" : "vizualizări"}`; el.hidden = false; }).catch(() => {}); })();
 /* favicon: minge care se rotește (fundal transparent, merge pe tab-uri închise și deschise) */
 (() => {
   const B_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#f4f6f0" stroke="#11130c" stroke-width="3"/><path d="M32 22l9.5 6.9-3.6 11.2H26.1l-3.6-11.2z" fill="#11130c"/><path d="M32 22V7M41.5 28.9l13.6-4.5M37.9 40.1l8.6 11.6M26.1 40.1l-8.6 11.6M22.5 28.9 8.9 24.4" stroke="#11130c" stroke-width="3" stroke-linecap="round"/><path d="M26 6.5 32 9l6-2.5M55.5 22l-1 6.5 4 4.5M48 54l-6.5-.5-3.5 5M16 54l6.5-.5 3.5 5M8.5 22l1 6.5-4 4.5" fill="none" stroke="#11130c" stroke-width="3" stroke-linejoin="round"/></svg>`;
