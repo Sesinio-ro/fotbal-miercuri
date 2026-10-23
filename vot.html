@@ -10,10 +10,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
 :root { color-scheme: dark; --bg:#0B1018; --panel:#121A26; --panel-2:#182233; --line:#223044; --ink:#EEF2F7; --mute:#8A97AA; --lime:#C8F03C; --volt:#C8F03C; --lime-ink:#0B1018; --lose:#5b6a80;
-  --t-bronz:#C48A5E; --t-argint:#C3CBD4; --t-aur:#D9B85A; --t-platina:#7FB3E6; --t-diamant:#C8F03C; --c-NS:#ef5b5b;
+  --warm:#F0A53B; --t-bronz:#C48A5E; --t-argint:#C3CBD4; --t-aur:#D9B85A; --t-platina:#7FB3E6; --t-diamant:#C8F03C; --c-NS:#ef5b5b;
   --f-display:"Barlow Condensed","Arial Narrow",sans-serif; --f-body:"Manrope","Segoe UI",system-ui,sans-serif; }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { color-scheme:light; --bg:#F3F5F8; --panel:#FFFFFF; --panel-2:#EDF1F5; --line:#D9DFE8; --ink:#0E1622; --mute:#5A6678; --lime:#4F7A00; --lime-ink:#FFFFFF; --lose:#A9B3C2; } }
-:root[data-theme="light"] { color-scheme:light; --bg:#F3F5F8; --panel:#FFFFFF; --panel-2:#EDF1F5; --line:#D9DFE8; --ink:#0E1622; --mute:#5A6678; --lime:#4F7A00; --lime-ink:#FFFFFF; --lose:#A9B3C2; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { color-scheme:light; --bg:#F3F5F8; --panel:#FFFFFF; --panel-2:#EDF1F5; --line:#D9DFE8; --ink:#0E1622; --mute:#5A6678; --lime:#4F7A00; --lime-ink:#FFFFFF; --lose:#A9B3C2; --warm:#D9822B; } }
+:root[data-theme="light"] { --warm:#D9822B; color-scheme:light; --bg:#F3F5F8; --panel:#FFFFFF; --panel-2:#EDF1F5; --line:#D9DFE8; --ink:#0E1622; --mute:#5A6678; --lime:#4F7A00; --lime-ink:#FFFFFF; --lose:#A9B3C2; }
 * { box-sizing:border-box; }
 html { background:var(--bg); scroll-behavior:smooth; }
 html.lockscroll, html.lockscroll body { overflow:hidden; }
@@ -62,6 +62,8 @@ td.few { color:var(--mute); }
 tr.sel td { background:color-mix(in oklab, var(--lime) 9%, var(--panel)); }
 .ck { display:inline-grid; place-items:center; width:44px; height:44px; vertical-align:middle; cursor:pointer; }
 .ck input { width:20px; height:20px; accent-color:var(--lime); margin:0; cursor:pointer; }
+.hleg { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-size:12px; color:var(--mute); }
+.hleg span { display:inline-flex; align-items:center; gap:6px; } .hleg i { width:22px; height:14px; border-radius:4px; border:1px solid var(--line); }
 .fewtag { font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--mute); border:1px solid var(--line); border-radius:999px; padding:1px 7px; margin-left:6px; }
 .cmark { margin-left:4px; }
 /* bara de selecție */
@@ -203,6 +205,7 @@ footer { color:var(--mute); font-size:12px; text-align:center; }
     <div class="sechead"><div style="display:grid;gap:4px"><h2 id="h-l">Notele colegilor</h2><p class="note">Nota generală = media celor 5 criterii de pe teren, fără A treia repriză. Apasă pe antet ca să sortezi. Bifează doi jucători ca să vezi profil lângă profil.</p></div>
       <div class="tools"><input type="search" id="q" placeholder="Caută jucător" aria-label="Caută jucător"><label><input type="checkbox" id="all"> Arată și jucătorii cu sub 3 voturi</label></div></div>
     <div class="tablewrap"><table id="tbl"></table></div>
+    <div class="hleg" id="hleg" aria-label="Legenda culorilor"></div>
     <p class="note" id="foot"></p>
   </section>
   <footer id="stat"></footer>
@@ -351,13 +354,17 @@ function val(p, k) { return k === "gen" ? gen(p) : k === "n" ? p.n : k === "name
 function rows() { const q = query.trim().toLowerCase(); let L = DATA.filter(p => p.n >= (showAll ? 1 : MIN) && (!q || p.name.toLowerCase().includes(q)));
   L.sort((a, b) => { const x = val(a, sort.k), y = val(b, sort.k); const c = sort.k === "name" ? x.localeCompare(y, "ro") : (x - y);
     return (c * sort.dir) || (gen(b) - gen(a)) || (b.n - a.n) || a.name.localeCompare(b.name, "ro"); }); return L; }
-function heat(v) { return `background:color-mix(in oklab, var(--lime) ${Math.max(0, (v - 1) / 4 * 34).toFixed(0)}%, transparent)`; }
+/* 5 trepte în jurul lui 3 (ok): sub 2,5 și 2,5–2,9 chihlimbar, 3,0–3,4 neutru, 3,5–3,9 și 4+ verde */
+const BANDS = [["sub 2,5", 2.0, "--warm", 40], ["2,5 – 2,9", 2.7, "--warm", 18], ["3,0 – 3,4", 3.2, null, 0], ["3,5 – 3,9", 3.7, "--lime", 20], ["4,0 sau mai mult", 4.5, "--lime", 42]];
+function band(v) { const x = r1(v); return x < 2.5 ? 0 : x < 3 ? 1 : x < 3.5 ? 2 : x < 4 ? 3 : 4; }
+function heat(v, soft) { const b = BANDS[band(v)]; return b[2] ? `background:color-mix(in oklab, var(${b[2]}) ${soft ? Math.round(b[3] * .45) : b[3]}%, transparent)` : ""; }
 function renderTable() {
   const L = rows(), cols = [["name", "Jucător", 1], ...KS.map((l, i) => [i, l]), ["gen", "Generală"], ["n", "Voturi"]];
   const th = cols.map(([k, l, left]) => `<th class="${left ? "l nmh" : ""}${sort.k === k ? " on" : ""}" aria-sort="${sort.k === k ? (sort.dir < 0 ? "descending" : "ascending") : "none"}"><button data-k="${k}">${l}<span class="ar">${sort.k === k ? (sort.dir < 0 ? "▼" : "▲") : ""}</span></button></th>`).join("");
   $("tbl").innerHTML = `<thead><tr><th style="width:40px"><span style="font-size:11px">#</span></th>${th}</tr></thead><tbody>${L.map((p, i) => {
     const few = p.n < MIN, on = SEL.includes(p.name);
-    return `<tr class="${i < 3 && sort.k === "gen" && !few ? "t" + (i + 1) : ""}${on ? " sel" : ""}"><td class="rk">${i + 1}</td><td class="nm" title="${esc(p.name)}"><label class="ck"><input type="checkbox" class="pk" data-n="${esc(p.name)}" ${on ? "checked" : ""} aria-label="Alege ${esc(p.name)} pentru comparație"></label>${esc(p.name)}${CHAMPS.includes(p.name) ? '<span class="cmark" title="Campion la nota generală">🏅</span>' : ""}${few ? '<span class="fewtag">sub 3 voturi</span>' : ""}</td>${p.v.map((v, j) => `<td class="${sort.k === j ? "on" : ""}" style="${heat(v)}">${f1(v)}</td>`).join("")}<td class="g${sort.k === "gen" ? " on" : ""}" style="${heat(gen(p))}">${f1(gen(p))}</td><td class="${few ? "few" : ""}${sort.k === "n" ? " on" : ""}">${p.n}</td></tr>`; }).join("")}</tbody>`;
+    return `<tr class="${i < 3 && sort.k === "gen" && !few ? "t" + (i + 1) : ""}${on ? " sel" : ""}"><td class="rk">${i + 1}</td><td class="nm" title="${esc(p.name)}"><label class="ck"><input type="checkbox" class="pk" data-n="${esc(p.name)}" ${on ? "checked" : ""} aria-label="Alege ${esc(p.name)} pentru comparație"></label>${esc(p.name)}${CHAMPS.includes(p.name) ? '<span class="cmark" title="Campion la nota generală">🏅</span>' : ""}${few ? '<span class="fewtag">sub 3 voturi</span>' : ""}</td>${p.v.map((v, j) => `<td class="${sort.k === j ? "on" : ""}" style="${heat(v, j === 5)}">${f1(v)}</td>`).join("")}<td class="g${sort.k === "gen" ? " on" : ""}" style="${heat(gen(p))}">${f1(gen(p))}</td><td class="${few ? "few" : ""}${sort.k === "n" ? " on" : ""}">${p.n}</td></tr>`; }).join("")}</tbody>`;
+  $("hleg").innerHTML = BANDS.map(b => `<span><i style="${b[2] ? `background:color-mix(in oklab, var(${b[2]}) ${b[3]}%, transparent)` : ""}"></i>${b[0]}</span>`).join("") + "<span>Bere 🍺 e mai estompată: nu intră în nota generală</span>";
   $("foot").textContent = L.length ? `${L.length} ${L.length === 1 ? "jucător" : "jucători"}. ${DATA.filter(p => p.n < MIN).length && !showAll ? `Cei cu sub ${MIN} voturi nu apar în listă.` : ""}` : "Niciun jucător găsit.";
 }
 /* selecție + bara de jos */
