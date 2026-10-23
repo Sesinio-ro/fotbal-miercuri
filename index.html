@@ -846,7 +846,7 @@ const ICON = {
 };
 const AWARD_ICON = { "Nelipsitul": "medal", "Ironman": "iron", "Seria sezonului": "flame", "Salvatorul": "life", "Al 13-lea jucător": "shirt" };
 const BADGE_ICON = { faza: "bolt", maraton: "watch", foc: "flame", salvator: "life", gata: "bench", cuvant: "hand", revenire: "back" };
-const NAV = [["prezentare", "Prezentare", "home"], ["lot", "Lotul de 12", "pitch"], ["inscrieri", "Viteza listei", "watch"], ["clasament", "Clasament", "table"], ["statistici", "Statistici", "stats"], ["note", "Notele colegilor", "table"], ["premii", "Premii și insigne", "trophy"], ["harta", "Harta prezenței", "heat"], ["regulament", "Regulament", "book"]];
+const NAV = [["prezentare", "Prezentare", "home"], ["lot", "Lotul de 12", "pitch"], ["inscrieri", "Viteza listei", "watch"], ["clasament", "Clasament", "table"], ["statistici", "Statistici", "stats"], ["premii", "Premii și insigne", "trophy"], ["harta", "Harta prezenței", "heat"], ["regulament", "Regulament", "book"]];
 const UP = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1 9 8H1z" fill="currentColor"/></svg>';
 const DOWN = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 9 1 2h8z" fill="currentColor"/></svg>';
 const RACE = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181"];
@@ -1555,7 +1555,7 @@ function mvSim(P, rates, mi, nw, ctrl, N, seed, track) {
   return { res, pats, N };
 }
 const mvPc = x => Math.round(x * 20) * 5;
-const mvPt = x => { const r = mvPc(x); return r === 0 && x > 0 ? '<span class="pc lo">sub 5%</span>' : `<span class="pc">${r}%</span>`; };
+const mvPt = x => { const r = mvPc(x); return r === 0 && x > 0 ? '<span class="pc lo">&lt;5%</span>' : `<span class="pc">${r}%</span>`; };
 const mvJoin = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " și " + a[a.length - 1];
 const mvNm = q => { const m = q.name.match(/\(([^)]+)\)/); return m ? m[1] : q.name; };
 function mvFall(P, mi, up) { const me = P[mi], q = P.find(z => z.rank === me.rank + (up ? -1 : 1)); return q ? (up ? `ar trebui să joci tu și să lipsească ${mvNm(q)}` : `ar trebui să lipsești tu și să joace ${mvNm(q)}`) : ""; }
@@ -1584,13 +1584,13 @@ function moveSection(p) {
       const why = k === 1 && v === 0 ? mvNm(dn) + " e la " + pts(p.pts - dn.pts) + " sub tine" : (mvCause(m1, -k, P) || mvFall(P, mi, false));
       rowD.push(row(mvPt(v), `▼ −${k} ${k === 1 ? "loc" : "locuri"}`, why)); }); }
   const sh = (pr, f) => { let c = 0; for (const k in pr.res) if (f(+k)) c += pr.res[k]; return c / pr.N; };
-  const pct = v => { const r = mvPc(v); return r === 0 && v > 0 ? "sub 5%" : r + "%"; };
+  const pct = v => { const r = mvPc(v); return r === 0 && v > 0 ? "<5%" : r + "%"; };
   const pU = sh(m1, k => k > 0), pD = sh(m1, k => k < 0), pS = 1 - pU - pD;
   const lotP = sh(m1, k => p.rank - k <= 12), selfP = Math.round(100 * rates[mi]);
   const play1 = mvSim(P, rates, mi, 1, () => ({ play: true }), N, sd + 1), abs1 = mvSim(P, rates, mi, 1, () => ({ play: false }), N, sd + 2);
   if (up) { const a = sh(play1, k => k > 0); if (Math.abs(a - pU) >= .05) rowU.push(row(mvPt(a), "▲ +1 loc", "dacă joci miercurea viitoare")); rowU.push(row(mvPt(sh(all4, k => k > 0)), "▲ +1 loc", "dacă joci în următoarele 4 meciuri")); }
   if (dn) { const a = sh(abs1, k => k < 0); if (Math.abs(a - pD) >= .05) rowD.push(row(mvPt(a), "▼ −1 loc", "dacă lipsești miercurea viitoare")); rowD.push(row(mvPt(sh(miss1, k => k < 0)), "▼ −1 loc", "dacă lipsești o dată în următoarele 4 meciuri")); }
-  const sum = `<div class="mvsum">Îți păstrezi locul: <b>${pct(pS)}</b> · Șanse să joci: <b>${selfP}%</b> · ${p.rank <= 12 ? "Rămâi în lotul de 12" : "Intri în lotul de 12"}: <b>${Math.round(100 * (p.rank <= 12 ? lotP : lotP))}%</b></div>`;
+  const sum = `<div class="mvsum">Îți păstrezi locul: <b>${pct(pS)}</b> · Probabilitate prezență: <b>${selfP}%</b> · ${p.rank <= 12 ? "Rămâi în lotul de 12" : "Intri în lotul de 12"}: <b>${Math.round(100 * (p.rank <= 12 ? lotP : lotP))}%</b></div>`;
   const line = (lbl, pr) => { const a = [];
     if (up) a.push(`<b>${pct(sh(pr, k => k > 0))}</b> să-l depășești pe ${esc(mvNm(up))}`);
     if (dn) a.push(`<b>${pct(sh(pr, k => k < 0))}</b> să te depășească ${esc(mvNm(dn))}`);
@@ -1606,18 +1606,19 @@ function moveSection(p) {
     : `<div class="mvgoal"><span>🛡️ Pentru lotul de 12 mai ai <b>${pl(P[11].pts - p.pts)}</b> până la locul 12</span></div>`;
   const none = t => `<div class="mvnone">${t}</div>`;
   const html = `<div class="panel mvx"><h3>Impact prezență · miercurea viitoare</h3>
-    <div class="mvgrid"><div class="mvcol up"><div class="mvh">⬆️ Șanse să urci</div>${rowU.join("") || none("Ești pe primul loc 🔝")}</div>
-    <div class="mvcol down"><div class="mvh">⬇️ Șanse să cobori</div>${rowD.join("") || none("Ești pe ultimul loc")}</div></div>
+    <div class="mvgrid"><div class="mvcol up"><div class="mvh">⬆️ Șanse să urci</div>${rowU.join("") || none("Mai sus de atât nu se poate. <b>" + esc(p.name) + "</b> a atins limita, iar mai departe e doar Cel de Sus. 🕊️")}</div>
+    <div class="mvcol down"><div class="mvh">⬇️ Șanse să cobori</div>${rowD.join("") || none("Mai jos de atât nu se poate. De aici vezi doar sus, până la <b>" + esc((P.find(q => q.rank === 1) || P[0]).name) + "</b>, care e limita.")}</div></div>
     ${sum}
     ${goal}${lot}
     <p class="note mvhow">Simulare Monte Carlo: am simulat 3.000 de scenarii pe baza prezenței recente (ultimele 8 meciuri, cu pondere dublă pentru ultimele 4). Procentul arată cât de probabil este rezultatul.</p></div>`;
   MVC[key] = html; return html;
 }
 /* tabel note colegi, cu sortare pe criteriu */
+const NOTES_PUBLIC = false; /* tabelul „Notele colegilor” nu apare pe index (cerut doar la vot) */
 let nview = "gen";
 const NCRIT = [["gen", "Nota generală"], ["0", "Viteză"], ["1", "Șut"], ["2", "Pase"], ["3", "Apărare"], ["4", "Condiție"], ["5", "Bere 🍺"]];
 function renderNotes() {
-  const sec = $("note"); if (!sec || !HEX_ON) return;
+  const sec = $("note"); if (!sec || !HEX_ON || !NOTES_PUBLIC) return;
   const P = (S_() || {}).players || [], f1 = x => x.toFixed(1).replace(".", ",");
   const rows = P.filter(p => RATINGS[p.name] && RATINGS[p.name].peer && RATINGS[p.name].n >= CHAMP_MIN).map(p => ({ p, r: RATINGS[p.name], g: genOf(p.name) }));
   const few = P.filter(p => RATINGS[p.name] && RATINGS[p.name].n >= 1 && RATINGS[p.name].n < CHAMP_MIN).length;
