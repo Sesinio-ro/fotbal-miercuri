@@ -1569,7 +1569,7 @@ function moveSection(p) {
   const key = p.name + "|" + p.pts + "|" + DATA.updated + "|" + P.length; if (MVC[key]) return MVC[key];
   const rates = P.map(q => mvRate(q, S.weeks)), sd = mvHash(p.name), N = 3000;
   const m1 = mvSim(P, rates, mi, 1, () => ({ play: null }), N, sd, true);
-  const all4 = mvSim(P, rates, mi, 4, () => ({ play: true }), N, sd + 4), miss1 = mvSim(P, rates, mi, 4, w => ({ play: w !== 0 }), N, sd + 5);
+  const all4 = mvSim(P, rates, mi, 4, () => ({ play: true }), N, sd + 4), miss1 = mvSim(P, rates, mi, 4, (w, c) => ({ play: w !== c.miss }), N, sd + 5);
   const up = P.find(q => q.rank === p.rank - 1), dn = P.find(q => q.rank === p.rank + 1);
   const pts = n => n + " p", row = (pc, b, s) => `<div class="mvrow">${pc}<div><b>${b}</b><span>${s ? " · " + esc(s) : ""}</span></div></div>`;
   const pres = q => row(`<span class="pc">${Math.round(100 * rates[P.indexOf(q)])}%</span>`, "șanse să se prezinte " + esc(mvNm(q)), "");
@@ -1588,8 +1588,8 @@ function moveSection(p) {
   const pU = sh(m1, k => k > 0), pD = sh(m1, k => k < 0), pS = 1 - pU - pD;
   const lotP = sh(m1, k => p.rank - k <= 12), selfP = Math.round(100 * rates[mi]);
   const play1 = mvSim(P, rates, mi, 1, () => ({ play: true }), N, sd + 1), abs1 = mvSim(P, rates, mi, 1, () => ({ play: false }), N, sd + 2);
-  if (up) { rowU.push(row(mvPt(sh(play1, k => k > 0)), "▲ +1 loc", "dacă joci miercuri")); rowU.push(row(mvPt(sh(all4, k => k > 0)), "▲ +1 loc", "peste 4 miercuri, dacă joci toate")); }
-  if (dn) { rowD.push(row(mvPt(sh(abs1, k => k < 0)), "▼ −1 loc", "dacă lipsești miercuri")); rowD.push(row(mvPt(sh(miss1, k => k < 0)), "▼ −1 loc", "peste 4 miercuri, dacă lipsești miercurea viitoare")); }
+  if (up) { const a = sh(play1, k => k > 0); if (Math.abs(a - pU) >= .05) rowU.push(row(mvPt(a), "▲ +1 loc", "dacă joci miercurea viitoare")); rowU.push(row(mvPt(sh(all4, k => k > 0)), "▲ +1 loc", "dacă joci în următoarele 4 meciuri")); }
+  if (dn) { const a = sh(abs1, k => k < 0); if (Math.abs(a - pD) >= .05) rowD.push(row(mvPt(a), "▼ −1 loc", "dacă lipsești miercurea viitoare")); rowD.push(row(mvPt(sh(miss1, k => k < 0)), "▼ −1 loc", "dacă lipsești o dată în următoarele 4 meciuri")); }
   const sum = `<div class="mvsum">Îți păstrezi locul: <b>${pct(pS)}</b> · Șanse să joci: <b>${selfP}%</b> · ${p.rank <= 12 ? "Rămâi în lotul de 12" : "Intri în lotul de 12"}: <b>${Math.round(100 * (p.rank <= 12 ? lotP : lotP))}%</b></div>`;
   const line = (lbl, pr) => { const a = [];
     if (up) a.push(`<b>${pct(sh(pr, k => k > 0))}</b> să-l depășești pe ${esc(mvNm(up))}`);
@@ -1610,7 +1610,7 @@ function moveSection(p) {
     <div class="mvcol down"><div class="mvh">⬇️ Șanse să cobori</div>${rowD.join("") || none("Ești pe ultimul loc")}</div></div>
     ${sum}
     ${goal}${lot}
-    <p class="note mvhow">Metodă Monte Carlo: P = simulări cu rezultatul respectiv ÷ 3.000. Prezența = (meciuri jucate + 0,5) ÷ (meciuri + 1), pe ultimele 8 meciuri, ultimele 4 cu greutate dublă.</p></div>`;
+    <p class="note mvhow">Simulare Monte Carlo: am simulat 3.000 de scenarii pe baza prezenței recente (ultimele 8 meciuri, cu pondere dublă pentru ultimele 4). Procentul arată cât de probabil este rezultatul.</p></div>`;
   MVC[key] = html; return html;
 }
 /* tabel note colegi, cu sortare pe criteriu */
