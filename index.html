@@ -498,7 +498,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .havg em { font-style: normal; font-size: 10px; color: var(--mute); }
 @media (max-width: 700px) { .havg { position: static; margin: 10px auto 0; grid-auto-flow: column; justify-content: center; align-items: baseline; gap: 4px 8px; width: max-content; max-width: calc(100% - 20px); min-width: 0; padding: 6px 12px; } .havg b { font-size: 24px; } }
 .hero h2 { font-size: clamp(32px, 6vw, 52px); line-height: .95; overflow-wrap: anywhere; }
-.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .facts div { background: var(--panel-2); border-radius: 12px; padding: 10px; }
 .facts b { display: block; font-family: var(--f-display); font-size: 26px; line-height: 1; }
 .facts span { font-size: 11px; color: var(--mute); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
@@ -627,8 +627,8 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
   #table.v-cota th:nth-child(2), #table.v-cota td:nth-child(2) { left: 56px; }
   #table .who { gap: 6px; font-size: 13px; }
   #table.v-pts td:nth-child(3), #table.v-pts th:nth-child(3), #table.v-cota td:nth-child(2), #table.v-bank td:first-child { white-space: normal; width: 112px; min-width: 112px; max-width: 112px; line-height: 1.15; padding-left: 6px; }
-  #table .who .admt { display: none; }
   #table .who .av { display: none; }
+  #table .who .admt { display: none; }
 }
 </style>
 
@@ -668,14 +668,14 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
           
           <div class="lineup" id="lineup"></div>
         </div>
-        <div class="photorule"><span class="pr-ic">📸</span><div><b>Doar lotul de 12 apare cu poză.</b><span>Rezervele au silueta până intră în lot. Dacă n-avem încă poza cuiva, rămâne cu silueta chiar și în lot.</span></div></div>
+        <div class="photorule" id="photorule"><span class="pr-ic">📸</span><div><b>Doar lotul de 12 apare cu poză.</b><span>Rezervele au silueta până intră în lot. Dacă n-avem încă poza cuiva, rămâne cu silueta chiar și în lot.</span></div><button type="button" class="pr-x" aria-label="Închide">×</button></div>
         <div class="photorule champrule" id="champrule" hidden></div>
         <div class="benchwrap"><span class="eyebrow">Rezerve · locurile 13–17</span><div class="bench" id="bench"></div></div>
       </div>
     </section>
 
     <section id="inscrieri" aria-labelledby="h-ins" hidden>
-      <div class="sechead"><div class="sht"><h2 id="h-ins">Cât de repede ne strângem</h2><button class="sharebtn" id="sigshare" type="button" hidden onclick="shareSignup()" aria-label="Distribuie" title="Distribuie"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button></div><p class="note">De marți dimineață, când se deschide lista, până apare al 12-lea. Doar o statistică de curiozitate: nu contează la puncte, la rating sau la cota de titular.</p></div>
+      <div class="sechead"><div class="sht"><h2 id="h-ins">Cât de repede ne strângem</h2><button class="sharebtn" id="sigshare" type="button" hidden onclick="shareSignup()" aria-label="Distribuie" title="Distribuie"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button></div><p class="note">De marți dimineață, când se deschide lista, până apare al 12-lea. Doar o statistică de curiozitate: nu contează la puncte sau la rating.</p></div>
       <div class="sgrid"><div class="scol"><div class="sbox num" id="sigbox"></div><div class="sbox wk" id="sigwk"></div></div>
         <div class="panel"><h3>Miercuri de miercuri: în cât timp s-a umplut lotul</h3><p class="note">Fiecare bară e o miercuri. Cu cât e mai scurtă, cu atât ne-am strâns mai repede. Treci peste o bară pentru dată.</p><div class="chartbox" id="sigch"></div>
           <div class="legend"><span><i style="background:var(--lime)"></i>sub o oră</span><span><i style="background:var(--lime-2)"></i>în aceeași zi</span><span><i style="background:var(--c-XT)"></i>abia a doua zi</span><span><i style="background:repeating-linear-gradient(45deg,#3a3f36 0 3px,transparent 3px 6px)"></i>lista n-a ajuns la 12</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>meci anulat</span></div></div></div>
@@ -686,7 +686,6 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
         <h2 id="h-cls">Clasament</h2>
         <div class="tabs" role="tablist" id="tabs">
           <button role="tab" id="tab-pts" data-v="pts" aria-selected="true">Puncte</button>
-          <button role="tab" id="tab-cota" data-v="cota" aria-selected="false">Cota de titular</button>
           <button role="tab" id="tab-bank" data-v="bank" aria-selected="false">Bancă și salvatori</button>
         </div>
       </div>
@@ -747,6 +746,86 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
   </main>
 </div>
 <button class="totop" id="totop" type="button" aria-label="Înapoi sus" title="Înapoi sus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<style id="pf2css">
+/* PROFIL+ (25.10.2026) */
+.facts .fc { display: block; margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--line); font-size: 11.5px; font-weight: 600; font-style: normal; letter-spacing: 0; text-transform: none; color: var(--mute); line-height: 1.3; }
+.facts .fc.up { color: var(--lime); }
+.fb { display: block; position: relative; height: 5px; border-radius: 3px; background: var(--line); margin: 2px 0 8px; }
+.fb u { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: var(--lime); text-decoration: none; }
+.fb s { position: absolute; top: -3px; width: 2px; height: 11px; background: var(--ink); text-decoration: none; }
+.pb { display: block; height: 6px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.pb u { display: block; height: 100%; background: var(--lime); border-radius: 4px; text-decoration: none; }
+/* rezumat: rânduri stil știri */
+.pf2news { display: grid; border: 1px solid var(--line); background: var(--panel); border-radius: 16px; padding: 2px 16px; }
+.pf2n { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.pf2n:last-child { border-bottom: 0; }
+.pf2n .ic { font-size: 18px; text-align: center; }
+.pf2n .rt { font-family: var(--f-display); font-size: 19px; font-weight: 800; color: var(--lime); letter-spacing: .02em; white-space: nowrap; }
+.pf2n .pb { grid-column: 2 / 4; }
+.pf2n.goal { cursor: pointer; } .pf2n.goal:hover .tx { color: var(--lime); }
+/* insigne */
+.pf2bdg, .pf2cmp { grid-template-columns: minmax(0, 1fr); }
+.pf2bdg { gap: 10px; }
+.pf2sum { display: flex; align-items: center; gap: 12px 16px; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; flex-wrap: wrap; }
+.pf2sum .t { min-width: 150px; } .pf2sum .t b { display: block; font-size: 15px; }
+.pf2sum .t span { display: block; font-size: 12px; color: var(--t-aur); margin-top: 2px; font-weight: 700; }
+.pf2sum > .pb { flex: 1 1 100px; max-width: 240px; min-width: 80px; height: 9px; }
+.pf2ics { display: flex; gap: 8px; align-items: center; margin-left: auto; max-width: 100%; overflow-x: auto; padding: 2px; }
+.pf2b { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--panel-2); border: 2px solid var(--lime); flex: none; }
+.pf2b.g { filter: grayscale(1); opacity: .45; border-color: var(--line); }
+.pf2more { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--mute); flex: none; }
+.pf2grid { display: none; border-top: 1px solid var(--line); padding-top: 6px; }
+.pf2bdg.on .pf2grid { display: block; }
+.pf2grid h4 { margin: 14px 0 8px; font-family: var(--f-body); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.pf2cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.pf2k { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 2px; align-content: start; }
+.pf2k .e { font-size: 24px; } .pf2k b { font-size: 14px; } .pf2k small { color: var(--mute); font-size: 12px; line-height: 1.3; }
+.pf2k.g { opacity: .7; } .pf2k.g .e { filter: grayscale(1); }
+.pf2k .rr.rare { color: var(--t-aur); font-weight: 700; }
+:root[data-theme="light"] .pf2k .rr.rare, :root[data-theme="light"] .pf2sum .t span { color: #8a6514; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .pf2k .rr.rare, :root:not([data-theme="dark"]) .pf2sum .t span { color: #8a6514; } }
+.pf2k .pb { margin-top: 6px; height: 5px; }
+/* Compară-te */
+.pf2cmp { gap: 12px; }
+.pf2tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.pf2tab { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--mute); padding: 9px 14px; font-size: 14px; font-weight: 700; white-space: nowrap; margin-bottom: -1px; }
+.pf2tab.on { color: var(--ink); border-bottom-color: var(--lime); }
+.pf2panes { display: grid; } .pf2pane { display: block; grid-area: 1 / 1; visibility: hidden; min-width: 0; } .pf2pane.on { visibility: visible; }
+.pf2cm { display: grid; grid-template-columns: 160px minmax(0, 1fr) 190px; gap: 14px; align-items: center; padding: 9px 0; font-size: 14px; }
+.pf2cm .fb { margin: 0; }
+.pf2cm .r { text-align: right; color: var(--lime); font-family: var(--f-display); font-weight: 800; font-size: 18px; }
+.pf2lg { font-size: 12px; color: var(--mute); margin: 8px 0 0; }
+.pf2rv { display: flex; gap: 16px; align-items: center; }
+.pf2av { width: 56px; height: 56px; border-radius: 50%; background: var(--panel-2); border: 2px solid var(--lime); display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: 22px; flex: none; }
+.pf2rv .pf2t { font-size: 17px; line-height: 1.4; font-weight: 400; } .pf2rv .pf2t b { font-weight: 800; } .pf2rv .pf2s { color: var(--mute); font-size: 15px; margin-top: 6px; line-height: 1.4; font-weight: 400; }
+.pf2sel { background: var(--panel-2); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; max-width: 100%; }
+.pf2dh, .pf2dr { display: grid; grid-template-columns: 1fr 140px 1fr; text-align: center; align-items: center; }
+.pf2dh { margin: 14px 0 4px; font-family: var(--f-display); font-weight: 800; font-size: 22px; text-transform: uppercase; }
+.pf2dr { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 16px; } .pf2dr:last-child { border-bottom: 0; }
+.pf2dr span { color: var(--mute); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.pf2dr b.w { color: var(--lime); }
+@media (max-width: 640px) {
+  .pf2cm { grid-template-columns: minmax(0, 1fr) auto; } .pf2cm .fb { grid-column: 1 / -1; grid-row: 2; }
+  .pf2dh, .pf2dr { grid-template-columns: 1fr 96px 1fr; } .pf2rv { align-items: flex-start; }
+  .pf2sum .t { min-width: 0; } .pf2ics { margin-left: 0; width: 100%; }
+}
+/* v2 */
+.facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pf2news .eyebrow { padding: 14px 0 2px; }
+.pf2k.aw { border-color: var(--t-aur); }
+.pf2tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; overflow: visible; }
+.pf2tab { padding: 9px 4px; text-align: center; }
+@media (max-width: 640px) { .pf2tab { font-size: 13px; padding: 9px 2px; } }
+@media (max-width: 380px) { .pf2tab { font-size: 12px; } }
+/* v3: lățime constantă la schimbarea taburilor */
+dialog#prof { scrollbar-gutter: stable; }
+.pf2cmp { width: 100%; box-sizing: border-box; }
+@media (max-width: 380px) { .pf2dh, .pf2dr { grid-template-columns: 1fr 72px 1fr; } .pf2dh { font-size: 18px; } }
+/* anunțuri închidere */
+.photorule .pr-x { margin-left: auto; flex: none; align-self: flex-start; background: none; border: 0; color: var(--mute); font-size: 24px; line-height: 1; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
+.photorule .pr-x:hover { background: color-mix(in oklab, var(--ink) 10%, transparent); color: var(--ink); }
+.photorule[hidden] { display: none !important; }
+</style>
 <dialog id="prof" aria-label="Profil jucător"><div class="pf" id="pf"></div></dialog>
 
 <script>
@@ -780,6 +859,7 @@ function buildData(rows, base) {
   const MEM = get("m").map(r => r[1]), CODES = Object.fromEntries(get("m").map(r => [r[1], r.slice(2, 2 + NW).map(c => (c || "").trim().toUpperCase())]));
   const GUESTS = get("g").map(r => [r[2], r[1], r[3]]);
   const BN = ((get("bn")[0]) || []).slice(2).map(x => +String(x || 0).replace("~", "") || 0);  // bonus de miercuri pentru cei care au jucat
+  const TMP = ((get("tmp")[0]) || []).slice(2).map(x => { const v = String(x == null ? "" : x).replace("~", "").replace(",", ".").trim(); return v === "" || isNaN(+v) ? null : +v; });  // temperatura reala la 20:00-21:00, pe miercuri (optional)
   const SG = ((get("sg")[0]) || []).slice(2);  // minute pana la lotul de 12, citite live (suprascriu SIGNUP.weeks); x = nu s-a strans
   dates.forEach((d, i) => { const v = String(SG[i] == null ? "" : SG[i]).replace("~", "").trim(), G0 = SIGNUP[d.slice(0, 4)]; if (v !== "" && G0) G0.weeks[d] = v === "x" ? null : +v; });
   const ALLW = dates.slice(0, NW).map((d, i) => ({ date: d, status: stats[i] || "Jucat", note: notes[i] || "", i }));
@@ -839,7 +919,7 @@ function buildData(rows, base) {
         cotaRank: cotaOrder.indexOf(m) + 1, codes, badges: badges(x, codes) }; });
     const wk = weeks.map(w => { const cs = MEM.map(m => CODES[m][w.i] || "");
       return { date: w.date, label: `${w.date.slice(8)}.${w.date.slice(5, 7)}`, status: w.status, note: w.note,
-        played: cs.filter(PLAYED).length, signed: cs.filter(c => SIGN.includes(c)).length, guests: GUESTS.filter(g => g[0] === w.date).length }; });
+        played: cs.filter(PLAYED).length, signed: cs.filter(c => SIGN.includes(c)).length, guests: GUESTS.filter(g => g[0] === w.date).length, temp: TMP[w.i] == null ? undefined : TMP[w.i] }; });
     const half = Math.max(1, Math.floor((played.length + 1) / 2)), elig = order.filter(m => st[m].games >= half);
     const nel = maxBy(order, m => [st[m].games, st[m].pts]), iron = maxBy(elig.length ? elig : order, m => [st[m].rate, st[m].games]);
     const bm = maxBy(order, m => [st[m].best, st[m].games]), sal = maxBy(order, m => [st[m].JP + st[m].guests, st[m].guests]), bank = maxBy(order, m => [st[m].R + st[m].JP, st[m].R]);
@@ -919,7 +999,7 @@ const RACE = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181"];
 const POS = ["ATA", "ATA", "ATA", "MIJ", "MIJ", "MIJ", "MIJ", "FUN", "FUN", "FUN", "FUN", "POR"];
 let seasons = Object.keys(DATA.seasons).sort();
 let season = seasons[seasons.length - 1], view = "pts", at = null, timer = null;
-try { const s = localStorage.getItem("fm-season"); if (s && DATA.seasons[s]) season = s; const v = localStorage.getItem("fm-view"); if (v) view = v; } catch (e) {}
+try { const s = localStorage.getItem("fm-season"); if (s && DATA.seasons[s]) season = s; const v = localStorage.getItem("fm-view"); if (v && v !== "cota") view = v; } catch (e) {}
 const tierStyle = t => `--tc: var(${TIERS[t] || "--t-bronz"})`;
 /* în previzualizarea de pe claude.ai (iframe) adresa nu se poate schimba; acolo ignorăm */
 function safeRS(...a) { try { history.replaceState(...a); } catch (e) {} }
@@ -950,7 +1030,7 @@ let CHAMPS = []; const CHAMP_MIN = 3, CHAMP_GRADE = 4.0; /* campion = nota gener
 const genOf = n => { const r = RATINGS[n]; return r && r.peer && r.n >= CHAMP_MIN ? r.peer.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : null; };
 function calcChamp() { let best = null; const L = []; ((S_() || {}).players || []).forEach(p => { const g = genOf(p.name); if (g == null) return; const g1 = Math.round(g * 10) / 10; L.push({ name: p.name, g1 }); if (best == null || g1 > best) best = g1; }); CHAMPS = L.filter(x => x.g1 >= CHAMP_GRADE - 1e-9).map(x => x.name);
   const el = document.getElementById("champrule"); if (el) { if (!CHAMPS.length) el.hidden = true; else { const nm = CHAMPS.length > 1 ? CHAMPS.slice(0, -1).join(", ") + " și " + CHAMPS[CHAMPS.length - 1] : CHAMPS[0], g = best.toFixed(1).replace(".", ",");
-    el.hidden = false; el.innerHTML = `<span class="pr-ic">🏅</span><div><b>Cartonaș de legendă</b><span>${CHAMPS.length === 3 ? "Top 3 la nota de la colegi" : "Cei mai bine notați de colegi"} (minim 4,0): ${nm} au primit cartonașul special de marmură și aur, cu poza lor pe el. <a href="https://sesinio-ro.github.io/fotbal-miercuri/vot.html" style="color:var(--lime);font-weight:800">Vezi notele</a></span></div>`; } } } /* campioni = toți cei cu aceeași notă generală rotunjită la o zecimală */
+    el.dataset.dk = "champrule:" + CHAMPS.join("|"); el.hidden = pfDis(el.dataset.dk); el.innerHTML = `<span class="pr-ic">🏅</span><div><b>Cartonaș de legendă</b><span>${CHAMPS.length === 3 ? "Top 3 la nota de la colegi" : "Cei mai bine notați de colegi"} (minim 4,0): ${nm} au primit cartonașul special de marmură și aur, cu poza lor pe el. <a href="https://sesinio-ro.github.io/fotbal-miercuri/vot.html" style="color:var(--lime);font-weight:800">Vezi notele</a></span></div><button type="button" class="pr-x" aria-label="Închide">×</button>`; } } } /* campioni = toți cei cu aceeași notă generală rotunjită la o zecimală */
 const hasPhoto = p => (p.rank <= PHOTO_TOP || PHOTO_ALWAYS.includes(p.name) || CHAMPS.includes(p.name)) && PHOTOS[p.name];
 const card = (p, full) => { const ph = hasPhoto(p); return `<span class="card t-${p.tier}${full ? " full" : ""}${ph ? " photo" : ""}${CHAMPS.includes(p.name) ? " champ" : ""}" style="${tierStyle(p.tier)}"><span class="rt num">${p.rating}</span><span class="tr">${TIER_LBL[p.tier] || ""}</span>${ADMINS.includes(p.name) ? '<span class="adm">ADMIN</span>' : ""}${!ph && p.rank <= PHOTO_TOP ? '<span class="nopic">fără poză încă</span>' : ""}${ph ? `<img class="ph pd" src="${ph.d}" alt=""><img class="ph pl" src="${ph.l}" alt="">` : FIG(p.rank)}
   <span class="nm" style="font-size:${Math.min(14, 128 / Math.max(1, p.name.length)).toFixed(1)}cqw">${esc(p.name)}</span><span class="st num">${p.pts}p · ${p.games}m</span><span class="sx">${[["PCT", p.pts], ["MEC", p.games], ["PRZ", Math.round((p.rate || 0) * 100) + "%"], ["SER", p.cur ?? 0], ["REC", p.best ?? 0], ["RTR", (p.X || 0) + (p.XT || 0)]].map(([k, v]) => `<span><i>${k}</i>${v}</span>`).join("")}</span>${full ? "" : `<span class="hov">${[["Puncte", p.pts], ["Meciuri", p.games], ["Prezență", Math.round((p.rate || 0) * 100) + "%"], ["Serie acum", p.cur ?? 0], ["Record serie", p.best ?? 0], ["Retrageri", (p.X || 0) + (p.XT || 0)]].map(([k, v]) => `<span><i>${k}</i><b>${v}</b></span>`).join("")}</span>`}</span>`; };
@@ -1520,6 +1600,246 @@ function renderStatic() {
 }
 
 /* profil jucător */
+/* ===== PROFIL+ (25.10.2026): rezumat, insigne cu progres, Compară-te (Tu vs grup, Evoluție, Rival, Duel) ===== */
+const PF_MS = ["ian", "feb", "mar", "apr", "mai", "iun", "iul", "aug", "sep", "oct", "nov", "dec"];
+const PF_ML = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];
+const PF_SIGN = ["J", "J+", "R", "AN", "X", "XT", "NS"];
+const pfShort = d => d ? `${+d.slice(8, 10)} ${PF_MS[+d.slice(5, 7) - 1]}` : "";
+const pfRo = n => String(n).replace(".", ",");
+const pfPl = c => c === "J" || c === "J+";
+const pfNick = n => { const m = n.match(/\(([^)]+)\)/); return m ? m[1] : n.split(" ")[0]; };
+const pfIni = n => (n.replace(/\([^)]*\)/g, "").trim().split(/\s+/).map(w => w[0] || "").join("").slice(0, 2) || n[0] || "?").toUpperCase();
+const pfCap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+function pfToday() { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; }
+function pfPts() { const m = {}; (DATA.legend || []).forEach(r => { const v = parseInt(String(r[2]).replace("−", "-").replace("+", ""), 10); m[r[0]] = isNaN(v) ? 0 : v; }); return m; }
+
+/* meciurile jucate ale unui jucător, în ordine, cu contoare cumulate */
+function pfTimeline(p, S) {
+  const out = []; let games = 0, run = 0, jp = 0, best = 0;
+  p.codes.forEach((c, i) => { const w = S.weeks[i]; if (!w || w.status !== "Jucat") return;
+    const pl = pfPl(c);
+    if (pl) { games++; run++; if (c === "J+") jp++; best = Math.max(best, run); } else if (c !== "M") run = 0;
+    out.push({ i, date: w.date, label: w.label, c, pl, games, run, jp, best, played: w.played, total: (w.played || 0) + (w.guests || 0), temp: w.temp }); });
+  return out;
+}
+/* meciuri jucate în perioada de iarnă, din toate sezoanele (iarna 2026–27 trece peste 31 dec) */
+function pfWinterGames(name) {
+  const rows = [];
+  Object.keys(DATA.seasons).sort().forEach(k => { const S = DATA.seasons[k], p = S.players.find(x => x.name === name); if (!p) return;
+    p.codes.forEach((c, i) => { const w = S.weeks[i]; if (w && w.status === "Jucat" && pfPl(c) && inWinter(w.date)) rows.push({ date: w.date, temp: w.temp }); }); });
+  return rows;
+}
+function pfWinterMonth(name) {
+  let ok = false;
+  Object.keys(DATA.seasons).forEach(k => (DATA.seasons[k].motm || []).forEach(m => {
+    if (m.partial || m.games < 3 || !m.names.includes(name)) return;
+    const mi = PF_ML.indexOf(String(m.month).toLowerCase()); if (mi < 0) return;
+    if (inWinter(`${k}-${String(mi + 1).padStart(2, "0")}-15`)) ok = true; }));
+  return ok;
+}
+
+/* ---------- INSIGNE ---------- */
+function pfBadges(p, S) {
+  const tl = pfTimeline(p, S), at = fn => { const t = tl.find(fn); return t ? t.date : ""; };
+  const jp = p.JP + p.guests, today = pfToday(), has = k => (p.badges || []).includes(k);
+  const wg = pfWinterGames(p.name), cold = wg.filter(x => x.temp != null && x.temp <= 0).sort((a, b) => a.temp - b.temp);
+  const wvis = today <= WINTER.to, wpre = today < WINTER.from, WS = "Iarna 2026–27";
+  const L = [];
+  const step = (k, n, e, d, goal, cur, date, u, extra) => L.push(Object.assign({ k, n, e, d, goal, cur: Math.min(cur, goal), u, vis: true, earned: cur >= goal, date: cur >= goal ? date : "" }, extra || {}));
+  step("debut", "Debut", "🏃", "Primul meci jucat", 1, p.games, at(t => t.games >= 1), ["meci", "meciuri"]);
+  step("m10", "10 meciuri", "⚽", "10 meciuri jucate în sezon", 10, p.games, at(t => t.games >= 10), ["meci", "meciuri"]);
+  step("maraton", "Maratonist", "🎯", "20 de meciuri jucate în sezon", 20, p.games, at(t => t.games >= 20), ["meci", "meciuri"]);
+  step("m50", "50 de meciuri", "🏅", "50 de meciuri jucate în sezon", 50, p.games, at(t => t.games >= 50), ["meci", "meciuri"]);
+  step("serie4", "Serie de 4", "🔥", "4 meciuri jucate la rând", 4, p.best, at(t => t.run >= 4), ["meci la rând", "meciuri la rând"]);
+  const sets = []; tl.forEach(t => { if (t.pl && t.run % 4 === 0) sets.push(t.date); });
+  step("serii3", "3 serii de 4", "♨️", "3 serii de 4 meciuri la rând, în total", 3, sets.length, sets[2] || "", ["serie de 4", "serii de 4"]);
+  step("serii5", "5 serii de 4", "🌋", "5 serii de 4 meciuri la rând, în total", 5, sets.length, sets[4] || "", ["serie de 4", "serii de 4"]);
+  step("foc", "Serie de foc", "🚀", "8 meciuri jucate la rând", 8, p.best, at(t => t.run >= 8), ["meci la rând", "meciuri la rând"]);
+  step("salv1", "Prima salvare", "🛟", "Ai intrat o dată de pe rezervă sau ai adus un invitat", 1, jp, at(t => t.jp >= 1), ["salvare", "salvări"]);
+  step("salvator", "Salvator", "🦸", "De 2 ori ai intrat de pe rezervă sau ai adus un invitat", 2, jp, at(t => t.jp >= 2), ["salvare", "salvări"]);
+  step("gata", "Mereu gata", "🪑", "De 3 ori pe lista de rezerve", 3, p.R + p.JP, "", ["dată la rezerve", "ori la rezerve"]);
+  step("aduce", "Aduce oameni", "👥", "Ai adus un invitat când nu ne strângeam", 1, p.guests, "", ["invitat", "invitați"]);
+  const clean = p.X + p.XT + p.NS === 0;
+  step("cuvant", "Om de cuvânt", "🤝", "10 meciuri fără nicio retragere", 10, p.games, "", ["meci", "meciuri"], { earned: has("cuvant"), vis: clean || has("cuvant") });
+  L.push({ k: "plina", n: "Seară plină", e: "🎉", d: "Ai jucat într-o seară cu 12 din 12", earned: !!at(t => t.pl && t.played >= 12), date: at(t => t.pl && t.played >= 12), vis: true });
+  L.push({ k: "faza", n: "Pe fază", e: "⏱️", d: "De obicei pe listă în primele 3 minute", earned: has("faza"), date: "", vis: has("faza") || !!SIGNUP[season] });
+  L.push({ k: "revenire", n: "Revenirea", e: "🔁", d: "Întors după o pauză de 4 miercuri", earned: has("revenire"), date: "", vis: has("revenire") });
+  step("iarna", "Iarna prezent", "❄️", "4 miercuri jucate între 1 nov și 28 feb", 4, wg.length, wg[3] ? wg[3].date : "", ["miercuri", "miercuri"], { vis: wvis || wg.length >= 4, season: WS, note: wpre ? "începe 1 nov" : "" });
+  const pm = pfWinterMonth(p.name);
+  L.push({ k: "perfecta", n: "Iarna perfectă", e: "☃️", d: "Toate meciurile unei luni de iarnă", earned: pm, date: "", vis: wvis || pm, season: WS });
+  L.push({ k: "gheata", n: "Om de gheață", e: "🧊", d: "Ai jucat la 0° sau mai puțin (temperatura reală)", earned: cold.length > 0, date: cold[0] ? cold[0].date : "", tag: cold[0] ? `la ${pfRo(cold[0].temp).replace("-", "−")}°` : "", vis: wvis || cold.length > 0, season: WS });
+  return L;
+}
+let _pfRar = { key: "", map: {} };
+function pfRarity(S) {
+  const key = season + "|" + DATA.updated + "|" + S.weeks.length + "|" + S.players.length;
+  if (_pfRar.key === key) return _pfRar.map;
+  const map = {}; S.players.forEach(q => pfBadges(q, S).forEach(b => { if (b.earned) map[b.k] = (map[b.k] || 0) + 1; }));
+  _pfRar = { key, map }; return map;
+}
+const PF_AWD = { "Nelipsitul": "Cele mai multe meciuri jucate", "Ironman": "Cea mai mare prezență", "Seria sezonului": "Cea mai lungă serie la rând", "Salvatorul": "Cele mai multe miercuri salvate", "Al 13-lea jucător": "Cel mai des pe lista de rezerve" };
+const PF_AWE = { "Nelipsitul": "🥇", "Ironman": "🦾", "Seria sezonului": "☄️", "Salvatorul": "🪂", "Al 13-lea jucător": "👕" };
+function pfBadgePanel(p, S) {
+  const L = pfBadges(p, S).filter(b => b.vis), R = pfRarity(S), N = S.players.length;
+  const AW = (S.awards || []).filter(a => a[1] === p.name).map(a => ({ k: "aw:" + a[0], n: a[0], e: PF_AWE[a[0]] || "🏆", d: PF_AWD[a[0]] || String(a[3] || "").split(". ")[0], tag: a[2], earned: true, vis: true, award: true }));
+  const base = L.filter(b => !b.season), win = L.filter(b => b.season);
+  const earnedB = L.filter(b => b.earned), earned = [...AW, ...earnedB], rare = b => R[b.k] && R[b.k] / N <= .2;
+  const near = L.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal);
+  const sE = earned.slice(0, 5), sN = near.slice(0, Math.max(1, 6 - sE.length)), strip = [...sE, ...sN], more = L.length + AW.length - strip.length;
+  const rareN = earnedB.filter(rare).length, extra = [AW.length ? `${AW.length} ${AW.length === 1 ? "premiu" : "premii"} ale sezonului` : "", rareN ? `Rare: ${rareN}` : ""].filter(Boolean).join(" · ");
+  const card = b => {
+    const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag || ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
+    const rr = b.award ? '<small class="rr rare">Premiul sezonului</small>' : b.earned && R[b.k] ? `<small class="rr${rare(b) ? " rare" : ""}">${rare(b) ? "Rar · " : ""}${R[b.k]} din ${N} jucători</small>` : "";
+    return `<div class="pf2k${b.earned ? "" : " g"}${b.award ? " aw" : ""}"><span class="e">${b.e}</span><b>${esc(b.n)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}${b.d ? `<small>${esc(b.d)}</small>` : ""}${rr}${!b.earned && b.goal ? `<i class="pb"><u style="width:${Math.round(100 * b.cur / b.goal)}%"></u></i>` : ""}</div>`; };
+  const todo = [...base.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), ...base.filter(b => !b.earned && !b.goal)];
+  const sec = (t, a) => a.length ? `<h4>${t}</h4><div class="pf2cards">${a.map(card).join("")}</div>` : "";
+  return `<div class="panel pf2bdg"><span class="eyebrow">Insigne</span>
+    <button type="button" class="pf2sum" data-pf2tog="1" aria-expanded="false"><span class="t"><b>${earnedB.length} din ${L.length} insigne</b>${extra ? `<span>${extra}</span>` : ""}</span><i class="pb"><u style="width:${L.length ? Math.round(100 * earnedB.length / L.length) : 0}%"></u></i>
+      <span class="pf2ics">${strip.map(b => `<span class="pf2b${b.earned ? "" : " g"}" title="${esc(b.n)}">${b.e}</span>`).join("")}${more > 0 ? `<span class="pf2more">+${more}</span>` : ""}</span></button>
+    <div class="pf2grid">${sec("Premiile sezonului", AW)}${sec("Câștigate", base.filter(b => b.earned))}${sec("Ce poți câștiga", todo)}${win.length ? sec(win[0].season, win) : ""}</div></div>`;
+}
+
+/* ---------- REZUMAT (știrile tale) ---------- */
+function pfNews(p, S) {
+  const rows = [], k = S.snaps.length - 1, ev = DATA.settings.streak_every || 4, tl = pfTimeline(p, S);
+  const lp = S.weeks.map((w, i) => i).filter(i => S.weeks[i].status === "Jucat").pop();
+  const cs = lp != null && S.snaps[lp] && S.snaps[lp].find(r => r[0] === p.name), ps = lp > 0 && S.snaps[lp - 1].find(r => r[0] === p.name);
+  const dp = cs && ps ? cs[2] - ps[2] : 0;
+  if (dp > 0) rows.push(["⚡", `+${dp} puncte miercurea trecută`, `#${cs[1]}`]);
+  const t4 = tl.slice(-4)[0], nb = pfBadges(p, S).filter(b => b.vis && b.earned && b.date && t4 && b.date >= t4.date).sort((a, b) => a.date < b.date ? 1 : -1)[0];
+  if (nb) rows.push([nb.e, `Insignă nouă: ${nb.n}`, pfShort(nb.date)]);
+  if (p.cur >= 2) rows.push(["🔥", `${p.cur} miercuri la rând`, `bonus la ${p.cur + ev - p.cur % ev}`]);
+  const l8 = tl.slice(-8), n8 = l8.length, c8 = l8.filter(t => t.pl).length;
+  if (n8 >= 6 && c8 >= 5) rows.push(["📅", `Ai fost la ${c8} din ultimele ${n8} miercuri`, `${c8}/${n8}`]);
+  const r0 = S.snaps[Math.max(0, k - 4)].find(r => r[0] === p.name), up = r0 ? r0[1] - p.rank : 0;
+  if (up > 0) rows.push(["⬆️", `Ai urcat ${up} ${up === 1 ? "loc" : "locuri"} în 4 săptămâni`, `#${p.rank}`]);
+  const ahead = S.players.filter(q => q.games > p.games).length, top = Math.ceil(100 * (ahead + 1) / S.players.length / 5) * 5;
+  if (p.games >= 5 && top <= 30) rows.push(["🏅", `Printre primii ${top}% la meciuri jucate`, `top ${top}%`]);
+  const sv = p.JP + p.guests;
+  if (sv >= 1) rows.push(["🛟", sv === 1 ? "Ai salvat o miercuri" : `Ai salvat ${sv} miercuri`, `${sv}`]);
+  const pw = S.weeks.map((w, i) => ({ w, i })).filter(x => x.w.status === "Jucat").pop();
+  if (pw && pfPl(p.codes[pw.i]) && !(dp > 0)) rows.push(["✅", "Ai jucat ultima miercuri", pw.w.label]);
+  if (p.best >= 4) rows.push(["🏆", `Cea mai lungă serie a ta: ${p.best} la rând`, `${p.best}`]);
+  const row = (ic, tx, rt, bar, go) => `<div class="pf2n${go ? " goal" : ""}"${go ? ' data-pf2go="1" role="button" tabindex="0"' : ""}><span class="ic" aria-hidden="true">${ic}</span><span class="tx">${esc(tx)}</span><b class="rt">${esc(rt)}</b>${bar != null ? `<i class="pb"><u style="width:${bar}%"></u></i>` : ""}</div>`;
+  const goals = pfBadges(p, S).filter(b => b.vis && !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), g = goals[0];
+  let html = rows.slice(0, 3).map(r => row(r[0], r[1], r[2])).join("");
+  if (g) { const rem = g.goal - g.cur; html += row("🎯", `Următoarea insignă: ${g.n} (încă ${rem})`, `${g.cur}/${g.goal}`, Math.round(100 * g.cur / g.goal), true); }
+  return html ? `<div class="pf2news"><span class="eyebrow">Pe scurt despre tine</span>${html}</div>` : "";
+}
+
+/* ---------- GRUP: medii pentru cei activi (cel puțin un meci în ultimele 8) ---------- */
+function pfGroup(S) {
+  const PW = S.weeks.map((w, i) => i).filter(i => S.weeks[i].status === "Jucat");
+  const l8 = PW.slice(-8), n8 = l8.length;
+  const rows = S.players.map(q => { const signed = q.codes.filter(c => PF_SIGN.includes(c)).length;
+    return { q, r8: l8.filter(i => pfPl(q.codes[i])).length, rel: signed >= 3 ? 1 - (q.XT + q.NS) / signed : null }; });
+  const act = rows.filter(r => r.r8 > 0), avg = (f, a) => { a = a || act; return a.length ? a.reduce((s, r) => s + f(r), 0) / a.length : 0; };
+  const relRows = act.filter(r => r.rel != null);
+  return { rows, act, n8, avgPts: avg(r => r.q.pts), avgRate: avg(r => r.q.rate), avgR8: avg(r => r.r8), avgBest: avg(r => r.q.best), avgRel: avg(r => r.rel, relRows),
+    maxPts: Math.max(1, ...S.players.map(q => q.pts)), maxBest: Math.max(1, ...S.players.map(q => q.best)), me: n => rows.find(r => r.q.name === n) };
+}
+function pfFacts(p, S) {
+  const G = pfGroup(S), me = G.me(p.name), ok = G.act.length >= 3 && !!me, pctw = v => Math.max(3, Math.min(100, v));
+  const bar = (v, m) => `<i class="fb"><u style="width:${pctw(v)}%"></u>${m == null ? "" : `<s style="left:${pctw(m)}%"></s>`}</i>`;
+  const bx = (v, l, c) => `<div><b>${v}</b><span>${l}</span>${c || ""}</div>`;
+  let c1 = "", c3 = "";
+  if (ok && p.pts > G.avgPts) c1 = `<em class="fc up">${bar(100 * p.pts / G.maxPts, 100 * G.avgPts / G.maxPts)}Peste media activilor (${Math.round(G.avgPts)})</em>`;
+  if (ok && p.rate > G.avgRate) c3 = `<em class="fc up">${bar(100 * p.rate, 100 * G.avgRate)}Media activilor: ${pct(G.avgRate)}%</em>`;
+  const tot = S.kpi.played, c2 = tot > 0 ? `<em class="fc">${bar(100 * p.games / tot)}din ${tot} posibile</em>` : "";
+  return bx(p.pts, "Puncte", c1) + bx(p.games, "Meciuri", c2) + bx(pct(p.rate) + "%", "Prezență", c3);
+}
+
+/* ---------- COMPARĂ-TE ---------- */
+function pfRival(p, S) {
+  const n = S.weeks.length, b0 = Math.floor((n - 1) / 4) * 4, k = Math.max(0, b0 - 1);
+  const snap = S.snaps[k] || S.snaps[S.snaps.length - 1], me = snap.find(r => r[0] === p.name);
+  const idx = S.weeks.map((w, i) => i).filter(i => i <= k && S.weeks[i].status === "Jucat").slice(-8);
+  const pres = q => idx.filter(i => pfPl(q.codes[i])).length / Math.max(1, idx.length);
+  const nm = x => S.players.find(q => q.name === x);
+  let pool = me ? snap.filter(r => r[0] !== p.name && Math.abs(r[1] - me[1]) <= 3).map(r => ({ q: nm(r[0]), pts: r[2] })).filter(o => o.q && pres(o.q) >= .5) : [], mePts = me ? me[2] : p.pts;
+  if (!pool.length) { mePts = p.pts; pool = S.players.filter(q => q !== p && Math.abs(q.rank - p.rank) <= 4 && pres(q) >= .5).map(q => ({ q, pts: q.pts })); }
+  if (!pool.length) return null;
+  pool.sort((a, b) => Math.abs(a.pts - mePts) - Math.abs(b.pts - mePts) || Math.abs(pres(a.q) - pres(p)) - Math.abs(pres(b.q) - pres(p)) || (a.q.name < b.q.name ? -1 : 1));
+  return pool[0].q;
+}
+function pfDuelRows(p, q, S) {
+  const gr = n => { const r = RATINGS[n]; return r && r.peer && r.n >= 1 ? r.peer.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : null; };
+  const tog = S.weeks.reduce((a, w, i) => a + (w.status === "Jucat" && pfPl(p.codes[i]) && pfPl(q.codes[i]) ? 1 : 0), 0);
+  const rows = [["Puncte", p.pts, q.pts, v => v], ["Prezență", p.rate, q.rate, v => pct(v) + "%"], ["Nota colegilor", gr(p.name), gr(q.name), v => pfRo(v.toFixed(1))]];
+  return `<div class="pf2dh"><span>${esc(pfNick(p.name))}</span><span></span><span>${esc(pfNick(q.name))}</span></div>` + rows.map(([l, a, b, f]) => {
+    const cmp = a != null && b != null;
+    return `<div class="pf2dr"><b class="${cmp && a > b ? "w" : ""}">${a == null ? "–" : f(a)}</b><span>${l}</span><b class="${cmp && b > a ? "w" : ""}">${b == null ? "–" : f(b)}</b></div>`; }).join("")
+    + `<div class="pf2dr"><b>${tog}</b><span>Meciuri împreună</span><b>${tog}</b></div>`;
+}
+function pfCompare(p, S) {
+  const G = pfGroup(S), me = G.me(p.name), tl = pfTimeline(p, S), P = S.players;
+  /* tab 1: doar atributele în care ești bine */
+  const items = [];
+  if (G.act.length >= 3 && me) {
+    const row = (l, v, m, r) => items.push(`<div class="pf2cm"><span>${l}</span><i class="fb"><u style="width:${Math.max(3, Math.min(100, v))}%"></u><s style="left:${Math.max(3, Math.min(100, m))}%"></s></i><span class="r">${r}</span></div>`);
+    if (p.pts > G.avgPts) row("Puncte în sezon", 100 * p.pts / G.maxPts, 100 * G.avgPts / G.maxPts, `+${Math.round(p.pts - G.avgPts)} față de medie`);
+    if (p.rate > G.avgRate) row("Prezență în sezon", 100 * p.rate, 100 * G.avgRate, `+${Math.round(100 * (p.rate - G.avgRate))} pp`);
+    if (G.n8 >= 4 && me.r8 > 0 && me.r8 >= G.avgR8) row(`Ultimele ${G.n8} meciuri`, 100 * me.r8 / G.n8, 100 * G.avgR8 / G.n8, `${me.r8} din ${G.n8}`);
+    if (p.best > G.avgBest) row("Serie maximă", 100 * p.best / G.maxBest, 100 * G.avgBest / G.maxBest, `${p.best} la rând`);
+    if (me.rel != null && me.rel > G.avgRel) row("Fiabilitate", 100 * me.rel, 100 * G.avgRel, `${pct(me.rel)}%`);
+  }
+  /* tab 2: evoluția ta (doar ce e pozitiv) */
+  const ev = [], k = S.snaps.length - 1, r0 = S.snaps[Math.max(0, k - 4)].find(r => r[0] === p.name), up = r0 ? r0[1] - p.rank : 0;
+  const r1 = k >= 8 ? S.snaps[3].find(r => r[0] === p.name) : null, up1 = r1 ? r1[1] - p.rank : 0;
+  const l4 = tl.slice(-4).filter(t => t.pl).length, p4 = tl.slice(-8, -4).filter(t => t.pl).length;
+  const hard = tl.filter(t => t.pl && t.total <= 10).length, mo = {}, moAll = {};
+  tl.forEach(t => { const m = t.date.slice(0, 7); moAll[m] = (moAll[m] || 0) + 1; if (t.pl) mo[m] = (mo[m] || 0) + 1; });
+  const bm = Object.keys(mo).filter(m => moAll[m] >= 3 && mo[m] / moAll[m] > p.rate && mo[m] / moAll[m] >= .6)
+    .sort((a, b) => mo[b] / moAll[b] - mo[a] / moAll[a] || moAll[b] - moAll[a] || (a < b ? 1 : -1))[0], f1 = tl.find(t => t.pl);
+  const ln = (ic, tx, rt) => ev.push(`<div class="pf2n"><span class="ic" aria-hidden="true">${ic}</span><span class="tx">${esc(tx)}</span><b class="rt">${esc(rt)}</b></div>`);
+  if (up > 0) ln("⬆️", `Ai urcat ${up} ${up === 1 ? "loc" : "locuri"} în ultimele 4 săptămâni`, `#${p.rank}`);
+  if (up1 >= 2) ln("🧗", `Ai urcat ${up1} locuri față de prima lună`, `#${p.rank}`);
+  if (tl.length >= 8 && l4 > p4) ln("📈", "Față de cele 4 miercuri dinainte", `+${l4 - p4} ${l4 - p4 === 1 ? "meci" : "meciuri"}`);
+  else if (l4 >= 3) ln("📈", "Prezent în ultimele 4 miercuri", `${l4} din 4`);
+  if (hard >= 1) ln("💪", "Ai venit și când ne-am strâns greu", `${hard} ${hard === 1 ? "seară" : "seri"}`);
+  if (bm) ln("🏆", `Cea mai bună lună, ca prezență: ${pfCap(PF_ML[+bm.slice(5) - 1])}`, `${mo[bm]} din ${moAll[bm]}`);
+  if (f1 && ev.length < 2) ln("📅", `Primul meci: ${pfShort(f1.date)}`, `${p.games} ${p.games === 1 ? "meci" : "meciuri"}`);
+  /* tab 3: rival */
+  const rv = pfRival(p, S);
+  let rhtml = '<p class="note">Rivalul apare după câteva meciuri jucate.</p>';
+  if (rv) { const gap = rv.pts - p.pts, m = Math.round(Math.abs(gap) / 10 * 2) / 2, mt = m === 1 ? "1 meci" : `${pfRo(m)} meciuri`;
+    const t2 = gap > 0 ? (m < 1 ? "Ești la mai puțin de un meci de el." : `Ești la ${mt} de el.`) + " Fiecare miercuri în care vii tu și el nu te apropie."
+      : gap < 0 ? `Ești cu ${m < 1 ? "mai puțin de un meci" : mt} înaintea lui. Ține prezența ca să rămâi în față.` : "Sunteți la egalitate. Prima miercuri în care vii tu și el nu te scoate în față.";
+    rhtml = `<div class="pf2rv"><span class="pf2av">${esc(pfIni(rv.name))}</span><div><div class="pf2t">Rivalul tău, următoarele 4 săptămâni: <b>${esc(rv.name)}</b></div><div class="pf2s">${t2}</div></div></div>
+      <p class="pf2lg">Ales automat dintre cei apropiați în clasament, cu prezență de cel puțin 50% în ultimele 8 meciuri. Rămâne fix 4 săptămâni.</p>`; }
+  /* tab 4: duel */
+  const others = P.filter(q => q !== p), dq = rv || others[0];
+  const duel = dq ? `<select class="pf2sel" data-for="${esc(p.name)}" aria-label="Alege un coleg">${others.map(q => `<option value="${esc(q.name)}"${q === dq ? " selected" : ""}>${esc(q.name)} · locul ${q.rank}</option>`).join("")}</select><div class="pf2duel">${pfDuelRows(p, dq, S)}</div>` : '<p class="note">Nu există încă alți jucători.</p>';
+  const first = items.length >= 2 ? "g" : "e", T = [["g", "Tu vs grup"], ["e", "Evoluția ta"], ["r", "Rival"], ["d", "Duel"]];
+  return `<div class="panel pf2cmp"><span class="eyebrow">Compară-te</span>
+    <div class="pf2tabs" role="tablist">${T.map(([id, l]) => `<button type="button" role="tab" class="pf2tab${id === first ? " on" : ""}" data-tab="${id}" aria-selected="${id === first}">${l}</button>`).join("")}</div>
+    <div class="pf2panes"><div class="pf2pane${first === "g" ? " on" : ""}" data-pane="g">${items.length ? items.join("") + '<p class="pf2lg">Linia albă = media celor activi (cu cel puțin un meci în ultimele 8). Apar doar atributele în care ești peste medie.</p>' : '<p class="note">Aici apar atributele în care ești peste media grupului. Vezi „Evoluția ta”.</p>'}</div>
+    <div class="pf2pane${first === "e" ? " on" : ""}" data-pane="e">${ev.slice(0, 4).join("") || '<p class="note">Evoluția ta apare după primele meciuri jucate.</p>'}</div>
+    <div class="pf2pane" data-pane="r">${rhtml}</div>
+    <div class="pf2pane" data-pane="d">${duel}</div></div></div>`;
+}
+document.addEventListener("click", e => {
+  const tb = e.target.closest(".pf2tab");
+  if (tb) { const box = tb.closest(".pf2cmp"); box.querySelectorAll(".pf2tab").forEach(x => { x.classList.toggle("on", x === tb); x.setAttribute("aria-selected", x === tb); });
+    box.querySelectorAll(".pf2pane").forEach(x => x.classList.toggle("on", x.dataset.pane === tb.dataset.tab)); return; }
+  const sm = e.target.closest(".pf2sum");
+  if (sm) { const bx = sm.closest(".pf2bdg"); bx.classList.toggle("on"); sm.setAttribute("aria-expanded", bx.classList.contains("on")); return; }
+  const go = e.target.closest("[data-pf2go]");
+  if (go) { const bx = go.closest("#pf").querySelector(".pf2bdg"); if (bx) { bx.classList.add("on"); bx.querySelector(".pf2sum").setAttribute("aria-expanded", "true"); bx.scrollIntoView({ behavior: "smooth", block: "center" }); } }
+});
+document.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[data-pf2go]")) { e.preventDefault(); e.target.click(); } });
+document.addEventListener("change", e => {
+  const s = e.target.closest && e.target.closest(".pf2sel"); if (!s) return;
+  const S = S_(), p = byName(s.dataset.for), q = byName(s.value);
+  if (p && q) s.closest(".pf2pane").querySelector(".pf2duel").innerHTML = pfDuelRows(p, q, S);
+});
+
+/* ---------- anunțuri care se pot închide (×) ---------- */
+function pfDis(k) { try { return localStorage.getItem("fm-dis-" + k) === "1"; } catch (e) { return false; } }
+document.querySelectorAll("#photorule").forEach(r => { r.dataset.dk = "photorule"; r.hidden = pfDis("photorule"); });
+document.addEventListener("click", e => { const x = e.target.closest(".pr-x"); if (!x) return; const r = x.closest(".photorule"); if (!r) return; r.hidden = true;
+  try { localStorage.setItem("fm-dis-" + (r.dataset.dk || r.id || "x"), "1"); } catch (er) {} });
+
 function openProfile(name, push = true) {
   const S = S_(), P = S.players, p = byName(name); if (!p) return; _cur = p.name;
   const W = S.weeks, labels = W.map(w => w.label);
@@ -1542,10 +1862,13 @@ function openProfile(name, push = true) {
   $("pf").innerHTML = `<div class="pnav">${_pv ? `<button type="button" class="pv" data-go="-1" aria-label="Jucătorul anterior: ${esc(_pv.name)}">${ICON.prev}<span>${esc(_pv.name)}</span></button>` : `<button type="button" class="pv" disabled aria-label="Ești la primul jucător">${ICON.prev}<span></span></button>`}<span class="pc num">${p.rank} / ${P.length}</span>${_nx ? `<button type="button" class="nx" data-go="1" aria-label="Jucătorul următor: ${esc(_nx.name)}"><span>${esc(_nx.name)}</span>${ICON.next}</button>` : `<button type="button" class="nx" disabled aria-label="Ești la ultimul jucător"><span></span>${ICON.next}</button>`}<button class="x" id="pfx" type="button" aria-label="Închide profilul">${ICON.close}</button></div>
     <div class="hero" style="${tierStyle(p.tier)}">${heroAvg(p)}${card(p, true)}
       <div><span class="eyebrow">Locul ${p.rank} din ${P.length} · cel mai bun loc: ${bestRank}</span><h2>${esc(p.name)}</h2>
-        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" style="${tierStyle(p.tier)}">${esc(p.tier)}</span><span class="tag">${p.rank <= 12 ? "În lotul de 12" : p.rank <= 17 ? "Rezervă" : "În afara lotului"}</span><span class="tag">Prioritate: locul ${p.cotaRank}</span>${RATINGS[p.name] && RATINGS[p.name].voted ? `<span class="tag votd">🗳️ A votat${p.voteBonus ? ` · +${p.voteBonus}p` : ""}</span>` : ""}</div>
-        <div class="facts num"><div><b>${p.pts}</b><span>Puncte</span></div><div><b>${p.games}</b><span>Meciuri</span></div><div><b>${pct(p.rate)}%</b><span>Prezență</span></div><div><b>${p.cota}</b><span>Cota ${DATA.settings.cota_weeks} săpt.</span></div></div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" style="${tierStyle(p.tier)}">${esc(p.tier)}</span><span class="tag">${p.rank <= 12 ? "În lotul de 12" : p.rank <= 17 ? "Rezervă" : "În afara lotului"}</span>${RATINGS[p.name] && RATINGS[p.name].voted ? `<span class="tag votd">🗳️ A votat${p.voteBonus ? ` · +${p.voteBonus}p` : ""}</span>` : ""}</div>
+        <div class="facts num">${pfFacts(p, S)}</div>
       </div></div>
+    ${pfNews(p, S)}
     ${moveSection(p)}
+    ${pfBadgePanel(p, S)}
+    ${pfCompare(p, S)}
     <div class="panel"><span class="eyebrow">Atribute · de la 20 la 99</span><div class="attrs">${attrs.map(([k, d, v]) => `<div class="attr"><span class="av2 num ${v >= 85 ? "hi" : ""}">${v}</span><div><b>${k}</b><span class="ad">${esc(d)}</span><span class="ab"><i style="width:${v}%"></i></span></div></div>`).join("")}</div></div>
     ${radarPanel(p)}
     ${sigProfile(p)}
@@ -1554,9 +1877,7 @@ function openProfile(name, push = true) {
       <div class="panel"><h3>Puncte față de lider</h3><div class="chartbox" id="pfpts"></div></div></div>
     <div class="panel"><span class="eyebrow">Toate miercurile</span><div class="strip">${p.codes.map(vis).map((c, i) => { const an = W[i].status !== "Jucat";
       return `<span class="cell ${c ? CLS[c] : (an ? "dash" : "")}" title="${W[i].label}: ${c ? CODE_TXT[c] : (an ? "anulat" : "n-a fost înscris")}">${c && c !== "J" ? c : ""}</span>`; }).join("")}</div></div>
-    <div class="grid2">
-      <div class="panel"><span class="eyebrow">Premii și insigne</span>${aw.length || bd.length ? `<div class="badges" style="grid-template-columns:1fr">${aw.map(a => `<div class="badge"><span class="ic">${ICON[AWARD_ICON[a[0]] || "trophy"]}</span><span class="bn">${esc(a[0])}</span><span></span><span class="bd">${esc(a[2])}</span></div>`).join("")}${bd.map(b => `<div class="badge"><span class="ic">${ICON[BADGE_ICON[b[0]] || "trophy"]}</span><span class="bn">${esc(b[1])}</span><span></span><span class="bd">${esc(b[2])}</span></div>`).join("")}</div>` : '<p class="note">Încă nicio insignă. Prima e la 2 salvări sau 3 liste de rezerve.</p>'}</div>
-      <div class="panel"><span class="eyebrow">Luni cu prezență la toate meciurile</span>${months.length ? `<div class="chips">${months.map(m => `<span class="mchip">${ICON.cal}<b>${m}</b></span>`).join("")}</div>` : '<p class="note">Încă nicio lună cu toate meciurile jucate.</p>'}</div></div>
+    <div class="panel"><span class="eyebrow">Luni cu prezență la toate meciurile</span>${months.length ? `<div class="chips">${months.map(m => `<span class="mchip">${ICON.cal}<b>${m}</b></span>`).join("")}</div>` : '<p class="note">Încă nicio lună cu toate meciurile jucate.</p>'}</div>
     <div class="tiles num">
       <div class="tile"><b class="${p.cur >= 4 ? "streak" : ""}">${p.cur}</b><span>serie curentă (record ${p.best})</span></div>
       <div class="tile"><b>${p.JP + p.guests}</b><span>salvări (${p.JP} de pe rezervă, ${p.guests} invitați)</span></div>
@@ -1573,10 +1894,10 @@ function openProfile(name, push = true) {
 let _cur = null;
 function stepProfile(dir) { const P = S_().players, d = $("prof"); if (!d.open || !_cur) return; const i = P.findIndex(x => x.name === _cur); if (i < 0) return;
   const n = P[i + dir]; if (!n) return; openProfile(n.name, false); safeRS(null, "", "#p-" + slug(n.name)); d.scrollTop = 0; }
-document.addEventListener("keydown", e => { const d = $("prof"); if (!d.open || e.altKey || e.ctrlKey || e.metaKey) return; if (e.key === "ArrowLeft") { e.preventDefault(); stepProfile(-1); } else if (e.key === "ArrowRight") { e.preventDefault(); stepProfile(1); } });
+document.addEventListener("keydown", e => { const d = $("prof"); if (!d.open || e.altKey || e.ctrlKey || e.metaKey || (e.target.closest && e.target.closest("select, input, textarea"))) return; if (e.key === "ArrowLeft") { e.preventDefault(); stepProfile(-1); } else if (e.key === "ArrowRight") { e.preventDefault(); stepProfile(1); } });
 (() => { let x0 = 0, y0 = 0, t0 = 0, ok = false;
   const d = $("prof");
-  d.addEventListener("touchstart", e => { const t = e.touches[0]; ok = e.touches.length === 1 && !e.target.closest(".strip, .chartbox, .rad, input, textarea"); x0 = t.clientX; y0 = t.clientY; t0 = Date.now(); }, { passive: true });
+  d.addEventListener("touchstart", e => { const t = e.touches[0]; ok = e.touches.length === 1 && !e.target.closest(".strip, .chartbox, .rad, input, textarea, select, .pf2cmp, .pf2ics, .pf2grid"); x0 = t.clientX; y0 = t.clientY; t0 = Date.now(); }, { passive: true });
   d.addEventListener("touchend", e => { if (!ok) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; ok = false;
     if (Math.abs(dx) > 70 && Math.abs(dx) > 1.8 * Math.abs(dy) && Date.now() - t0 < 700) stepProfile(dx < 0 ? 1 : -1); }, { passive: true }); })();
 $("prof").addEventListener("close", () => { document.documentElement.classList.remove("lockscroll"); if (location.hash.startsWith("#p-")) safeRS(null, "", location.pathname + location.search); });
