@@ -4,65 +4,69 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Echipe · Fotbal Miercuri</title>
+<title>EchipeAi · Fotbal Miercuri</title>
 <style>
 :root{--bg:#0A1630;--panel:#12254A;--pitch:#0F2A55;--volt:#C6F432;--blue:#8DBBFF;--ink:#F2F5FA;--mut:#A9B8D4;--line:#3A5086;--dim:#2A3F6B}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 button{font-family:inherit;cursor:pointer;color:inherit}
-.wrap{max-width:1000px;margin:0 auto;padding:22px 16px 28px;display:flex;flex-direction:column;gap:12px}
-.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-.eyebrow{font-size:11px;letter-spacing:.12em;color:var(--volt);font-weight:700}
-h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
-.badge{font-size:12px;font-weight:700;color:var(--bg);background:var(--volt);padding:6px 10px;border-radius:999px;white-space:nowrap}
-.meta{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mut)}
-.test{display:none;font-size:13px;font-weight:700;color:var(--bg);background:var(--blue);border-radius:10px;padding:8px 12px}
-.status{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:10px;padding:0 12px;min-height:38px;font-size:14px;font-weight:600}
+.wrap{max-width:1000px;margin:0 auto;padding:12px 14px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.eyebrow{font-size:10px;letter-spacing:.12em;color:var(--volt);font-weight:700}
+h1{margin:2px 0 0;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.badge{font-size:11px;font-weight:700;color:var(--bg);background:var(--volt);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.meta{font-size:12px;color:var(--mut);white-space:nowrap}
+.test{display:none;font-size:12px;font-weight:700;color:var(--bg);background:var(--blue);border-radius:8px;padding:6px 10px;line-height:1.3}
+.status{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:10px;padding:0 12px;min-height:32px;font-size:13px;font-weight:600}
 .status i{width:8px;height:8px;border-radius:999px;background:var(--volt);flex-shrink:0}
 .card{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:18px;font-size:15px;line-height:1.5}
 .card b{display:block;font-size:17px;margin-bottom:4px}
-.pitch{display:grid;grid-template-columns:1fr;border:2px solid rgba(198,244,50,.45);border-radius:16px;background:var(--pitch);overflow:hidden}
-.half{padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.hh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.hh .t{font-size:13px;font-weight:800;letter-spacing:.1em}
-.hh .a{font-size:26px;font-weight:800}
-.hh small{font-size:11px;color:var(--mut);font-weight:600;margin-left:6px}
+#app{flex:1 1 auto;display:flex;flex-direction:column;gap:8px;min-height:0}
+.pitch{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:1fr auto 1fr;border:2px solid rgba(198,244,50,.45);border-radius:14px;background:var(--pitch);overflow:hidden}
+.half{padding:8px 10px;display:flex;flex-direction:column;gap:6px;min-width:0;min-height:0}
+.hh{display:flex;justify-content:space-between;align-items:baseline}
+.hh .t{font-size:12px;font-weight:800;letter-spacing:.1em}
+.hh .a{font-size:22px;font-weight:800;line-height:1}
 .ta .t,.ta .a{color:var(--volt)}.tb .t,.tb .a{color:var(--blue)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.mid{display:flex;align-items:center;gap:10px;padding:0 12px}
+.grid{flex:1 1 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(44px,1fr);gap:6px}
+.mid{display:flex;align-items:center;gap:10px;padding:0 10px}
 .mid span.l{flex:1;height:2px;background:rgba(198,244,50,.45)}
-.mid .p{font-size:12px;font-weight:700;background:var(--bg);border:1.5px solid rgba(198,244,50,.6);border-radius:999px;padding:5px 12px;white-space:nowrap}
-.chip{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-height:56px;min-width:0;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);text-align:left}
+.mid .p{font-size:12px;font-weight:700;background:var(--bg);border:1.5px solid rgba(198,244,50,.6);border-radius:999px;padding:3px 12px;white-space:nowrap}
+.chip{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-width:0;padding:4px 8px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);text-align:left}
 .ta .chip{border-color:var(--volt)}.tb .chip{border-color:var(--blue)}
-.chip .n{font-size:15px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chip .r{font-size:12px;font-weight:600;color:var(--mut)}
+.chip .n{font-size:14px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .r{font-size:11px;font-weight:600;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.g{border-style:dashed}
 .chip.sel{background:var(--volt);color:var(--bg)}.chip.sel .r{color:var(--bg)}
 .chip.ca{background:#1B3A2E;border-color:var(--volt)}.chip.cb{background:#1B3262;border-color:var(--blue)}
 .chip:disabled{cursor:default}
-.hint{font-size:13px;color:var(--mut);line-height:1.45;margin:0}
-.pickbox{border:2px solid rgba(198,244,50,.45);border-radius:16px;background:var(--pitch);padding:14px;display:flex;flex-direction:column;gap:12px}
-.pickbox p{margin:0;font-size:14px;color:#D3DDF0;line-height:1.4}
-.btns{display:flex;flex-direction:column;gap:8px}
-.row{display:flex;gap:8px}
+.hint{font-size:12px;color:var(--mut);line-height:1.35;margin:0}
+.pickbox{flex:1 1 auto;min-height:0;border:2px solid rgba(198,244,50,.45);border-radius:14px;background:var(--pitch);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pickbox p{margin:0;font-size:13px;color:#D3DDF0;line-height:1.35}
+.btns{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:6px}
 .row .btn{flex:1}
-.btn{min-height:52px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);font-size:16px;font-weight:700;padding:0 14px}
-.btn.pri{border:none;background:var(--volt);color:var(--bg);font-size:17px;font-weight:800;min-height:56px;border-radius:14px}
+.btn{min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);font-size:16px;font-weight:700;padding:0 14px}
+.btn.pri{border:none;background:var(--volt);color:var(--bg);font-size:17px;font-weight:800;min-height:50px;border-radius:14px}
 .btn.off{background:var(--dim);color:#8FA2C4;border:none;cursor:default}
 .btn:focus-visible,.chip:focus-visible{outline:3px solid #fff;outline-offset:2px}
 [hidden]{display:none!important}
 @media (min-width:820px){
-  .wrap{padding-top:32px}
-  h1{font-size:32px}
-  .pitch{grid-template-columns:1fr auto 1fr}
-  .half{padding:18px}
+  .wrap{padding-top:24px;gap:10px}
+  h1{font-size:30px}
+  .pitch{grid-template-columns:1fr auto 1fr;grid-template-rows:none}
+  .half{padding:16px;gap:10px}
+  .hh .a{font-size:26px}
   .mid{flex-direction:column;padding:12px 0}
   .mid span.l{width:2px;height:auto;flex:1}
   .mid .p{white-space:normal;text-align:center;max-width:90px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .chip{min-height:64px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(56px,1fr);gap:10px}
+  .chip .n{font-size:15px}.chip .r{font-size:12px}
   .btns{flex-direction:row;flex-wrap:wrap}
   .btns .row{flex:1}
   .btn.pri{flex:1 1 100%}
+  .hint{font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -70,10 +74,9 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
 <body>
 <main class="wrap">
   <div class="top">
-    <div><div class="eyebrow">FOTBAL MIERCURI · ADMIN</div><h1>Echipe</h1></div>
-    <div class="badge">Doar admini</div>
+    <div><div class="eyebrow">FOTBAL MIERCURI</div><h1>Echipe<span style="color:var(--volt)">Ai</span></h1></div>
+    <div class="right"><div class="badge">Doar admini</div><div class="meta"><span id="when"></span><span id="cnt"></span></div></div>
   </div>
-  <div class="meta"><span id="when">&nbsp;</span><span id="cnt"></span></div>
   <div class="test" id="test"></div>
   <div class="status" role="status" aria-live="polite"><i></i><span id="msg">Se încarcă datele…</span></div>
 
@@ -82,24 +85,24 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
   <section id="app" hidden>
     <div class="pitch" id="pitch">
       <div class="half ta">
-        <div class="hh"><span class="t">ECHIPA A</span><span><span class="a" id="avgA">–</span><small id="unA"></small></span></div>
+        <div class="hh"><span class="t">ECHIPA A</span><span class="a" id="avgA">–</span></div>
         <div class="grid" id="gridA"></div>
       </div>
       <div class="mid"><span class="l"></span><span class="p" id="diff">Diferență –</span><span class="l"></span></div>
       <div class="half tb">
-        <div class="hh"><span class="t">ECHIPA B</span><span><span class="a" id="avgB">–</span><small id="unB"></small></span></div>
+        <div class="hh"><span class="t">ECHIPA B</span><span class="a" id="avgB">–</span></div>
         <div class="grid" id="gridB"></div>
       </div>
     </div>
     <div class="pickbox" id="pick" hidden>
-      <p>Apasă pe doi jucători. Primul devine căpitan A, al doilea căpitan B. Restul se completează după forța lor.</p>
+      <p>Apasă pe doi jucători: primul e căpitan A, al doilea căpitan B. Restul se completează după nota lor.</p>
       <div class="grid" id="gridP"></div>
     </div>
-    <p class="hint" id="hint" style="margin-top:12px">Echipele ies aleatoriu, dar le poți schimba: apasă un jucător, apoi pe cel din cealaltă echipă cu care vrei să-l schimbi. După ce ești mulțumit, blochează echipele și trimite-le.</p>
-    <div class="btns" style="margin-top:12px">
+    <p class="hint" id="hint"></p>
+    <div class="btns">
       <div class="row" id="rowGen">
         <button class="btn" id="bGen" type="button">Generează</button>
-        <button class="btn" id="bCap" type="button">Căpitani</button>
+        <button class="btn" id="bCap" type="button">Alege căpitanii</button>
       </div>
       <div class="row" id="rowUnlock" hidden>
         <button class="btn" id="bUnlock" type="button">Deblochează</button>
@@ -118,7 +121,8 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
   var qs = new URLSearchParams(location.search);
   var TEST = qs.get("test") === "1";
   var $ = function (id) { return document.getElementById(id); };
-  var S = { ids: [], R: {}, SN: {}, A: [], B: [], sel: null, busy: false, locked: false, view: "teams", cA: null, cB: null, pA: null, pB: null, dateLabel: "", testNote: "" };
+  /* ids: identificatori unici; R: nota (null la invitați și la cei fără destule voturi); SN: nume afișat; G: invitat (cu "adus de") */
+  var S = { ids: [], R: {}, SN: {}, FN: {}, G: {}, A: [], B: [], sel: null, busy: false, locked: false, view: "teams", cA: null, cB: null, pA: null, pB: null, dateLabel: "" };
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
   function fmt(x, d) { return x == null ? "–" : x.toFixed(d).replace(".", ","); }
@@ -166,10 +170,10 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
   function avgOf(list) {
     var s = 0, c = 0;
     list.forEach(function (i) { if (S.R[i] != null) { s += S.R[i]; c++; } });
-    return { v: c ? s / c : null, un: list.length - c };
+    return c ? s / c : null;
   }
 
-  /* împărțire echilibrată: cei fără notă se pun la întâmplare, ceilalți se echilibrează */
+  /* împărțire echilibrată: cei fără notă (invitați etc.) se pun la întâmplare, ceilalți se echilibrează */
   function solve(ca, cb) {
     var ids = S.ids, R = S.R, n = ids.length, sa = sizeA(), sb = n - sa;
     var fA = ca ? [ca] : [], fB = cb ? [cb] : [], swapSides = false;
@@ -216,8 +220,13 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     return { A: p.slice(0, sa), B: p.slice(sa) };
   }
 
-  function chipHtml(id, cls, sub, dis) {
-    return "<button type=\"button\" class=\"chip" + cls + "\" data-id=\"" + esc(id) + "\"" + (dis ? " disabled" : "") + "><span class=\"n\">" + esc(S.SN[id]) + "</span><span class=\"r\">" + sub + "</span></button>";
+  function sub(id) {
+    var g = S.G[id];
+    if (g) return "invitat" + (g.by ? " · " + g.by : "");
+    return fmt(S.R[id], 1);
+  }
+  function chipHtml(id, cls, subtxt, dis) {
+    return "<button type=\"button\" class=\"chip" + (S.G[id] ? " g" : "") + cls + "\" data-id=\"" + esc(id) + "\"" + (dis ? " disabled" : "") + "><span class=\"n\">" + esc(S.SN[id]) + "</span><span class=\"r\">" + esc(subtxt) + "</span></button>";
   }
 
   function render() {
@@ -227,26 +236,25 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     if (pick) {
       $("gridP").innerHTML = S.ids.map(function (id) {
         var a = S.pA === id, b = S.pB === id;
-        return chipHtml(id, a ? " ca" : (b ? " cb" : ""), a ? "Căpitan A" : (b ? "Căpitan B" : fmt(S.R[id], 1)), false);
+        return chipHtml(id, a ? " ca" : (b ? " cb" : ""), a ? "Căpitan A" : (b ? "Căpitan B" : sub(id)), false);
       }).join("");
     } else {
       var one = function (list) {
         return list.map(function (id) {
           var cap = id === S.cA || id === S.cB;
-          return chipHtml(id, S.sel === id ? " sel" : "", (cap ? "Căpitan · " : "") + fmt(S.R[id], 1), S.locked || S.busy);
+          return chipHtml(id, S.sel === id ? " sel" : "", (cap ? "Căpitan · " : "") + sub(id), S.locked || S.busy);
         }).join("");
       };
       $("gridA").innerHTML = one(S.A); $("gridB").innerHTML = one(S.B);
       var a = avgOf(S.A), b = avgOf(S.B);
-      $("avgA").textContent = fmt(a.v, 2); $("avgB").textContent = fmt(b.v, 2);
-      $("unA").textContent = a.un ? a.un + " fără notă" : ""; $("unB").textContent = b.un ? b.un + " fără notă" : "";
-      $("diff").textContent = "Diferență " + (a.v != null && b.v != null ? fmt(Math.abs(a.v - b.v), 2) : "–");
-      $("hint").textContent = S.locked ? "Echipele sunt blocate. Apasă Trimite echipele sau Deblochează dacă vrei să le schimbi."
-        : "Echipele ies aleatoriu, dar le poți schimba: apasă un jucător, apoi pe cel din cealaltă echipă cu care vrei să-l schimbi. După ce ești mulțumit, blochează echipele și trimite-le.";
+      $("avgA").textContent = fmt(a, 2); $("avgB").textContent = fmt(b, 2);
+      $("diff").textContent = "Diferență " + (a != null && b != null ? fmt(Math.abs(a - b), 2) : "–");
+      $("hint").textContent = S.locked ? "Blocate. Trimite echipele sau deblochează."
+        : "Calculate după voturile colegilor. Schimbi jucători apăsând pe doi, din echipe diferite.";
     }
     $("rowGen").hidden = S.locked;
     $("rowUnlock").hidden = !S.locked;
-    $("bGen").hidden = pick; $("bCap").textContent = pick ? "Înapoi" : "Căpitani";
+    $("bGen").hidden = pick; $("bCap").textContent = pick ? "Înapoi" : "Alege căpitanii";
     var pri = $("bPri"), off = false;
     if (S.busy) { pri.textContent = "Se amestecă…"; off = true; }
     else if (pick) { pri.textContent = "Completează echipele"; off = !(S.pA && S.pB); }
@@ -261,7 +269,7 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     var fin = solve(ca, cb), step = 0, total = 14;
     S.busy = true; S.view = "teams"; S.sel = null; S.cA = ca || null; S.cB = cb || null;
     var tick = function () {
-      if (step >= total) { S.A = fin.A; S.B = fin.B; S.busy = false; setMsg("Gata. Echipele sunt echilibrate."); render(); return; }
+      if (step >= total) { S.A = fin.A; S.B = fin.B; S.busy = false; setMsg("Gata. Echipe calculate după voturi."); render(); return; }
       var s = shuffled(ca, cb); S.A = s.A; S.B = s.B;
       setMsg(step < 7 ? "Se amestecă…" : "Se echilibrează notele…");
       render(); step++; setTimeout(tick, 70 + step * 14);
@@ -269,7 +277,8 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     tick();
   }
 
-  function names(l) { return l.map(function (i) { return i + (i === S.cA || i === S.cB ? " (C)" : ""); }).join(", "); }
+  function fullName(id) { return S.G[id] ? S.FN[id] + " (invitat)" : id; }
+  function names(l) { return l.map(function (i) { return fullName(i) + (i === S.cA || i === S.cB ? " (C)" : ""); }).join(", "); }
   function shareText() {
     return S.dateLabel + (TEST ? " (TEST)" : "") + " | Echipe finale | Mod: " + (S.cA ? "căpitani" : "automat") + "\nA: " + names(S.A) + "\nB: " + names(S.B);
   }
@@ -306,7 +315,7 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     $("bGen").addEventListener("click", function () { if (!S.busy && !S.locked) run(null, null); });
     $("bCap").addEventListener("click", function () {
       if (S.busy || S.locked) return;
-      if (S.view === "pick") { S.view = "teams"; setMsg("Echipe echilibrate. Apasă două nume ca să le schimbi."); }
+      if (S.view === "pick") { S.view = "teams"; setMsg("Echipe calculate după voturile colegilor."); }
       else { S.view = "pick"; S.pA = null; S.pB = null; S.sel = null; setMsg("Alege doi căpitani."); }
       render();
     });
@@ -319,15 +328,20 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     });
   }
 
-  function start(players, R, label, testNote) {
-    var n = players.length;
+  /* members: [nume]; guests: [{name, by}] */
+  function start(members, guests, R, label, testNote) {
+    var n = members.length + guests.length;
     if (n < 6) { showBlock("Prea puțini jucători", "Lista are " + n + " jucători, minimum 6."); return; }
-    if (n > 14) { testNote = (testNote ? testNote + " " : "") + "Lista are " + n + " jucători, am luat primii 14."; players = players.slice(0, 14); n = 14; }
-    S.ids = players; S.R = R; S.SN = shortNames(players); S.dateLabel = label;
+    if (n > 14) { showBlock("Prea mulți jucători", "Lista are " + n + " jucători, maximum 14."); return; }
+    var sn = shortNames(members);
+    S.ids = []; S.R = {}; S.SN = {}; S.FN = {}; S.G = {};
+    members.forEach(function (m) { S.ids.push(m); S.R[m] = R[m] != null ? R[m] : null; S.SN[m] = sn[m]; });
+    guests.forEach(function (g, i) { var id = "inv" + (i + 1) + ":" + g.name; S.ids.push(id); S.R[id] = null; S.SN[id] = g.name; S.FN[id] = g.name; S.G[id] = { by: g.by || "" }; });
+    S.dateLabel = label;
     var f = solve(null, null); S.A = f.A; S.B = f.B;
-    $("cnt").textContent = n + " jucători" + (n === 12 ? " · 12 din 12" : "");
+    $("cnt").textContent = " · " + n + " jucători";
     if (testNote) { $("test").textContent = testNote; $("test").style.display = "block"; }
-    setMsg("Echipe echilibrate. Apasă două nume ca să le schimbi.");
+    setMsg("Echipe calculate după voturile colegilor.");
     $("block").hidden = true; $("app").hidden = false; wire(); render();
   }
 
@@ -359,22 +373,26 @@ h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
     try { localStorage.setItem("fm_k", ADMIN_CODE); } catch (e) {}
     var wed = targetWed();
     $("when").textContent = "Miercuri " + dmy(wed).slice(0, 5);
-    var needDate = TEST;
-    Promise.all([gviz("hexagon"), needDate ? gviz("date") : gviz("echipe").catch(function () { return []; })]).then(function (out) {
+    Promise.all([gviz("hexagon"), TEST ? gviz("date") : gviz("echipe").catch(function () { return []; })]).then(function (out) {
       var R = ratingsFrom(out[0]), rows = out[1];
       if (TEST) {
         var wk = rows.filter(function (r) { return r[0] === "wk"; })[0], st = rows.filter(function (r) { return r[0] === "st"; })[0], last = -1;
         for (var i = 2; wk && i < wk.length; i++) if (st && st[i] === "Jucat") last = i;
         if (last < 0) { showBlock("Fără date", "Nu am găsit nicio miercuri jucată."); return; }
+        var d = wk[last], dm = d.slice(8) + "." + d.slice(5, 7);
+        var gs = rows.filter(function (r) { return r[0] === "g" && r[2] === d; });
         var pl = rows.filter(function (r) { return r[0] === "m" && (r[last] === "J" || r[last] === "J+"); }).map(function (r) { return r[1]; });
-        var d = wk[last];
-        $("when").textContent = "Test · miercuri " + d.slice(8) + "." + d.slice(5, 7);
-        start(pl, R, "Miercuri " + dmy(d), "MOD TEST: lista din ultima miercuri jucată (" + d.slice(8) + "." + d.slice(5, 7) + "). Nu e lista de miercuri.");
+        pl = pl.slice(0, Math.max(0, 12 - gs.length));
+        var gl = gs.map(function (r, k) { return { name: "Invitat " + (k + 1), by: r[1] }; });
+        $("when").textContent = "Test " + dm;
+        start(pl, gl, R, "Miercuri " + dmy(d), "MOD TEST: lista din " + dm + " (" + pl.length + " din listă + " + gl.length + " invitați). Nu e lista de miercuri.");
         return;
       }
-      var pl2 = rows.filter(function (r) { return (r[0] || "") === wed && (r[1] || "").trim(); }).map(function (r) { return r[1].trim(); });
-      if (!pl2.length) { setMsg("Prezența nu e încărcată."); showBlock("Sese nu a încărcat prezența", "Echipele se deblochează după ce Sese încarcă lista pentru miercuri " + dmy(wed).slice(0, 5) + "."); return; }
-      start(pl2, R, "Miercuri " + dmy(wed), "");
+      var mine = rows.filter(function (r) { return (r[0] || "") === wed && (r[1] || "").trim(); });
+      if (!mine.length) { setMsg("Prezența nu e încărcată."); showBlock("Sese nu a încărcat prezența", "Echipele se deblochează după ce Sese încarcă lista pentru miercuri " + dmy(wed).slice(0, 5) + "."); return; }
+      var mem = [], gst = [];
+      mine.forEach(function (r) { var nm = r[1].trim(); if (/^i/i.test((r[2] || "").trim())) gst.push({ name: nm, by: (r[3] || "").trim() }); else mem.push(nm); });
+      start(mem, gst, R, "Miercuri " + dmy(wed), "");
     }).catch(function () {
       setMsg("Nu s-au putut citi datele."); showBlock("Nu s-au putut citi datele", "Verifică conexiunea și reîncarcă pagina.");
     });
