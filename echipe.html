@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Echipe · Fotbal Miercuri</title>
+<style>
+:root{--bg:#0A1630;--panel:#12254A;--pitch:#0F2A55;--volt:#C6F432;--blue:#8DBBFF;--ink:#F2F5FA;--mut:#A9B8D4;--line:#3A5086;--dim:#2A3F6B}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font-family:inherit;cursor:pointer;color:inherit}
+.wrap{max-width:1000px;margin:0 auto;padding:22px 16px 28px;display:flex;flex-direction:column;gap:12px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.eyebrow{font-size:11px;letter-spacing:.12em;color:var(--volt);font-weight:700}
+h1{margin:4px 0 0;font-size:26px;font-weight:800;letter-spacing:-.01em}
+.badge{font-size:12px;font-weight:700;color:var(--bg);background:var(--volt);padding:6px 10px;border-radius:999px;white-space:nowrap}
+.meta{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mut)}
+.test{display:none;font-size:13px;font-weight:700;color:var(--bg);background:var(--blue);border-radius:10px;padding:8px 12px}
+.status{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:10px;padding:0 12px;min-height:38px;font-size:14px;font-weight:600}
+.status i{width:8px;height:8px;border-radius:999px;background:var(--volt);flex-shrink:0}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:18px;font-size:15px;line-height:1.5}
+.card b{display:block;font-size:17px;margin-bottom:4px}
+.pitch{display:grid;grid-template-columns:1fr;border:2px solid rgba(198,244,50,.45);border-radius:16px;background:var(--pitch);overflow:hidden}
+.half{padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.hh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hh .t{font-size:13px;font-weight:800;letter-spacing:.1em}
+.hh .a{font-size:26px;font-weight:800}
+.hh small{font-size:11px;color:var(--mut);font-weight:600;margin-left:6px}
+.ta .t,.ta .a{color:var(--volt)}.tb .t,.tb .a{color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mid{display:flex;align-items:center;gap:10px;padding:0 12px}
+.mid span.l{flex:1;height:2px;background:rgba(198,244,50,.45)}
+.mid .p{font-size:12px;font-weight:700;background:var(--bg);border:1.5px solid rgba(198,244,50,.6);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.chip{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-height:56px;min-width:0;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);text-align:left}
+.ta .chip{border-color:var(--volt)}.tb .chip{border-color:var(--blue)}
+.chip .n{font-size:15px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .r{font-size:12px;font-weight:600;color:var(--mut)}
+.chip.sel{background:var(--volt);color:var(--bg)}.chip.sel .r{color:var(--bg)}
+.chip.ca{background:#1B3A2E;border-color:var(--volt)}.chip.cb{background:#1B3262;border-color:var(--blue)}
+.chip:disabled{cursor:default}
+.hint{font-size:13px;color:var(--mut);line-height:1.45;margin:0}
+.pickbox{border:2px solid rgba(198,244,50,.45);border-radius:16px;background:var(--pitch);padding:14px;display:flex;flex-direction:column;gap:12px}
+.pickbox p{margin:0;font-size:14px;color:#D3DDF0;line-height:1.4}
+.btns{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:8px}
+.row .btn{flex:1}
+.btn{min-height:52px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);font-size:16px;font-weight:700;padding:0 14px}
+.btn.pri{border:none;background:var(--volt);color:var(--bg);font-size:17px;font-weight:800;min-height:56px;border-radius:14px}
+.btn.off{background:var(--dim);color:#8FA2C4;border:none;cursor:default}
+.btn:focus-visible,.chip:focus-visible{outline:3px solid #fff;outline-offset:2px}
+[hidden]{display:none!important}
+@media (min-width:820px){
+  .wrap{padding-top:32px}
+  h1{font-size:32px}
+  .pitch{grid-template-columns:1fr auto 1fr}
+  .half{padding:18px}
+  .mid{flex-direction:column;padding:12px 0}
+  .mid span.l{width:2px;height:auto;flex:1}
+  .mid .p{white-space:normal;text-align:center;max-width:90px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .chip{min-height:64px}
+  .btns{flex-direction:row;flex-wrap:wrap}
+  .btns .row{flex:1}
+  .btn.pri{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div><div class="eyebrow">FOTBAL MIERCURI · ADMIN</div><h1>Echipe</h1></div>
+    <div class="badge">Doar admini</div>
+  </div>
+  <div class="meta"><span id="when">&nbsp;</span><span id="cnt"></span></div>
+  <div class="test" id="test"></div>
+  <div class="status" role="status" aria-live="polite"><i></i><span id="msg">Se încarcă datele…</span></div>
+
+  <div class="card" id="block" hidden></div>
+
+  <section id="app" hidden>
+    <div class="pitch" id="pitch">
+      <div class="half ta">
+        <div class="hh"><span class="t">ECHIPA A</span><span><span class="a" id="avgA">–</span><small id="unA"></small></span></div>
+        <div class="grid" id="gridA"></div>
+      </div>
+      <div class="mid"><span class="l"></span><span class="p" id="diff">Diferență –</span><span class="l"></span></div>
+      <div class="half tb">
+        <div class="hh"><span class="t">ECHIPA B</span><span><span class="a" id="avgB">–</span><small id="unB"></small></span></div>
+        <div class="grid" id="gridB"></div>
+      </div>
+    </div>
+    <div class="pickbox" id="pick" hidden>
+      <p>Apasă pe doi jucători. Primul devine căpitan A, al doilea căpitan B. Restul se completează după forța lor.</p>
+      <div class="grid" id="gridP"></div>
+    </div>
+    <p class="hint" id="hint" style="margin-top:12px">Echipele ies aleatoriu, dar le poți schimba: apasă un jucător, apoi pe cel din cealaltă echipă cu care vrei să-l schimbi. După ce ești mulțumit, blochează echipele și trimite-le.</p>
+    <div class="btns" style="margin-top:12px">
+      <div class="row" id="rowGen">
+        <button class="btn" id="bGen" type="button">Generează</button>
+        <button class="btn" id="bCap" type="button">Căpitani</button>
+      </div>
+      <div class="row" id="rowUnlock" hidden>
+        <button class="btn" id="bUnlock" type="button">Deblochează</button>
+      </div>
+      <button class="btn pri" id="bPri" type="button">Blochează echipele</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var LIVE_SHEET = "1qZwefpegumzPD9McRsfmnqfDgDzyUzwJKEQi65y3i3g";
+  var ADMIN_CODE = "miercuri20";
+  var MIN_VOTES = 3;
+  var qs = new URLSearchParams(location.search);
+  var TEST = qs.get("test") === "1";
+  var $ = function (id) { return document.getElementById(id); };
+  var S = { ids: [], R: {}, SN: {}, A: [], B: [], sel: null, busy: false, locked: false, view: "teams", cA: null, cB: null, pA: null, pB: null, dateLabel: "", testNote: "" };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
+  function fmt(x, d) { return x == null ? "–" : x.toFixed(d).replace(".", ","); }
+  function setMsg(t) { $("msg").textContent = t; }
+  function showBlock(title, text) { $("block").innerHTML = "<b>" + esc(title) + "</b>" + esc(text); $("block").hidden = false; $("app").hidden = true; }
+
+  /* citire live din sheet-ul public (JSONP, ca pe site) */
+  function gviz(sheet) {
+    return new Promise(function (ok, no) {
+      var cb = "__fe" + Date.now() + Math.floor(Math.random() * 1e6), sc = document.createElement("script");
+      var t = setTimeout(function () { delete window[cb]; sc.remove(); no(new Error("timeout")); }, 8000);
+      window[cb] = function (res) {
+        clearTimeout(t); delete window[cb]; sc.remove();
+        try {
+          if (res.status === "error") throw new Error("sheet");
+          ok(res.table.rows.map(function (r) { return (r.c || []).map(function (c) { return c == null || c.v == null ? "" : String(c.v).replace(/^~/, ""); }); }));
+        } catch (e) { no(e); }
+      };
+      sc.onerror = function () { clearTimeout(t); delete window[cb]; no(new Error("net")); };
+      sc.src = "https://docs.google.com/spreadsheets/d/" + LIVE_SHEET + "/gviz/tq?tqx=responseHandler:" + cb + "&headers=0&sheet=" + encodeURIComponent(sheet) + "&_=" + Date.now();
+      document.head.appendChild(sc);
+    });
+  }
+
+  /* miercurea țintă: azi dacă e miercuri, altfel următoarea (ora României) */
+  function targetWed() {
+    var iso = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Bucharest" });
+    var p = iso.split("-").map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+    d.setDate(d.getDate() + ((3 - d.getDay() + 7) % 7));
+    var z = function (n) { return String(n).padStart(2, "0"); };
+    return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate());
+  }
+  function dmy(iso) { return iso.slice(8) + "." + iso.slice(5, 7) + "." + iso.slice(0, 4); }
+
+  function shortNames(names) {
+    var o = {}, cnt = {};
+    names.forEach(function (n) { var m = n.match(/\(([^)]+)\)/); o[n] = m ? m[1] : n.split(" ")[0]; });
+    Object.keys(o).forEach(function (k) { cnt[o[k]] = (cnt[o[k]] || 0) + 1; });
+    names.forEach(function (n) { if (cnt[o[n]] > 1 && !/\(/.test(n)) { var p = n.split(" "); if (p[1]) o[n] = p[0] + " " + p[1][0] + "."; } });
+    return o;
+  }
+
+  function shuf(a) { var x = a.slice(); for (var i = x.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = x[i]; x[i] = x[j]; x[j] = t; } return x; }
+  function sizeA() { return Math.ceil(S.ids.length / 2); }
+  function avgOf(list) {
+    var s = 0, c = 0;
+    list.forEach(function (i) { if (S.R[i] != null) { s += S.R[i]; c++; } });
+    return { v: c ? s / c : null, un: list.length - c };
+  }
+
+  /* împărțire echilibrată: cei fără notă se pun la întâmplare, ceilalți se echilibrează */
+  function solve(ca, cb) {
+    var ids = S.ids, R = S.R, n = ids.length, sa = sizeA(), sb = n - sa;
+    var fA = ca ? [ca] : [], fB = cb ? [cb] : [], swapSides = false;
+    var rest = ids.filter(function (i) { return fA.indexOf(i) < 0 && fB.indexOf(i) < 0; });
+    if (!ca && !cb) {
+      var first = rest.filter(function (i) { return R[i] != null; })[0] || rest[0];
+      fA = [first]; swapSides = n % 2 === 0 && Math.random() < 0.5;
+      rest = rest.filter(function (i) { return i !== first; });
+    }
+    var needA = sa - fA.length, needB = sb - fB.length;
+    var U = shuf(rest.filter(function (i) { return R[i] == null; }));
+    var Rr = rest.filter(function (i) { return R[i] != null; });
+    var u = U.length, ua = Math.floor(u / 2) + (u % 2 && Math.random() < 0.5 ? 1 : 0);
+    ua = Math.max(u - needB, Math.min(needA, ua));
+    var ra = needA - ua, m = Rr.length, res = [];
+    var allRated = ids.filter(function (i) { return R[i] != null; });
+    var gm = allRated.reduce(function (s, i) { return s + R[i]; }, 0) / (allRated.length || 1);
+    var baseA = fA.filter(function (i) { return R[i] != null; }), baseB = fB.filter(function (i) { return R[i] != null; });
+    var sumA0 = baseA.reduce(function (s, i) { return s + R[i]; }, 0), sumB0 = baseB.reduce(function (s, i) { return s + R[i]; }, 0);
+    var tot = Rr.reduce(function (s, i) { return s + R[i]; }, 0);
+    for (var mask = 0; mask < (1 << m); mask++) {
+      var c = 0, s = 0;
+      for (var j = 0; j < m; j++) if (mask & (1 << j)) { c++; s += R[Rr[j]]; }
+      if (c !== ra) continue;
+      var cntA = baseA.length + c, cntB = baseB.length + (m - c);
+      var aA = cntA ? (sumA0 + s) / cntA : gm, aB = cntB ? (sumB0 + tot - s) / cntB : gm;
+      res.push({ mask: mask, d: Math.abs(aA - aB) });
+    }
+    res.sort(function (x, y) { return x.d - y.d; });
+    var lim = res[0].d + 0.1, pool = res.filter(function (x) { return x.d <= lim; }).slice(0, 12);
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    var A = fA.concat(U.slice(0, ua)), B = fB.concat(U.slice(ua));
+    Rr.forEach(function (id, j) { if (pick.mask & (1 << j)) A.push(id); else B.push(id); });
+    return swapSides ? { A: B, B: A } : { A: A, B: B };
+  }
+
+  function shuffled(ca, cb) {
+    var sa = sizeA();
+    if (ca) {
+      var o = shuf(S.ids.filter(function (i) { return i !== ca && i !== cb; }));
+      return { A: [ca].concat(o.slice(0, sa - 1)), B: [cb].concat(o.slice(sa - 1)) };
+    }
+    var p = shuf(S.ids);
+    return { A: p.slice(0, sa), B: p.slice(sa) };
+  }
+
+  function chipHtml(id, cls, sub, dis) {
+    return "<button type=\"button\" class=\"chip" + cls + "\" data-id=\"" + esc(id) + "\"" + (dis ? " disabled" : "") + "><span class=\"n\">" + esc(S.SN[id]) + "</span><span class=\"r\">" + sub + "</span></button>";
+  }
+
+  function render() {
+    var pick = S.view === "pick";
+    $("pitch").hidden = pick; $("pick").hidden = !pick;
+    $("hint").hidden = pick;
+    if (pick) {
+      $("gridP").innerHTML = S.ids.map(function (id) {
+        var a = S.pA === id, b = S.pB === id;
+        return chipHtml(id, a ? " ca" : (b ? " cb" : ""), a ? "Căpitan A" : (b ? "Căpitan B" : fmt(S.R[id], 1)), false);
+      }).join("");
+    } else {
+      var one = function (list) {
+        return list.map(function (id) {
+          var cap = id === S.cA || id === S.cB;
+          return chipHtml(id, S.sel === id ? " sel" : "", (cap ? "Căpitan · " : "") + fmt(S.R[id], 1), S.locked || S.busy);
+        }).join("");
+      };
+      $("gridA").innerHTML = one(S.A); $("gridB").innerHTML = one(S.B);
+      var a = avgOf(S.A), b = avgOf(S.B);
+      $("avgA").textContent = fmt(a.v, 2); $("avgB").textContent = fmt(b.v, 2);
+      $("unA").textContent = a.un ? a.un + " fără notă" : ""; $("unB").textContent = b.un ? b.un + " fără notă" : "";
+      $("diff").textContent = "Diferență " + (a.v != null && b.v != null ? fmt(Math.abs(a.v - b.v), 2) : "–");
+      $("hint").textContent = S.locked ? "Echipele sunt blocate. Apasă Trimite echipele sau Deblochează dacă vrei să le schimbi."
+        : "Echipele ies aleatoriu, dar le poți schimba: apasă un jucător, apoi pe cel din cealaltă echipă cu care vrei să-l schimbi. După ce ești mulțumit, blochează echipele și trimite-le.";
+    }
+    $("rowGen").hidden = S.locked;
+    $("rowUnlock").hidden = !S.locked;
+    $("bGen").hidden = pick; $("bCap").textContent = pick ? "Înapoi" : "Căpitani";
+    var pri = $("bPri"), off = false;
+    if (S.busy) { pri.textContent = "Se amestecă…"; off = true; }
+    else if (pick) { pri.textContent = "Completează echipele"; off = !(S.pA && S.pB); }
+    else if (S.locked) pri.textContent = "Trimite echipele";
+    else pri.textContent = "Blochează echipele";
+    pri.className = "btn pri" + (off ? " off" : "");
+    pri.setAttribute("aria-disabled", off ? "true" : "false");
+  }
+
+  function run(ca, cb) {
+    if (S.busy) return;
+    var fin = solve(ca, cb), step = 0, total = 14;
+    S.busy = true; S.view = "teams"; S.sel = null; S.cA = ca || null; S.cB = cb || null;
+    var tick = function () {
+      if (step >= total) { S.A = fin.A; S.B = fin.B; S.busy = false; setMsg("Gata. Echipele sunt echilibrate."); render(); return; }
+      var s = shuffled(ca, cb); S.A = s.A; S.B = s.B;
+      setMsg(step < 7 ? "Se amestecă…" : "Se echilibrează notele…");
+      render(); step++; setTimeout(tick, 70 + step * 14);
+    };
+    tick();
+  }
+
+  function names(l) { return l.map(function (i) { return i + (i === S.cA || i === S.cB ? " (C)" : ""); }).join(", "); }
+  function shareText() {
+    return S.dateLabel + (TEST ? " (TEST)" : "") + " | Echipe finale | Mod: " + (S.cA ? "căpitani" : "automat") + "\nA: " + names(S.A) + "\nB: " + names(S.B);
+  }
+  function send() {
+    var t = shareText();
+    var fb = function () {
+      try { navigator.clipboard.writeText(t); setMsg("Copiat. Lipește-l în chat."); }
+      catch (e) { window.prompt("Copiază textul:", t); }
+    };
+    try { if (navigator.share) navigator.share({ text: t }).catch(function () {}); else fb(); } catch (e) { fb(); }
+  }
+
+  function onChip(id) {
+    if (S.busy) return;
+    if (S.view === "pick") {
+      if (S.pA === id) S.pA = null; else if (S.pB === id) S.pB = null; else if (!S.pA) S.pA = id; else if (!S.pB) S.pB = id;
+      setMsg(S.pA && S.pB ? "Căpitani aleși. Apasă Completează." : "Alege doi căpitani.");
+      render(); return;
+    }
+    if (S.locked) return;
+    if (!S.sel || S.sel === id) { S.sel = S.sel === id ? null : id; render(); return; }
+    var inA = function (x) { return S.A.indexOf(x) >= 0; };
+    if (inA(S.sel) === inA(id)) { S.sel = id; render(); return; }
+    var a = S.sel, sw = function (arr) { return arr.map(function (x) { return x === a ? id : (x === id ? a : x); }); };
+    S.A = sw(S.A); S.B = sw(S.B); S.sel = null;
+    setMsg(S.SN[a] + " ↔ " + S.SN[id] + " schimbați.");
+    render();
+  }
+
+  function wire() {
+    $("app").addEventListener("click", function (e) {
+      var b = e.target.closest(".chip"); if (b) onChip(b.getAttribute("data-id"));
+    });
+    $("bGen").addEventListener("click", function () { if (!S.busy && !S.locked) run(null, null); });
+    $("bCap").addEventListener("click", function () {
+      if (S.busy || S.locked) return;
+      if (S.view === "pick") { S.view = "teams"; setMsg("Echipe echilibrate. Apasă două nume ca să le schimbi."); }
+      else { S.view = "pick"; S.pA = null; S.pB = null; S.sel = null; setMsg("Alege doi căpitani."); }
+      render();
+    });
+    $("bUnlock").addEventListener("click", function () { S.locked = false; setMsg("Deblocat. Poți schimba echipele."); render(); });
+    $("bPri").addEventListener("click", function () {
+      if (S.busy) return;
+      if (S.view === "pick") { if (S.pA && S.pB) run(S.pA, S.pB); return; }
+      if (S.locked) { send(); return; }
+      S.locked = true; S.sel = null; setMsg("Echipe blocate. Le poți trimite."); render();
+    });
+  }
+
+  function start(players, R, label, testNote) {
+    var n = players.length;
+    if (n < 6) { showBlock("Prea puțini jucători", "Lista are " + n + " jucători, minimum 6."); return; }
+    if (n > 14) { testNote = (testNote ? testNote + " " : "") + "Lista are " + n + " jucători, am luat primii 14."; players = players.slice(0, 14); n = 14; }
+    S.ids = players; S.R = R; S.SN = shortNames(players); S.dateLabel = label;
+    var f = solve(null, null); S.A = f.A; S.B = f.B;
+    $("cnt").textContent = n + " jucători" + (n === 12 ? " · 12 din 12" : "");
+    if (testNote) { $("test").textContent = testNote; $("test").style.display = "block"; }
+    setMsg("Echipe echilibrate. Apasă două nume ca să le schimbi.");
+    $("block").hidden = true; $("app").hidden = false; wire(); render();
+  }
+
+  function ratingsFrom(rows) {
+    var R = {};
+    rows.slice(1).forEach(function (r) {
+      var nm = (r[0] || "").trim(); if (!nm) return;
+      var v = r.slice(2, 7).map(function (x) { return parseFloat(String(x).replace(",", ".")); });
+      var votes = parseInt(r[1], 10) || 0;
+      if (votes >= MIN_VOTES && v.every(function (x) { return x > 0; })) R[nm] = v.reduce(function (a, b) { return a + b; }, 0) / 5;
+    });
+    return R;
+  }
+
+  function boot() {
+    var saved = ""; try { saved = localStorage.getItem("fm_k") || ""; } catch (e) {}
+    var given = (qs.get("k") || saved).trim().toLowerCase();
+    if (given !== ADMIN_CODE) {
+      setMsg("Acces restricționat.");
+      showBlock("Acces doar pentru admini", "Scrie codul de admin. Îl cere o singură dată, apoi îl ține minte pe acest telefon.");
+      $("block").insertAdjacentHTML("beforeend", "<form id=\"gate\" style=\"display:flex;gap:8px;margin-top:12px\"><input id=\"code\" type=\"password\" autocomplete=\"off\" autocapitalize=\"none\" aria-label=\"Cod admin\" placeholder=\"Cod admin\" style=\"flex:1;min-width:0;height:48px;border-radius:10px;border:1.5px solid #3A5086;background:#0A1630;color:#F2F5FA;font-size:16px;padding:0 12px\"><button class=\"btn\" type=\"submit\" style=\"flex:0 0 auto\">Intră</button></form><div id=\"gerr\" style=\"margin-top:8px;color:#FFB4B4;font-size:14px\" role=\"alert\"></div>");
+      $("gate").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if ($("code").value.trim().toLowerCase() === ADMIN_CODE) { try { localStorage.setItem("fm_k", ADMIN_CODE); } catch (x) {} location.reload(); }
+        else { $("gerr").textContent = "Cod greșit."; }
+      });
+      return;
+    }
+    try { localStorage.setItem("fm_k", ADMIN_CODE); } catch (e) {}
+    var wed = targetWed();
+    $("when").textContent = "Miercuri " + dmy(wed).slice(0, 5);
+    var needDate = TEST;
+    Promise.all([gviz("hexagon"), needDate ? gviz("date") : gviz("echipe").catch(function () { return []; })]).then(function (out) {
+      var R = ratingsFrom(out[0]), rows = out[1];
+      if (TEST) {
+        var wk = rows.filter(function (r) { return r[0] === "wk"; })[0], st = rows.filter(function (r) { return r[0] === "st"; })[0], last = -1;
+        for (var i = 2; wk && i < wk.length; i++) if (st && st[i] === "Jucat") last = i;
+        if (last < 0) { showBlock("Fără date", "Nu am găsit nicio miercuri jucată."); return; }
+        var pl = rows.filter(function (r) { return r[0] === "m" && (r[last] === "J" || r[last] === "J+"); }).map(function (r) { return r[1]; });
+        var d = wk[last];
+        $("when").textContent = "Test · miercuri " + d.slice(8) + "." + d.slice(5, 7);
+        start(pl, R, "Miercuri " + dmy(d), "MOD TEST: lista din ultima miercuri jucată (" + d.slice(8) + "." + d.slice(5, 7) + "). Nu e lista de miercuri.");
+        return;
+      }
+      var pl2 = rows.filter(function (r) { return (r[0] || "") === wed && (r[1] || "").trim(); }).map(function (r) { return r[1].trim(); });
+      if (!pl2.length) { setMsg("Prezența nu e încărcată."); showBlock("Sese nu a încărcat prezența", "Echipele se deblochează după ce Sese încarcă lista pentru miercuri " + dmy(wed).slice(0, 5) + "."); return; }
+      start(pl2, R, "Miercuri " + dmy(wed), "");
+    }).catch(function () {
+      setMsg("Nu s-au putut citi datele."); showBlock("Nu s-au putut citi datele", "Verifică conexiunea și reîncarcă pagina.");
+    });
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
