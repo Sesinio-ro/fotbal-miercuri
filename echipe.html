@@ -116,7 +116,23 @@ h1{margin:2px 0 0;font-size:22px;font-weight:800;letter-spacing:-.01em;line-heig
 (function () {
   "use strict";
   var LIVE_SHEET = "1qZwefpegumzPD9McRsfmnqfDgDzyUzwJKEQi65y3i3g";
-  var ADMIN_CODE = "miercuri20";
+  var EMB = "v1.rxHXcoB3VoRK2WxG7WIrkw==.XKeg+1IaNszcKx88.fdFNMPuAzmM81wbbP7bd35KheZSJcdvZwQ==", RX = /^v1\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+$/;
+  function norm(x) { return String(x || "").trim().toLowerCase(); }
+  function ub(x) { return Uint8Array.from(atob(x), function (c) { return c.charCodeAt(0); }); }
+  /* parola e verificată pe un bloc criptat (AES-GCM); blocul poate fi înlocuit din fila "admin" a sheet-ului, rândul care începe cu "blk" */
+  function openBlock(blk, pw) {
+    var p = blk.split("."); if (p[0] !== "v1" || p.length !== 4 || !pw || !window.crypto || !crypto.subtle) return Promise.resolve(false);
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]).then(function (m) {
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: ub(p[1]), iterations: 200000, hash: "SHA-256" }, m, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    }).then(function (k) { return crypto.subtle.decrypt({ name: "AES-GCM", iv: ub(p[2]) }, k, ub(p[3])); })
+      .then(function (t) { return new TextDecoder().decode(t) === "echipe-ok"; }, function () { return false; });
+  }
+  var BLK = null;
+  function getBlock() {
+    if (BLK) return Promise.resolve(BLK);
+    var tmo = new Promise(function (ok) { setTimeout(function () { ok(null); }, 3500); });
+    return Promise.race([gviz("admin").then(function (rows) { var r = rows.filter(function (x) { return x[0] === "blk"; })[0]; return r && RX.test(String(r[1]).trim()) ? String(r[1]).trim() : null; }, function () { return null; }), tmo]).then(function (b) { return (BLK = b || EMB); });
+  }
   var MIN_VOTES = 3;
   var qs = new URLSearchParams(location.search);
   var TEST = qs.get("test") === "1";
@@ -358,19 +374,25 @@ h1{margin:2px 0 0;font-size:22px;font-weight:800;letter-spacing:-.01em;line-heig
 
   function boot() {
     var saved = ""; try { saved = localStorage.getItem("fm_k") || ""; } catch (e) {}
-    var given = (qs.get("k") || saved).trim().toLowerCase();
-    if (given !== ADMIN_CODE) {
+    var given = norm(qs.get("k") || saved);
+    getBlock().then(function (blk) { return given ? openBlock(blk, given) : false; }).then(function (ok) {
+      if (ok) { try { localStorage.setItem("fm_k", given); } catch (e) {} return bootOk(); }
+      try { localStorage.removeItem("fm_k"); } catch (e) {}
       setMsg("Acces restricționat.");
-      showBlock("Acces doar pentru admini", "Scrie codul de admin. Îl cere o singură dată, apoi îl ține minte pe acest telefon.");
-      $("block").insertAdjacentHTML("beforeend", "<form id=\"gate\" style=\"display:flex;gap:8px;margin-top:12px\"><input id=\"code\" type=\"password\" autocomplete=\"off\" autocapitalize=\"none\" aria-label=\"Cod admin\" placeholder=\"Cod admin\" style=\"flex:1;min-width:0;height:48px;border-radius:10px;border:1.5px solid #3A5086;background:#0A1630;color:#F2F5FA;font-size:16px;padding:0 12px\"><button class=\"btn\" type=\"submit\" style=\"flex:0 0 auto\">Intră</button></form><div id=\"gerr\" style=\"margin-top:8px;color:#FFB4B4;font-size:14px\" role=\"alert\"></div>");
+      showBlock("Acces doar pentru admini", "Scrie parola de admin. O cere o singură dată, apoi o ține minte pe acest telefon.");
+      $("block").insertAdjacentHTML("beforeend", "<form id=\"gate\" style=\"display:flex;gap:8px;margin-top:12px\"><input id=\"code\" type=\"password\" autocomplete=\"off\" autocapitalize=\"none\" aria-label=\"Parola admin\" placeholder=\"Parola\" style=\"flex:1;min-width:0;height:48px;border-radius:10px;border:1.5px solid #3A5086;background:#0A1630;color:#F2F5FA;font-size:16px;padding:0 12px\"><button class=\"btn\" type=\"submit\" style=\"flex:0 0 auto\">Intră</button></form><div id=\"gerr\" style=\"margin-top:8px;color:#FFB4B4;font-size:14px\" role=\"alert\"></div>");
       $("gate").addEventListener("submit", function (e) {
         e.preventDefault();
-        if ($("code").value.trim().toLowerCase() === ADMIN_CODE) { try { localStorage.setItem("fm_k", ADMIN_CODE); } catch (x) {} location.reload(); }
-        else { $("gerr").textContent = "Cod greșit."; }
+        var pw = norm($("code").value);
+        getBlock().then(function (blk) { return openBlock(blk, pw); }).then(function (ok) {
+          if (ok) { try { localStorage.setItem("fm_k", pw); } catch (x) {} location.reload(); }
+          else { $("gerr").textContent = "Parolă greșită."; }
+        });
       });
-      return;
-    }
-    try { localStorage.setItem("fm_k", ADMIN_CODE); } catch (e) {}
+    });
+  }
+
+  function bootOk() {
     var wed = targetWed();
     $("when").textContent = "Miercuri " + dmy(wed).slice(0, 5);
     Promise.all([gviz("hexagon"), TEST ? gviz("date") : gviz("echipe").catch(function () { return []; })]).then(function (out) {

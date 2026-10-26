@@ -16,6 +16,12 @@
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B1018">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fotbal 20:00">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -770,7 +776,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .pf2sum .t { min-width: 150px; } .pf2sum .t b { display: block; font-size: 15px; }
 .pf2sum .t span { display: block; font-size: 12px; color: var(--t-aur); margin-top: 2px; font-weight: 700; }
 .pf2sum > .pb { flex: 1 1 100px; max-width: 240px; min-width: 80px; height: 9px; }
-.pf2ics { display: flex; gap: 8px; align-items: center; margin-left: auto; max-width: 100%; overflow-x: auto; padding: 2px; }
+.pf2ics { display: flex; gap: 8px; align-items: center; margin-left: auto; max-width: 100%; overflow: hidden; padding: 2px; }
 .pf2b { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--panel-2); border: 2px solid var(--lime); flex: none; }
 .pf2b.g { filter: grayscale(1); opacity: .45; border-color: var(--line); }
 .pf2more { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--mute); flex: none; }
@@ -808,6 +814,10 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
   .pf2cm { grid-template-columns: minmax(0, 1fr) auto; } .pf2cm .fb { grid-column: 1 / -1; grid-row: 2; }
   .pf2dh, .pf2dr { grid-template-columns: 1fr 96px 1fr; } .pf2rv { align-items: flex-start; }
   .pf2sum .t { min-width: 0; } .pf2ics { margin-left: 0; width: 100%; }
+  .pf2ics { gap: 6px; } .pf2b { width: 40px; height: 40px; }
+}
+@media (max-width: 360px) {
+  .pf2ics { gap: 4px; } .pf2b { width: 34px; height: 34px; font-size: 16px; } .pf2more { padding: 8px 9px; font-size: 12px; }
 }
 /* v2 */
 .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -825,6 +835,58 @@ dialog#prof { scrollbar-gutter: stable; }
 .photorule .pr-x { margin-left: auto; flex: none; align-self: flex-start; background: none; border: 0; color: var(--mute); font-size: 24px; line-height: 1; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
 .photorule .pr-x:hover { background: color-mix(in oklab, var(--ink) 10%, transparent); color: var(--ink); }
 .photorule[hidden] { display: none !important; }
+</style>
+<style>
+#pwa { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: flex; justify-content: center; padding: 0 12px calc(12px + env(safe-area-inset-bottom)); pointer-events: none; }
+#pwa[hidden] { display: none !important; }
+#pwa .pw-card { pointer-events: auto; position: relative; width: 100%; max-width: 440px; background: var(--panel-2, #151d2b); border: 1px solid var(--line, #263247); border-radius: 18px; padding: 14px 14px 14px; box-shadow: 0 18px 50px rgba(0,0,0,.55); animation: pwin .35s ease-out; }
+@keyframes pwin { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { #pwa .pw-card { animation: none; } }
+#pwa .pw-head { display: flex; gap: 12px; align-items: center; padding-right: 26px; }
+#pwa .pw-head img { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+#pwa .pw-head b { display: block; font-size: 15px; line-height: 1.25; color: var(--ink, #fff); }
+#pwa .pw-head span { display: block; font-size: 12.5px; line-height: 1.35; color: var(--mute, #93a0b5); margin-top: 2px; }
+#pwa .pw-x { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--mute, #93a0b5); font-size: 20px; line-height: 1; cursor: pointer; }
+#pwa .pw-x:hover { background: rgba(255,255,255,.08); }
+#pwa ol { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: s; }
+#pwa li { counter-increment: s; display: flex; gap: 10px; align-items: center; font-size: 13.5px; color: var(--ink, #fff); line-height: 1.35; }
+#pwa li::before { content: counter(s); flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); font-weight: 800; font-size: 12px; display: grid; place-items: center; }
+#pwa li svg { width: 18px; height: 18px; vertical-align: -4px; margin: 0 2px; }
+#pwa .pw-act { display: flex; gap: 8px; margin-top: 12px; }
+#pwa .pw-act button { flex: 1; min-height: 44px; border-radius: 12px; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; border: 1px solid var(--line, #263247); background: transparent; color: var(--ink, #fff); }
+#pwa .pw-act button.go { background: var(--lime, #c6f432); border-color: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); }
+</style>
+<style>
+#adm { margin: 6px auto 18px; text-align: center; font-size: 12px; }
+#adm[hidden] { display: none !important; }
+#adm .adm-lock { background: none; border: 0; color: var(--mute); font: inherit; font-size: 12px; cursor: pointer; padding: 8px 12px; border-radius: 10px; opacity: .75; }
+#adm .adm-lock:hover { opacity: 1; background: var(--panel-2); }
+#adm .adm-on { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+#adm .adm-on a { background: var(--lime); color: var(--lime-ink); font-weight: 800; font-size: 13px; border-radius: 10px; padding: 9px 14px; text-decoration: none; }
+#adm .adm-on button { background: none; border: 0; color: var(--mute); font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; padding: 8px; }
+#admfab { position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 44; background: var(--lime); color: var(--lime-ink); font-weight: 800; font-size: 14px; border-radius: 999px; padding: 12px 18px; text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,.45); animation: admpop .45s cubic-bezier(.2,1.4,.4,1); }
+#admfab[hidden] { display: none !important; }
+@keyframes admpop { from { transform: scale(.6) translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+dialog#admdlg { border: 1px solid var(--line); border-radius: 20px; background: var(--panel); color: var(--ink); padding: 26px 22px 20px; width: min(92vw, 340px); text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+dialog#admdlg::backdrop { background: rgba(5,9,16,.72); backdrop-filter: blur(3px); }
+#admdlg .lk { width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; }
+#admdlg .lk svg { width: 46px; height: 46px; overflow: visible; }
+#admdlg .sh { transform-origin: 14px 11px; transition: transform .45s cubic-bezier(.3,1.5,.5,1); }
+#admdlg.ok .sh { transform: translateY(-4px) rotate(-28deg); }
+#admdlg h3 { margin: 0 0 4px; font-family: var(--f-display); font-size: 24px; letter-spacing: .02em; }
+#admdlg p { margin: 0 0 14px; color: var(--mute); font-size: 13px; line-height: 1.4; }
+#admdlg .pw { position: relative; }
+#admdlg input { width: 100%; box-sizing: border-box; height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--panel-2); color: var(--ink); font-size: 16px; padding: 0 44px 0 14px; text-align: center; letter-spacing: .08em; }
+#admdlg input:focus { outline: 0; border-color: var(--lime); }
+#admdlg .eye { position: absolute; right: 4px; top: 4px; width: 40px; height: 40px; border: 0; background: none; color: var(--mute); font-size: 18px; cursor: pointer; }
+#admdlg .er { min-height: 18px; margin: 8px 0 2px; color: #ff8f8f; font-size: 13px; }
+#admdlg.bad .pw { animation: admshake .4s; }
+@keyframes admshake { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+#admdlg .bt { display: flex; gap: 8px; margin-top: 8px; }
+#admdlg .bt button { flex: 1; min-height: 46px; border-radius: 12px; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--ink); }
+#admdlg .bt button.go { background: var(--lime); border-color: var(--lime); color: var(--lime-ink); }
+#admdlg .bt button[disabled] { opacity: .6; }
+@media (prefers-reduced-motion: reduce) { #admfab, #admdlg.bad .pw { animation: none; } #admdlg .sh { transition: none; } }
 </style>
 <dialog id="prof" aria-label="Profil jucător"><div class="pf" id="pf"></div></dialog>
 
@@ -1685,7 +1747,7 @@ function pfBadgePanel(p, S) {
   const base = L.filter(b => !b.season), win = L.filter(b => b.season);
   const earnedB = L.filter(b => b.earned), earned = [...AW, ...earnedB], rare = b => R[b.k] && R[b.k] / N <= .2;
   const near = L.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal);
-  const sE = earned.slice(0, 5), sN = near.slice(0, Math.max(1, 6 - sE.length)), strip = [...sE, ...sN], more = L.length + AW.length - strip.length;
+  const nar = matchMedia("(max-width: 640px)").matches, cap = nar ? 4 : 6, sE = earned.slice(0, cap - 1), sN = near.slice(0, Math.max(1, cap - sE.length)), strip = [...sE, ...sN], more = L.length + AW.length - strip.length;
   const rareN = earnedB.filter(rare).length, extra = [AW.length ? `${AW.length} ${AW.length === 1 ? "premiu" : "premii"} ale sezonului` : "", rareN ? `Rare: ${rareN}` : ""].filter(Boolean).join(" · ");
   const card = b => {
     const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag || ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
@@ -2046,6 +2108,105 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
   fetch(`https://abacus.jasoncameron.dev/${first ? "hit" : "get"}/${NS}/${K}`).then(r => r.ok ? r.json() : null).then(d => {
     if (!d || typeof d.value !== "number") return; const el = $("views");
     el.textContent = `👀 ${d.value.toLocaleString("ro-RO")} ${d.value === 1 ? "vizualizare" : "vizualizări"}`; el.hidden = false; }).catch(() => {}); })();
+/* ADMIN: lăcăt în subsol, parolă criptată (AES-GCM, cheie din parolă), buton către echipe.html. Blocul poate fi înlocuit din fila "admin" a sheet-ului public. */
+(() => {
+  const TEST = /[?&](pwatest|admintest)=1/.test(location.search);
+  if (!TEST && location.hostname !== "sesinio-ro.github.io") return;
+  const EMB = "v1.rxHXcoB3VoRK2WxG7WIrkw==.XKeg+1IaNszcKx88.fdFNMPuAzmM81wbbP7bd35KheZSJcdvZwQ==", SHEET = "1qZwefpegumzPD9McRsfmnqfDgDzyUzwJKEQi65y3i3g", RX = /^v1\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+$/;
+  const norm = s => String(s || "").trim().toLowerCase();
+  const ub = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function openBlock(blk, pw) {
+    try { const p = blk.split("."); if (p[0] !== "v1" || p.length !== 4 || !pw) return false;
+      const m = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+      const k = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: ub(p[1]), iterations: 200000, hash: "SHA-256" }, m, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      const t = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub(p[2]) }, k, ub(p[3]));
+      return new TextDecoder().decode(t) === "echipe-ok"; } catch (e) { return false; } }
+  function sheetBlock() {
+    return new Promise(ok => { const cb = "__ad" + Date.now(), sc = document.createElement("script"), t = setTimeout(() => { delete window[cb]; sc.remove(); ok(null); }, 3500);
+      window[cb] = res => { clearTimeout(t); delete window[cb]; sc.remove(); try { const r = res.table.rows.map(r => (r.c || []).map(c => c == null || c.v == null ? "" : String(c.v).trim())).find(r => r[0] === "blk"); ok(r && RX.test(r[1]) ? r[1] : null); } catch (e) { ok(null); } };
+      sc.onerror = () => { clearTimeout(t); delete window[cb]; sc.remove(); ok(null); };
+      sc.src = `https://docs.google.com/spreadsheets/d/${SHEET}/gviz/tq?tqx=responseHandler:${cb}&headers=0&sheet=admin&_=${Date.now()}`; document.head.appendChild(sc); }); }
+  let BLK = null; const getBlock = async () => BLK || (BLK = (await sheetBlock()) || EMB);
+  const kget = () => { try { return localStorage.getItem("fm_k") || ""; } catch (e) { return ""; } };
+  const kset = v => { try { v ? localStorage.setItem("fm_k", v) : localStorage.removeItem("fm_k"); } catch (e) {} };
+  const href = "echipe.html";
+  const box = document.createElement("div"); box.id = "adm";
+  const fab = document.createElement("a"); fab.id = "admfab"; fab.hidden = true; fab.href = href; fab.textContent = "⚽ Generează echipe";
+  const dlg = document.createElement("dialog"); dlg.id = "admdlg";
+  dlg.innerHTML = `<div class="lk"><svg viewBox="0 0 28 28" fill="none" stroke="#0b111b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><g class="sh"><path d="M8 12V8a6 6 0 0112 0v4"/></g><rect x="5" y="12" width="18" height="12" rx="3" fill="#0b111b"/><circle cx="14" cy="18" r="1.6" fill="#c6f432" stroke="none"/></svg></div>
+    <h3>Zona de admin</h3><p>Doar pentru cine organizează echipele.</p>
+    <form><div class="pw"><input id="admpw" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Parola" aria-label="Parola de admin"><button type="button" class="eye" aria-label="Arată parola">👁</button></div><div class="er" role="alert"></div>
+    <div class="bt"><button type="button" class="no">Anulează</button><button type="submit" class="go">Intră</button></div></form>`;
+  document.body.append(dlg, fab);
+  const foot = document.getElementById("foot"); foot.after(box);
+  const er = dlg.querySelector(".er"), inp = dlg.querySelector("#admpw"), go = dlg.querySelector(".go");
+  function paint(on) {
+    box.innerHTML = on ? `<span class="adm-on"><a href="${href}">⚽ Generează echipe</a><button type="button" data-o="1">Ieși din admin</button></span>` : `<button type="button" class="adm-lock" data-l="1">🔒 Admin</button>`;
+    fab.hidden = !on; }
+  box.addEventListener("click", e => { if (e.target.closest("[data-l]")) { dlg.classList.remove("ok", "bad"); er.textContent = ""; inp.value = ""; dlg.showModal(); inp.focus(); } else if (e.target.closest("[data-o]")) { kset(""); paint(false); } });
+  dlg.querySelector(".no").onclick = () => dlg.close();
+  dlg.querySelector(".eye").onclick = () => { inp.type = inp.type === "password" ? "text" : "password"; };
+  dlg.querySelector("form").addEventListener("submit", async e => { e.preventDefault(); const pw = norm(inp.value); if (!pw) return; go.disabled = true; er.textContent = "";
+    const ok = await openBlock(await getBlock(), pw);
+    if (ok) { kset(pw); dlg.classList.add("ok"); setTimeout(() => { dlg.close(); paint(true); go.disabled = false; }, 750); }
+    else { setTimeout(() => { dlg.classList.remove("bad"); void dlg.offsetWidth; dlg.classList.add("bad"); er.textContent = "Parolă greșită."; go.disabled = false; inp.select(); }, 500); } });
+  paint(false);
+  const saved = kset && kget(); if (saved) getBlock().then(b => openBlock(b, saved)).then(ok => { if (ok) paint(true); else kset(""); });
+})();
+/* PWA: instalare ca aplicație (pop-up de la prima deschidere, pe telefon) + contoare anonime (abacus) */
+(() => {
+  const TEST = /[?&]pwatest=1/.test(location.search);
+  if (!TEST && location.hostname !== "sesinio-ro.github.io") return;
+  const UA = navigator.userAgent, NS = "sesinio-fotbal-miercuri";
+  const hit = k => { if (TEST) return; try { fetch(`https://abacus.jasoncameron.dev/hit/${NS}/${k}`, { mode: "cors" }).catch(() => {}); } catch (e) {} };
+  const st = { get() { try { return JSON.parse(localStorage.getItem("fm-pwa") || "{}"); } catch (e) { return {}; } }, set(o) { try { localStorage.setItem("fm-pwa", JSON.stringify(o)); } catch (e) {} } };
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const iso = () => { const d = new Date(), t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return t.getUTCFullYear() + "-w" + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, "0"); };
+  if (!TEST && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  let o = st.get();
+  if (!TEST && !o.u) { o.u = 1; st.set(o); hit("pwa-dispozitive"); }
+  if (standalone) {
+    try { if (!sessionStorage.getItem("fm-pwa-open")) { sessionStorage.setItem("fm-pwa-open", "1"); hit("app-deschideri-" + iso()); } } catch (e) {}
+    if (!o.i) { o.i = 1; st.set(o); }
+    return;
+  }
+  const iOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const android = /Android/.test(UA);
+  const phone = iOS || android || (TEST && /[?&]pwatest=1/.test(location.search) && matchMedia("(pointer: coarse)").matches);
+  if (!phone) return;
+  const inApp = /FBAN|FBAV|Instagram|Messenger|WhatsApp|Snapchat|TikTok|Twitter|Line\/|; wv\)/.test(UA) || (iOS && !/Safari\//.test(UA));
+  let evt = null, built = false;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); evt = e; if (built) render(); });
+  window.addEventListener("appinstalled", () => { const x = st.get(); if (!x.i) { x.i = 1; st.set(x); hit("app-instalari"); } close(true); });
+  const DAY = 864e5;
+  const mayShow = () => { const x = st.get(); if (x.i) return false; if (!x.d) return true; return x.d < 3 && Date.now() - (x.t || 0) > 7 * DAY; };
+  if (!mayShow()) return;
+  const SHARE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>';
+  const DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+  const root = document.createElement("div"); root.id = "pwa"; root.hidden = true; root.setAttribute("role", "dialog"); root.setAttribute("aria-label", "Instalează aplicația");
+  document.body.appendChild(root);
+  const url = location.origin + location.pathname;
+  function body() {
+    if (inApp) return { sub: "Deschide linkul în browser, apoi o adaugi pe ecran.", steps: android ? ["Atinge „Deschide în Chrome”", "Apoi alege „Instalează”"] : [`Atinge ${DOTS} sau ${SHARE}, apoi „Deschide în Safari”`, "Apoi „Adaugă pe ecranul principal”"], acts: (android ? '<button class="go" data-a="chrome">Deschide în Chrome</button>' : "") + '<button data-a="copy">Copiază linkul</button>' };
+    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${SHARE} Partajează`, "Alege „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+    if (evt) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: null, acts: '<button class="go" data-a="inst">Instalează</button><button data-a="no">Nu acum</button>' };
+    return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge meniul ${DOTS} al browserului`, "Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+  }
+  function render() {
+    const b = body(); built = true;
+    root.innerHTML = `<div class="pw-card"><button type="button" class="pw-x" data-a="no" aria-label="Închide">×</button><div class="pw-head"><img src="icon-192.png" alt=""><div><b>Fotbal Miercuri 20:00 pe telefon</b><span>${b.sub}</span></div></div>${b.steps ? "<ol>" + b.steps.map(s => "<li><span>" + s + "</span></li>").join("") + "</ol>" : ""}<div class="pw-act">${b.acts}</div></div>`;
+  }
+  function close(done) { root.hidden = true; if (!done) { const x = st.get(); x.d = (x.d || 0) + 1; x.t = Date.now(); st.set(x); } }
+  root.addEventListener("click", async e => {
+    const a = e.target.closest("[data-a]"); if (!a) return; const k = a.dataset.a;
+    if (k === "no") close();
+    else if (k === "inst" && evt) { hit("app-click-instaleaza"); try { evt.prompt(); const r = await evt.userChoice; evt = null; if (r && r.outcome === "accepted") close(true); else close(); } catch (x) { close(); } }
+    else if (k === "copy") { try { await navigator.clipboard.writeText(url); } catch (x) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (y) {} t.remove(); } a.textContent = "Copiat ✓"; }
+    else if (k === "chrome") { location.href = "intent://" + location.host + location.pathname + "#Intent;scheme=https;package=com.android.chrome;end"; }
+  });
+  const show = () => { const d = document.getElementById("prof"); if (d && d.open) { setTimeout(show, 1500); return; } render(); root.hidden = false; if (!TEST && !st.get().s) { const x = st.get(); x.s = 1; st.set(x); hit("pwa-popup-afisat"); } };
+  setTimeout(show, android && !inApp ? 1800 : 1200);
+})();
 /* favicon: minge care se rotește (fundal transparent, merge pe tab-uri închise și deschise) */
 (() => {
   const B_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#f4f6f0" stroke="#11130c" stroke-width="3"/><path d="M32 22l9.5 6.9-3.6 11.2H26.1l-3.6-11.2z" fill="#11130c"/><path d="M32 22V7M41.5 28.9l13.6-4.5M37.9 40.1l8.6 11.6M26.1 40.1l-8.6 11.6M22.5 28.9 8.9 24.4" stroke="#11130c" stroke-width="3" stroke-linecap="round"/><path d="M26 6.5 32 9l6-2.5M55.5 22l-1 6.5 4 4.5M48 54l-6.5-.5-3.5 5M16 54l6.5-.5 3.5 5M8.5 22l1 6.5-4 4.5" fill="none" stroke="#11130c" stroke-width="3" stroke-linejoin="round"/></svg>`;

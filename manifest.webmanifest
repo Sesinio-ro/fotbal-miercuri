@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "Fotbal Miercuri 20:00",
+  "short_name": "Fotbal 20:00",
+  "description": "Clasament, profiluri și echipe pentru fotbalul de miercuri.",
+  "lang": "ro",
+  "start_url": "./?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1018",
+  "theme_color": "#0B1018",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
