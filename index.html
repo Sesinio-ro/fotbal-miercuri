@@ -353,9 +353,9 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
   #bmore .sh { position: absolute; left: 10px; right: 10px; bottom: calc(66px + env(safe-area-inset-bottom)); background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; box-shadow: 0 18px 50px rgba(0,0,0,.45); }
   #bmore a { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 12px; border-radius: 14px; background: var(--panel-2); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; border: 1px solid var(--line); }
   #bmore a.on { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); }
-  .totop { bottom: calc(76px + env(safe-area-inset-bottom)); }
-  #pwa { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
-  #admfab { bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .totop { bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
+  #pwa { padding-bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
+  #admfab { bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
 }
 @media (min-width: 700px) { #badges { grid-template-columns: repeat(3, 112px) !important; justify-content: start; } }
 #badges .bnote { grid-column: 1 / -1; align-self: start; font-size: 12.5px; line-height: 1.35; color: var(--mute); padding: 2px 4px; }
