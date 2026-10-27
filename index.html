@@ -831,6 +831,8 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pf2news .eyebrow { padding: 14px 0 2px; }
 .pf2k.aw { border-color: var(--t-aur); }
+.pf2k.bon { border-color: color-mix(in oklab, var(--lime) 65%, var(--line)); background: linear-gradient(150deg, color-mix(in oklab, var(--lime) 15%, var(--panel)), var(--panel) 75%); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 30%, transparent), 0 0 18px -4px color-mix(in oklab, var(--lime) 55%, transparent); }
+.pf2k.rare2 { border-color: color-mix(in oklab, var(--t-aur) 70%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 28%, transparent), 0 0 16px -6px color-mix(in oklab, var(--t-aur) 60%, transparent); }
 .pf2tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; overflow: visible; }
 .pf2tab { padding: 9px 4px; text-align: center; }
 @media (max-width: 640px) { .pf2tab { font-size: 13px; padding: 9px 2px; } }
@@ -886,10 +888,10 @@ function buildData(rows, base) {
   const rankTier = i => TB.find(t => i <= t[0])[1];
   const P = (k) => POINTS[k] ?? 0;
   /* bonus de iarnă (+5, o singură dată): prima serie de 4 miercuri la rând jucate în iarnă și 4 invitați aduși în iarnă; se numără peste sezoane (nov–dec 2026 + ian–feb 2027) */
-  const WSB = {}, WCB = {};
+  const WSB = {}, WCB = {}, WCNT = {};
   (() => { const wr = {}; ALLW.forEach(w => { if (!inWinter(w.date) || w.status !== "Jucat") return;
       MEM.forEach(m => { const c = CODES[m][w.i] || ""; if (PLAYED(c)) { wr[m] = (wr[m] || 0) + 1; if (wr[m] === 4 && !WSB[m]) WSB[m] = w.date; } else if (c !== "M") wr[m] = 0; }); });
-    const gc = {}; GUESTS.filter(g => g[2] === "Da" && inWinter(g[0])).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).forEach(([d, by]) => { gc[by] = (gc[by] || 0) + 1; if (gc[by] === 4 && !WCB[by]) WCB[by] = d; }); })();
+    const gc = WCNT; GUESTS.filter(g => g[2] === "Da" && inWinter(g[0])).sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).forEach(([d, by]) => { gc[by] = (gc[by] || 0) + 1; if (gc[by] === 4 && !WCB[by]) WCB[by] = d; }); })();
   function compute(weeks) {
     const played = weeks.filter(w => w.status === "Jucat"), gs = {}, gpts = {};
     GUESTS.forEach(([d, by, sh]) => { if (!weeks.length || d.slice(0, 4) !== weeks[0].date.slice(0, 4)) return; if (sh === "Da") { gs[by] = (gs[by] || 0) + 1; (gpts[d] = gpts[d] || {})[by] = ((gpts[d] || {})[by] || 0) + wInt(GUEST_POINTS, d); } });
@@ -956,7 +958,7 @@ function buildData(rows, base) {
     const players = order.map((m, i) => { const x = st[m], codes = weeks.map(w => CODES[m][w.i] || "");
       return { rank: i + 1, name: m, tier: x.tier, rating: x.rating, pts: x.pts, games: x.games, rate: r3(x.rate), cur: x.cur, best: x.best, bonus: x.bonus,
         R: x.R, JP: x.JP, X: x.X, XT: x.XT, ABS: x.ABS, NS: x.NS, M: x.M, AN: x.AN, guests: x.guests, cota: x.cota, cotaGames: x.cotaGames,
-        cotaRank: cotaOrder.indexOf(m) + 1, codes, badges: badges(x, codes, m) }; });
+        cotaRank: cotaOrder.indexOf(m) + 1, codes, badges: badges(x, codes, m), wguests: WCNT[m] || 0, f12: codes.filter((c, i) => full12[i] && PLAYED(c)).length }; });
     const wk = weeks.map(w => { const cs = MEM.map(m => CODES[m][w.i] || "");
       return { date: w.date, label: `${w.date.slice(8)}.${w.date.slice(5, 7)}`, status: w.status, note: w.note,
         played: cs.filter(PLAYED).length, signed: cs.filter(c => SIGN.includes(c)).length, guests: GUESTS.filter(g => g[0] === w.date).length, temp: TMP[w.i] == null ? undefined : TMP[w.i] }; });
@@ -1103,6 +1105,7 @@ function applyRankBadges(S) { /* insigne din clasamentul pe săptămâni; se num
       if (R[ks[ks.length - 1]] === 1) lm = true;
       if (ks.every(k => R[k] != null && R[k] <= 3)) t3 = true; if (ks.every(k => R[k] != null && R[k] <= 5)) t5 = true; });
     if (lm) add.push("liderluna"); else if (t3) add.push("top3luna"); else if (t5) add.push("top5luna");
+    p.rp = { lot, best, up, up4 };
     p.badges = (p.badges || []).filter(x => !RANK_IDS.includes(x)).concat(add); });
 }
 const S_ = () => { applyVoteBonus(); ensureBadges(); const S = DATA.seasons[season]; applyRankBadges(S); return S; };
@@ -1733,6 +1736,13 @@ function pfWinterGames(name) {
     p.codes.forEach((c, i) => { const w = S.weeks[i]; if (w && w.status === "Jucat" && pfPl(c) && inWinter(w.date)) rows.push({ date: w.date, temp: w.temp }); }); });
   return rows;
 }
+function pfWinterRun(name) {
+  let run = 0, best = 0;
+  Object.keys(DATA.seasons).sort().forEach(k => { const S = DATA.seasons[k], p = S.players.find(x => x.name === name); if (!p) return;
+    p.codes.forEach((c, i) => { const w = S.weeks[i]; if (!w || w.status !== "Jucat" || !inWinter(w.date)) return;
+      if (pfPl(c)) { run++; best = Math.max(best, run); } else if (c !== "M") run = 0; }); });
+  return best;
+}
 function pfWinterMonth(name) {
   let ok = false;
   Object.keys(DATA.seasons).forEach(k => (DATA.seasons[k].motm || []).forEach(m => {
@@ -1772,6 +1782,24 @@ function pfBadges(p, S) {
   const pm = pfWinterMonth(p.name);
   L.push({ k: "perfecta", n: "Iarna perfectă", e: "☃️", d: "Toate meciurile unei luni de iarnă", earned: pm, date: "", vis: wvis || pm, season: WS });
   L.push({ k: "gheata", n: "Om de gheață", e: "🧊", d: "Ai jucat la 0° sau mai puțin (temperatura reală)", earned: cold.length > 0, date: cold[0] ? cold[0].date : "", tag: cold[0] ? `la ${pfRo(cold[0].temp).replace("-", "−")}°` : "", vis: wvis || cold.length > 0, season: WS });
+  const rp = p.rp || {};
+  step("wserie", "Serie de iarnă", "🧣", "4 miercuri la rând jucate în iarnă · +5 puncte, o singură dată", 4, pfWinterRun(p.name), "", ["meci la rând", "meciuri la rând"], { earned: has("wserie"), vis: true, season: WS, tag: "+5 puncte", note: wpre ? "începe 1 nov" : "" });
+  step("colind", "Colindătorii", "🎄", "4 invitați aduși în iarnă · +5 puncte, o singură dată", 4, p.wguests || 0, "", ["invitat", "invitați"], { earned: has("colind"), vis: true, season: WS, tag: "+5 puncte" });
+  L.push({ k: "sanuan", n: "Start de an", e: "🎆", d: "Ai jucat primele 2 miercuri din ianuarie", earned: has("sanuan"), date: "", vis: true, season: WS });
+  L.push({ k: "rege", n: "Regele iernii", e: "👑", d: "Cele mai multe puncte din iarnă", earned: has("rege"), date: "", vis: true, season: WS });
+  L.push({ k: "iarnafier", n: "Iarna de fier", e: "⚙️", d: "Ai jucat toate miercurile iernii (minimum 12)", earned: has("iarnafier"), date: "", vis: true, season: WS });
+  L.push({ k: "lider1", n: "Lider pentru o seară", e: "🥇", d: "Singur pe locul 1, după cel puțin 4 miercuri jucate", earned: has("lider1"), date: "", vis: true });
+  L.push({ k: "urca", n: "Urcă tare", e: "📈", d: "Ai urcat 4 locuri sau mai mult într-o săptămână", earned: has("urca"), date: "", vis: true });
+  step("inlot", "În lot", "🏟️", "3 săptămâni în primele 12 locuri", 3, rp.lot || 0, "", ["săptămână", "săptămâni"], { earned: has("inlot") });
+  step("titular", "Titular fix", "📌", "8 săptămâni la rând în primele 12 locuri", 8, rp.best || 0, "", ["săptămână la rând", "săptămâni la rând"], { earned: has("titular") });
+  step("complet", "Complet", "🧩", "5 seri cu 12 din 12", 5, p.f12 || 0, "", ["seară", "seri"], { earned: has("complet") });
+  step("legenda", "Legenda", "🏆", "40 de meciuri jucate în sezon", 40, p.games, "", ["meci", "meciuri"], { earned: has("legenda") });
+  step("zid", "Zid de beton", "🧱", "20 de meciuri la rând, fără pauză", 20, p.best, "", ["meci la rând", "meciuri la rând"], { earned: has("zid") });
+  L.push({ k: "perfect", n: "Perfectul", e: "💯", d: "Prezență 100% în sezon, din cel puțin 15 meciuri", earned: has("perfect"), date: "", vis: true });
+  L.push({ k: "racheta", n: "Rachetă", e: "🛰️", d: "Ai urcat 10 locuri sau mai mult în 4 săptămâni", earned: has("racheta"), date: "", vis: true });
+  L.push({ k: "liderluna", n: "Lider de lună", e: "📅", d: "Ai încheiat o lună pe locul 1", earned: has("liderluna"), date: "", vis: true });
+  L.push({ k: "top3luna", n: "Top 3 pe o lună", e: "🔝", d: "În primele 3 locuri în toate miercurile unei luni", earned: has("top3luna"), date: "", vis: true });
+  L.push({ k: "top5luna", n: "Top 5 pe o lună", e: "⭐", d: "În primele 5 locuri în toate miercurile unei luni", earned: has("top5luna"), date: "", vis: true });
   return L;
 }
 let _pfRar = { key: "", map: {} };
@@ -1794,7 +1822,7 @@ function pfBadgePanel(p, S) {
   const card = b => {
     const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag || ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
     const rr = b.award ? '<small class="rr rare">Premiul sezonului</small>' : b.earned && R[b.k] ? `<small class="rr${rare(b) ? " rare" : ""}">${rare(b) ? "Rar · " : ""}${R[b.k]} din ${N} jucători</small>` : "";
-    return `<div class="pf2k${b.earned ? "" : " g"}${b.award ? " aw" : ""}"><span class="e">${b.e}</span><b>${esc(b.n)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}${b.d ? `<small>${esc(b.d)}</small>` : ""}${rr}${!b.earned && b.goal ? `<i class="pb"><u style="width:${Math.round(100 * b.cur / b.goal)}%"></u></i>` : ""}</div>`; };
+    return `<div class="pf2k${b.earned ? "" : " g"}${b.award ? " aw" : ""}${BONUS_B.includes(b.k) ? " bon" : RARE_B.includes(b.k) ? " rare2" : ""}"><span class="e">${b.e}</span><b>${esc(b.n)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}${b.d ? `<small>${esc(b.d)}</small>` : ""}${rr}${!b.earned && b.goal ? `<i class="pb"><u style="width:${Math.round(100 * b.cur / b.goal)}%"></u></i>` : ""}</div>`; };
   const todo = [...base.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), ...base.filter(b => !b.earned && !b.goal)];
   const sec = (t, a) => a.length ? `<h4>${t}</h4><div class="pf2cards">${a.map(card).join("")}</div>` : "";
   return `<div class="panel pf2bdg"><span class="eyebrow">Insigne</span>
