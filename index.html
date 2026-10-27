@@ -299,6 +299,76 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
 #badges .brow .bi { position: absolute; top: 8px; right: 8px; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--line); color: var(--mute); font: 700 9px/13px var(--f-body); text-align: center; font-style: normal; }
 #badges:not(.all) .brow.hid { display: none; }
 @media (max-width: 400px) { #badges { grid-template-columns: 1fr; } }
+
+/* insigne index: taburi pe categorii + foaie de detalii (fără extindere în pagină) */
+.btabs { display: flex; gap: 8px; margin: 0 0 12px; overflow-x: auto; scrollbar-width: none; padding: 2px 1px; }
+.btabs::-webkit-scrollbar { display: none; }
+.btabs button { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.btabs button small { font-size: 11px; color: var(--mute); font-weight: 800; }
+.btabs button.on { background: var(--lime); border-color: var(--lime); color: var(--lime-ink, #0b111b); }
+.btabs button.on small { color: inherit; opacity: .75; }
+.btnote { margin: -2px 2px 10px; font-size: 13px; color: var(--mute); }
+#badges .brow { grid-template-areas: "ic bt" "ic bw"; padding-right: 10px; }
+#badges .brow .bw .more { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: none; border: 1px dashed var(--line); color: var(--mute); font-weight: 800; }
+#badges .brow.wait { opacity: .62; }
+#badges .brow .bi { display: none; }
+#bsheet { position: fixed; z-index: 60; left: 50%; bottom: calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(460px, calc(100vw - 24px)); max-height: 62vh; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgba(0,0,0,.45); padding: 14px 14px 16px; display: none; overscroll-behavior: contain; }
+#bsheet.on { display: block; }
+#bsheet .bh { display: flex; align-items: center; gap: 10px; padding-right: 22px; }
+#bsheet .bh .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--lime); background: var(--panel-2); border: 1px solid var(--line); }
+#bsheet .bh .ic svg { width: 22px; height: 22px; }
+#bsheet .bh b { font-family: var(--f-display); font-size: 18px; font-weight: 800; text-transform: uppercase; line-height: 1.1; }
+#bsheet .bh small { display: block; color: var(--mute); font-size: 12px; font-weight: 700; margin-top: 2px; }
+#bsheet .bd { margin: 10px 0 0; color: var(--mute); font-size: 13px; line-height: 1.4; }
+#bsheet .bwho { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+#bsheet .bx { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 8px; border: 0; background: none; color: var(--mute); font-size: 13px; cursor: pointer; }
+#bsheet .bx:hover { color: var(--ink); background: var(--panel-2); }
+#badges { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px; grid-auto-rows: 92px; min-height: 292px; align-content: start; }
+#badges .brow { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 10px 6px 9px; }
+#badges .brow .ic { width: 30px; height: 30px; align-self: center; } #badges .brow .ic svg { width: 19px; height: 19px; }
+#badges .brow .bt { flex-direction: column; gap: 2px; justify-content: center; }
+#badges .brow .bt b { font-size: 11.5px; white-space: normal; line-height: 1.1; }
+#badges .brow .bt small { font-size: 10.5px; }
+#badges .brow .bw { display: none; }
+#badges .brow .b5 { position: absolute; top: 6px; right: 6px; font-size: 9px; padding: 1px 5px; }
+#bsheet { left: 0; bottom: auto; top: 0; transform: none; width: min(300px, calc(100vw - 24px)); max-height: 45vh; padding: 12px 12px 14px; border-radius: 14px; }
+@media (min-width: 700px) { #badges { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; max-width: 640px; } }
+.btabs { display: flex; flex-wrap: nowrap; gap: 6px; overflow: visible; }
+.btabs button { flex: 0 1 auto; min-width: 0; min-height: 40px; padding: 0 13px; border-radius: 999px; font-size: 14px; gap: 6px; }
+@media (max-width: 440px) { .btabs { gap: 5px; } .btabs button { padding: 0 11px; font-size: 13px; gap: 0; } .btabs button small { display: none; } }
+
+/* meniu mobil / aplicație: bară jos cu 4 secțiuni + „Mai mult” */
+#bnav, #bmore { display: none; }
+@media (max-width: 960px) {
+  .side .nav { display: none; }
+  .side .brand div { display: block; } .side .brand b { font-size: 17px; } .side .brand div span { display: none; }
+  .side { padding: 7px 14px; }
+  main { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+  #bnav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: color-mix(in oklab, var(--side) 96%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); }
+  #bnav a, #bnav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; border: 0; background: none; color: var(--mute); font: inherit; font-size: 11px; font-weight: 700; text-decoration: none; border-radius: 12px; cursor: pointer; padding: 4px 0; }
+  #bnav svg.i { width: 22px; height: 22px; }
+  #bnav .on { color: var(--lime-ink); background: var(--lime); }
+  #bmore { position: fixed; inset: 0; z-index: 55; background: rgba(5,9,16,.55); }
+  #bmore.on { display: block; }
+  #bmore .sh { position: absolute; left: 10px; right: 10px; bottom: calc(66px + env(safe-area-inset-bottom)); background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+  #bmore a { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 12px; border-radius: 14px; background: var(--panel-2); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; border: 1px solid var(--line); }
+  #bmore a.on { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); }
+  .totop { bottom: calc(76px + env(safe-area-inset-bottom)); }
+  #pwa { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+  #admfab { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+@media (min-width: 700px) { #badges { grid-template-columns: repeat(3, 112px) !important; justify-content: start; } }
+#badges .bnote { grid-column: 1 / -1; align-self: start; font-size: 12.5px; line-height: 1.35; color: var(--mute); padding: 2px 4px; }
+#badges { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-auto-rows: 52px; min-height: 292px; gap: 8px; justify-content: stretch; }
+@media (min-width: 700px) { #badges { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; max-width: 760px; } }
+#badges .brow { flex-direction: row; align-items: center; text-align: left; gap: 9px; padding: 6px 10px 6px 8px; }
+#badges .brow .ic { width: 34px; height: 34px; flex: none; }
+#badges .brow .ic svg { width: 20px; height: 20px; }
+#badges .brow .bt { flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+#badges .brow .bt b { font-size: 13px; line-height: 1.1; letter-spacing: .01em; }
+#badges .brow .bt small { font-size: 11px; }
+#badges .brow .b5 { position: static; margin-left: 5px; font-size: 9px; padding: 1px 5px; vertical-align: 1px; }
+@media (max-width: 380px) { #badges .brow { gap: 7px; padding: 5px 7px; } #badges .brow .ic { width: 30px; height: 30px; } #badges .brow .bt b { font-size: 12px; } #badges .brow .b5 { margin-left: 3px; padding: 1px 4px; } }
 .bmore { margin: 12px 0 0; padding: 11px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px; }
 .bmore:hover { border-color: var(--lime); }
 .bmore[hidden] { display: none; }
@@ -781,8 +851,10 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
       <div class="sechead"><h2 id="h-aw">Premiile sezonului</h2><p class="note">Câte unul pe categorie, se recalculează în fiecare joi.</p></div>
       <div class="awards" id="awards"></div>
       <div class="sechead" style="margin-top:10px"><h3>Insigne</h3><p class="note">Oricine le poate lua, nu doar cei din top. Apasă pe un nume pentru profil.</p></div>
+      <div class="btabs" id="btabs" role="tablist"></div>
+      <p class="btnote" id="btnote" hidden></p>
       <div class="badges" id="badges"></div>
-      <button type="button" class="bmore" id="badgesMore" hidden></button>
+      <div id="bsheet" role="dialog" aria-label="Detalii insignă"></div>
       <p class="note" style="margin-top:8px">Fiecare jucător își vede toate insignele în profilul lui.</p>
       <div class="sechead" style="margin-top:10px"><h3>Prezenți la toate meciurile lunii</h3><p class="note">Cine a jucat în fiecare miercuri din lună, fără nicio pauză.</p></div>
       <div class="months" id="months"></div>
@@ -852,21 +924,21 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 /* insigne profil: iconițe mici, ca pe Steam (27.10.2026) */
 .pf2bdg { position: relative; }
 .pf2tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; max-width: 520px; }
-.pf2t { position: relative; aspect-ratio: 1; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--panel-2); border: 1.5px solid color-mix(in oklab, var(--lime) 55%, var(--line)); padding: 0; color: inherit; cursor: pointer; }
-.pf2t .tip { display: none; }
-.pf2t.g { border-color: var(--line); } .pf2t.g .e { filter: grayscale(1); opacity: .5; }
-.pf2t.aw { border-color: color-mix(in oklab, var(--t-aur) 60%, var(--line)); }
-.pf2t.rare2 { border-color: color-mix(in oklab, var(--t-aur) 75%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 30%, transparent), 0 0 14px -4px color-mix(in oklab, var(--t-aur) 70%, transparent); }
-.pf2t.bon { border-color: var(--lime); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 35%, transparent), 0 0 14px -3px color-mix(in oklab, var(--lime) 65%, transparent); }
-.pf2t .p5 { position: absolute; top: -6px; right: -6px; font: 800 10px/1 var(--f-body); padding: 3px 5px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); font-style: normal; }
-.pf2t .pbm { position: absolute; left: 6px; right: 6px; bottom: 5px; height: 4px; border-radius: 4px; background: color-mix(in oklab, var(--ink) 18%, transparent); overflow: hidden; }
-.pf2t .pbm u { display: block; height: 100%; background: var(--lime); text-decoration: none; }
+.pf2bt { position: relative; aspect-ratio: 1; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--panel-2); border: 1.5px solid color-mix(in oklab, var(--lime) 55%, var(--line)); padding: 0; color: inherit; cursor: pointer; }
+.pf2bt .tip { display: none; }
+.pf2bt.g { border-color: var(--line); } .pf2bt.g .e { filter: grayscale(1); opacity: .5; }
+.pf2bt.aw { border-color: color-mix(in oklab, var(--t-aur) 60%, var(--line)); }
+.pf2bt.rare2 { border-color: color-mix(in oklab, var(--t-aur) 75%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 30%, transparent), 0 0 14px -4px color-mix(in oklab, var(--t-aur) 70%, transparent); }
+.pf2bt.bon { border-color: var(--lime); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 35%, transparent), 0 0 14px -3px color-mix(in oklab, var(--lime) 65%, transparent); }
+.pf2bt .p5 { position: absolute; top: -6px; right: -6px; font: 800 10px/1 var(--f-body); padding: 3px 5px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); font-style: normal; }
+.pf2bt .pbm { position: absolute; left: 6px; right: 6px; bottom: 5px; height: 4px; border-radius: 4px; background: color-mix(in oklab, var(--ink) 18%, transparent); overflow: hidden; }
+.pf2bt .pbm u { display: block; height: 100%; background: var(--lime); text-decoration: none; }
 .pf2pop { position: absolute; z-index: 30; width: 230px; max-width: calc(100% - 8px); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; box-shadow: 0 12px 30px -8px rgba(0,0,0,.55); display: none; font-size: 13px; line-height: 1.35; }
 .pf2pop.on { display: grid; gap: 3px; }
 .pf2pop b { font-size: 14px; } .pf2pop small { color: var(--mute); font-size: 12px; } .pf2pop .rr.rare { color: var(--t-aur); font-weight: 700; }
 .pf2pop .p5 { font-style: normal; font: 800 10px/1 var(--f-body); padding: 3px 6px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); margin-left: 6px; vertical-align: middle; }
 .pf2pop .pb { margin-top: 4px; height: 5px; }
-@media (max-width: 640px) { .pf2tiles { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 7px; } .pf2t { font-size: 22px; border-radius: 12px; } }
+@media (max-width: 640px) { .pf2tiles { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 7px; } .pf2bt { font-size: 22px; border-radius: 12px; } }
 @media (max-width: 640px) { .pf2ics { gap: 6px; } .pf2b { width: 38px; height: 38px; font-size: 17px; } .pf2more { padding: 9px 10px; } }
 
 /* duel: hexagoane suprapuse (27.10.2026) */
@@ -884,12 +956,13 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .pf2hl { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 11px; font-weight: 700; margin: 0 0 4px; }
 .pf2hl u { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--lime); vertical-align: middle; margin-right: 6px; text-decoration: none; }
 .pf2hl u.b { border-top-color: var(--t-plat, #38bdf8); border-top-style: dashed; }
+.pf2panes { display: block; } .pf2pane { display: none; } .pf2pane.on { display: block; visibility: visible; }
 /* Compară-te */
 .pf2cmp { gap: 12px; }
 .pf2tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
 .pf2tab { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--mute); padding: 9px 14px; font-size: 14px; font-weight: 700; white-space: nowrap; margin-bottom: -1px; }
 .pf2tab.on { color: var(--ink); border-bottom-color: var(--lime); }
-.pf2panes { display: grid; } .pf2pane { display: block; grid-area: 1 / 1; visibility: hidden; min-width: 0; } .pf2pane.on { visibility: visible; }
+.pf2pane { min-width: 0; }
 .pf2cm { display: grid; grid-template-columns: 160px minmax(0, 1fr) 190px; gap: 14px; align-items: center; padding: 9px 0; font-size: 14px; }
 .pf2cm .fb { margin: 0; }
 .pf2cm .r { text-align: right; color: var(--lime); font-family: var(--f-display); font-weight: 800; font-size: 18px; }
@@ -906,7 +979,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 @media (max-width: 640px) {
   .pf2cm { grid-template-columns: minmax(0, 1fr) auto; } .pf2cm .fb { grid-column: 1 / -1; grid-row: 2; }
   .pf2dh, .pf2dr { grid-template-columns: 1fr 96px 1fr; } .pf2rv { align-items: flex-start; }
-  .pf2sum .t { min-width: 0; } .pf2ics { margin-left: 0; width: 100%; flex-wrap: wrap; overflow: visible; row-gap: 8px; }
+  .pf2sum .t { min-width: 0; } .pf2ics { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow: visible; gap: 5px; } .pf2ics .pf2b { width: 32px; height: 32px; font-size: 15px; border-width: 1.5px; flex: 0 1 32px; min-width: 0; } .pf2ics .pf2more { padding: 7px 8px; font-size: 12px; }
 }
 /* v2 */
 .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -926,6 +999,56 @@ dialog#prof { scrollbar-gutter: stable; }
 .photorule .pr-x { margin-left: auto; flex: none; align-self: flex-start; background: none; border: 0; color: var(--mute); font-size: 24px; line-height: 1; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
 .photorule .pr-x:hover { background: color-mix(in oklab, var(--ink) 10%, transparent); color: var(--ink); }
 .photorule[hidden] { display: none !important; }
+#pwa { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: flex; justify-content: center; padding: 0 12px calc(12px + env(safe-area-inset-bottom)); pointer-events: none; }
+#pwa[hidden] { display: none !important; }
+#pwa .pw-card { pointer-events: auto; position: relative; width: 100%; max-width: 440px; background: var(--panel-2, #151d2b); border: 1px solid var(--line, #263247); border-radius: 18px; padding: 14px 14px 14px; box-shadow: 0 18px 50px rgba(0,0,0,.55); animation: pwin .35s ease-out; }
+@keyframes pwin { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { #pwa .pw-card { animation: none; } }
+#pwa .pw-head { display: flex; gap: 12px; align-items: center; padding-right: 26px; }
+#pwa .pw-head img { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+#pwa .pw-head b { display: block; font-size: 15px; line-height: 1.25; color: var(--ink, #fff); }
+#pwa .pw-head span { display: block; font-size: 12.5px; line-height: 1.35; color: var(--mute, #93a0b5); margin-top: 2px; }
+#pwa .pw-x { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--mute, #93a0b5); font-size: 20px; line-height: 1; cursor: pointer; }
+#pwa .pw-x:hover { background: rgba(255,255,255,.08); }
+#pwa ol { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: s; }
+#pwa li { counter-increment: s; display: flex; gap: 10px; align-items: center; font-size: 13.5px; color: var(--ink, #fff); line-height: 1.35; }
+#pwa li::before { content: counter(s); flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); font-weight: 800; font-size: 12px; display: grid; place-items: center; }
+#pwa li svg { width: 18px; height: 18px; vertical-align: -4px; margin: 0 2px; }
+#pwa .pw-act { display: flex; gap: 8px; margin-top: 12px; }
+#pwa .pw-act button { flex: 1; min-height: 44px; border-radius: 12px; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; border: 1px solid var(--line, #263247); background: transparent; color: var(--ink, #fff); }
+#pwa .pw-act button.go { background: var(--lime, #c6f432); border-color: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); }
+</style>
+<style>
+#adm { margin: 6px auto 18px; text-align: center; font-size: 12px; }
+#adm[hidden] { display: none !important; }
+#adm .adm-lock { background: none; border: 0; color: var(--mute); font: inherit; font-size: 12px; cursor: pointer; padding: 8px 12px; border-radius: 10px; opacity: .75; }
+#adm .adm-lock:hover { opacity: 1; background: var(--panel-2); }
+#adm .adm-on { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+#adm .adm-on a { background: var(--lime); color: var(--lime-ink); font-weight: 800; font-size: 13px; border-radius: 10px; padding: 9px 14px; text-decoration: none; }
+#adm .adm-on button { background: none; border: 0; color: var(--mute); font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; padding: 8px; }
+#admfab { position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 44; background: var(--lime); color: var(--lime-ink); font-weight: 800; font-size: 14px; border-radius: 999px; padding: 12px 18px; text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,.45); animation: admpop .45s cubic-bezier(.2,1.4,.4,1); }
+#admfab[hidden] { display: none !important; }
+@keyframes admpop { from { transform: scale(.6) translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+dialog#admdlg { border: 1px solid var(--line); border-radius: 20px; background: var(--panel); color: var(--ink); padding: 26px 22px 20px; width: min(92vw, 340px); text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+dialog#admdlg::backdrop { background: rgba(5,9,16,.72); backdrop-filter: blur(3px); }
+#admdlg .lk { width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; }
+#admdlg .lk svg { width: 46px; height: 46px; overflow: visible; }
+#admdlg .sh { transform-origin: 14px 11px; transition: transform .45s cubic-bezier(.3,1.5,.5,1); }
+#admdlg.ok .sh { transform: translateY(-4px) rotate(-28deg); }
+#admdlg h3 { margin: 0 0 4px; font-family: var(--f-display); font-size: 24px; letter-spacing: .02em; }
+#admdlg p { margin: 0 0 14px; color: var(--mute); font-size: 13px; line-height: 1.4; }
+#admdlg .pw { position: relative; }
+#admdlg input { width: 100%; box-sizing: border-box; height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--panel-2); color: var(--ink); font-size: 16px; padding: 0 44px 0 14px; text-align: center; letter-spacing: .08em; }
+#admdlg input:focus { outline: 0; border-color: var(--lime); }
+#admdlg .eye { position: absolute; right: 4px; top: 4px; width: 40px; height: 40px; border: 0; background: none; color: var(--mute); font-size: 18px; cursor: pointer; }
+#admdlg .er { min-height: 18px; margin: 8px 0 2px; color: #ff8f8f; font-size: 13px; }
+#admdlg.bad .pw { animation: admshake .4s; }
+@keyframes admshake { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+#admdlg .bt { display: flex; gap: 8px; margin-top: 8px; }
+#admdlg .bt button { flex: 1; min-height: 46px; border-radius: 12px; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--ink); }
+#admdlg .bt button.go { background: var(--lime); border-color: var(--lime); color: var(--lime-ink); }
+#admdlg .bt button[disabled] { opacity: .6; }
+@media (prefers-reduced-motion: reduce) { #admfab, #admdlg.bad .pw { animation: none; } #admdlg .sh { transition: none; } }
 </style>
 <dialog id="prof" aria-label="Profil jucător"><div class="pf" id="pf"></div></dialog>
 
@@ -1087,6 +1210,7 @@ const ICON = {
   home: P_('<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'),
   pitch: P_('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><circle cx="12" cy="12" r="3"/>'),
   table: P_('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>'),
+  menu: P_('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'),
   stats: P_('<path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/>'),
   trophy: P_('<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8"/>'),
   heat: P_('<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'),
@@ -1154,7 +1278,7 @@ const NEWB = [
   ["iarnafier", "Iarna de fier", "Ai jucat toate miercurile iernii (minimum 12)"],
   ["legenda", "Legenda", "40 de meciuri jucate în sezon"],
   ["zid", "Zid de beton", "20 de meciuri la rând, fără nicio pauză"],
-  ["racheta", "Rachetă", "Ai urcat 10 locuri sau mai mult în 4 săptămâni"],
+  ["racheta", "Rachetă", "Ai urcat 8 locuri sau mai mult în 4 săptămâni"],
   ["liderluna", "Lider de lună", "Ai încheiat o lună calendaristică pe locul 1"],
   ["top3luna", "Top 3 pe o lună", "Ai stat în primele 3 locuri în toate miercurile unei luni"],
   ["top5luna", "Top 5 pe o lună", "Ai stat în primele 5 locuri în toate miercurile unei luni"]];
@@ -1188,7 +1312,46 @@ const BSVG = {
   top5luna: BI("M12 3.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12z", "M8.5 14.6L7 21l5-2.5 5 2.5-1.5-6.4M12 6.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z") };
 const WINTER_B = ["wserie", "colind", "sanuan", "rege", "iarnafier"], BONUS_B = ["wserie", "colind"], RARE_B = ["perfect", "iarnafier", "legenda", "zid", "racheta", "liderluna", "rege"];
 const RANK_IDS = ["lider1", "urca", "racheta", "inlot", "titular", "liderluna", "top3luna", "top5luna"];
-document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("#badgesMore"); if (!b) return; const g = $("badges"); g.classList.toggle("all"); b.textContent = g.classList.contains("all") ? "Ascunde insignele comune" : `Vezi toate insignele (încă ${b.dataset.n})`; });
+const BTABS = [["rare", "Rare"], ["prez", "Prezență"], ["clas", "Clasament"], ["iarna", "Iarnă"]];
+const BCAT = { rare: ["perfect", "legenda", "zid", "racheta", "liderluna"], prez: ["maraton", "foc", "gata", "cuvant", "faza", "complet", "salvator", "revenire", "debut"], clas: ["lider1", "urca", "inlot", "titular", "top3luna", "top5luna"], iarna: ["wserie", "colind", "sanuan", "rege", "iarnafier"] };
+let BTAB = "rare";
+let CUR_P = null; const STATE_P = () => CUR_P;
+function renderBadgeTabs(P) {
+  const started = pfToday() >= WINTER.from, rowsAll = {};
+  DATA.badges.forEach(([id, n, d]) => { rowsAll[id] = { id, n, d, who: P.filter(p => (p.badges || []).includes(id)) }; });
+  const catOf = id => Object.keys(BCAT).find(k => BCAT[k].includes(id)) || "prez";
+  Object.keys(rowsAll).forEach(id => { if (!BCAT[catOf(id)].includes(id)) BCAT.prez.push(id); });
+  const tabsEl = $("btabs"), box = $("badges"); if (!tabsEl || !box) return;
+  tabsEl.innerHTML = BTABS.map(([k, l]) => { const ids = BCAT[k].filter(id => rowsAll[id]), got = ids.filter(id => rowsAll[id].who.length).length;
+    return `<button type="button" role="tab" class="${k === BTAB ? "on" : ""}" data-bt="${k}" aria-selected="${k === BTAB}">${l}<small>${got}/${ids.length}</small></button>`; }).join("");
+  const note = $("btnote"), wait = BTAB === "iarna" && !started;
+  note.hidden = true; const nt = BTAB === "iarna" ? `<p class="bnote">${wait ? "Se deschid pe 1 noiembrie, odată cu bonusul de +20%. Până atunci sunt gri." : "Doar 1 noiembrie – 28 februarie."}</p>` : "";
+  const rows = BCAT[BTAB].filter(id => rowsAll[id]).map(id => rowsAll[id]).sort((a, b) => (b.who.length > 0) - (a.who.length > 0) || a.who.length - b.who.length);
+  box.innerHTML = rows.map(({ id, n, who }) => {
+    const bn = BONUS_B.includes(id), cls = bn ? " bonus" : RARE_B.includes(id) ? " rare" : "";
+    return `<div class="brow ${who.length ? "" : "none"}${cls}${wait ? " wait" : ""}" data-b="${id}" role="button" tabindex="0"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span>
+      <span class="bt"><b>${esc(n)}${bn ? '<em class="b5">+5</em>' : ""}</b><small>${who.length} ${who.length === 1 ? "jucător" : "jucători"}</small></span>
+      <span class="bw">${who.length ? who.slice(0, 3).map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("") + (who.length > 3 ? `<span class="more">+${who.length - 3}</span>` : "") : '<span class="muted">' + (wait ? "Încă neînceput" : "Încă nimeni") + "</span>"}</span></div>`; }).join("") + nt;
+  hideBSheet();
+}
+function hideBSheet() { const s = $("bsheet"); if (s) s.classList.remove("on"); }
+function showBSheet(id, el) {
+  const s = $("bsheet"), r = (DATA.badges || []).find(b => b[0] === id); if (!s || !r) return;
+  const who = (STATE_P() || []).filter(p => (p.badges || []).includes(id)), bn = BONUS_B.includes(id);
+  s.innerHTML = `<button type="button" class="bx" aria-label="Închide">✕</button><div class="bh"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span><div><b>${esc(r[1])}${bn ? ' <em class="b5">+5</em>' : ""}</b><small>${who.length} ${who.length === 1 ? "jucător" : "jucători"}</small></div></div>
+    <p class="bd">${esc(r[2])}${bn ? " · +5 puncte, o singură dată" : ""}</p>${who.length ? `<div class="bwho">${who.map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>` : ""}`;
+  s.classList.add("on");
+  if (el) { const r = el.getBoundingClientRect(), sw = s.offsetWidth, sh = s.offsetHeight; let top = r.top - sh - 8; if (top < 8) top = r.bottom + 8; s.style.left = Math.max(12, Math.min(innerWidth - sw - 12, r.left + r.width / 2 - sw / 2)) + "px"; s.style.top = top + "px"; }
+}
+window.addEventListener("scroll", () => hideBSheet(), { passive: true });
+document.addEventListener("click", e => {
+  const tb = e.target.closest && e.target.closest("#btabs [data-bt]"); if (tb) { BTAB = tb.dataset.bt; renderBadgeTabs(STATE_P()); return; }
+  if (e.target.closest && e.target.closest("#bsheet .bx")) { hideBSheet(); return; }
+  if (e.target.closest && e.target.closest("[data-p]")) { hideBSheet(); return; }
+  const r = e.target.closest && e.target.closest("#badges .brow"); if (r) { const sh = $("bsheet"); if (sh.classList.contains("on") && sh.dataset.b === r.dataset.b) hideBSheet(); else { showBSheet(r.dataset.b, r); sh.dataset.b = r.dataset.b; } return; }
+  if (!(e.target.closest && e.target.closest("#bsheet"))) hideBSheet();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") hideBSheet(); });
 function ensureBadges() { NEWB.forEach(nb => { if (!DATA.badges.some(b => b[0] === nb[0])) DATA.badges.push(nb); });
   /* date de rezervă (fără Google): completează insignele care se pot deduce din coduri, ca să nu lipsească (ex. Zid de beton) */
   Object.values(DATA.seasons).forEach(S => { if (S._eb || !S.players || !S.weeks) return; S._eb = 1;
@@ -1215,8 +1378,8 @@ function applyRankBadges(S) { /* insigne din clasamentul pe săptămâni; se num
       if (R[k] <= 12) { lot++; run++; best = Math.max(best, run); } else run = 0;
       if (R[k] === 1 && solo(k)) lead = true;
       if (k > 0 && R[k - 1] != null) up = Math.max(up, R[k - 1] - R[k]);
-      if (k > 3 && R[k - 4] != null) up4 = Math.max(up4, R[k - 4] - R[k]); }
-    if (lead) add.push("lider1"); if (up >= 4) add.push("urca"); if (up4 >= 10) add.push("racheta"); if (lot >= 3) add.push("inlot"); if (best >= 8) add.push("titular");
+      if (k > 7 && R[k - 4] != null) up4 = Math.max(up4, R[k - 4] - R[k]); }  /* ignorăm primele 4 săptămâni: locurile încă sar mult */
+    if (lead) add.push("lider1"); if (up >= 4) add.push("urca"); if (up4 >= 8) add.push("racheta"); if (lot >= 3) add.push("inlot"); if (best >= 8) add.push("titular");
     let lm = false, t3 = false, t5 = false;
     months.forEach(mo => { const ks = []; W.slice(0, n).forEach((w, k) => { if (w.date.slice(0, 7) === mo && w.status === "Jucat") ks.push(k); });
       if (ks.length < 3 || !ks.every(ok)) return;
@@ -1261,11 +1424,22 @@ function renderNav() {
   $("logo").innerHTML = ICON.ball; $("sicon").innerHTML = ICON.search;
   $("nav").innerHTML = NAV.map(([id, l, ic]) => `<a href="#${id}" data-id="${id}">${ICON[ic]}<span>${l}</span></a>`).join("") + `<a class="ext" href="https://sesinio-ro.github.io/fotbal-miercuri/vot.html">${ICON.stats}<span>Rezultate vot</span></a>`;
   const links = [...$("nav").querySelectorAll("a[data-id]")];
+  const PRIM = ["prezentare", "lot", "clasament", "statistici"], PL = { prezentare: "Acasă", lot: "Lotul", clasament: "Clasament", statistici: "Statistici" };
+  if (!$("bnav")) { const bar = document.createElement("nav"); bar.id = "bnav"; bar.setAttribute("aria-label", "Meniu");
+    bar.innerHTML = PRIM.map(id => { const n = NAV.find(x => x[0] === id); return `<a href="#${id}" data-id="${id}">${ICON[n[2]]}<span>${PL[id]}</span></a>`; }).join("") + `<button type="button" id="bmoreBtn" aria-haspopup="true">${ICON.menu}<span>Mai mult</span></button>`;
+    const mo = document.createElement("div"); mo.id = "bmore";
+    mo.innerHTML = `<div class="sh">${NAV.filter(n => !PRIM.includes(n[0])).map(([id, l, ic]) => `<a href="#${id}" data-id="${id}">${ICON[ic]}<span>${l}</span></a>`).join("")}<a href="https://sesinio-ro.github.io/fotbal-miercuri/vot.html">${ICON.stats}<span>Rezultate vot</span></a></div>`;
+    document.body.append(bar, mo);
+    bar.querySelector("#bmoreBtn").addEventListener("click", e => { e.stopPropagation(); mo.classList.toggle("on"); });
+    mo.addEventListener("click", () => mo.classList.remove("on"));
+    document.addEventListener("keydown", e => { if (e.key === "Escape") mo.classList.remove("on"); }); }
+  const setOn = id => { document.querySelectorAll("#bnav [data-id], #bmore [data-id]").forEach(a => a.classList.toggle("on", a.dataset.id === id)); const mb = $("bmoreBtn"); if (mb) mb.classList.toggle("on", !PRIM.includes(id)); };
   const obs = new IntersectionObserver(es => {
-    es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.dataset.id === e.target.id)); });
+    es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.toggle("on", a.dataset.id === e.target.id)); setOn(e.target.id); } });
   }, { rootMargin: "-30% 0px -60% 0px" });
   NAV.forEach(([id]) => obs.observe($(id)));
   links[0].classList.add("on");
+  setOn("prezentare");
 }
 
 function renderSeasons() {
@@ -1541,17 +1715,7 @@ function render() {
   renderSignup(S);
   $("awards").innerHTML = S.awards.map(([k, n, d, r]) => `<div class="award"><span class="ic">${ICON[AWARD_ICON[k] || "trophy"]}</span><span class="k">${esc(k)}</span>
     <button class="n" data-p="${esc(n)}">${esc(n)}</button><span class="d">${esc(d)}</span><span class="r">${esc(r || "")}</span></div>`).join("");
-  { const wOn = pfToday() <= WINTER.to, rows = DATA.badges.map(([id, n, d]) => {
-      const who = P.filter(p => (p.badges || []).includes(id)), win = WINTER_B.includes(id), show = win ? wOn : who.length <= 2;
-      return { id, n, d, who, win, show, k: (win ? 0 : 1) * 1000 + who.length }; }).sort((a, b) => (b.show - a.show) || (a.k - b.k)), hidN = rows.filter(r => !r.show).length;
-    const emp = rows.filter(r => r.show && !r.who.length && !BONUS_B.includes(r.id));
-    $("badges").innerHTML = rows.filter(r => !(r.show && !r.who.length && !BONUS_B.includes(r.id))).map(({ id, n, d, who, show }) => {
-      const bn = BONUS_B.includes(id), cls = bn ? " bonus" : RARE_B.includes(id) ? " rare" : "";
-      return `<div class="brow ${who.length ? "" : "none"}${cls}${show ? "" : " hid"}" data-b="${id}"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span>
-      <span class="bt"><b>${esc(n)}${bn ? '<em class="b5">+5</em>' : ""}</b><small>${who.length} ${who.length === 1 ? "jucător" : "jucători"}</small></span>
-      <span class="bw">${who.length ? who.map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("") : '<span class="muted">Încă nimeni</span>'}</span>
-      <span class="bdd">${esc(d)}${bn ? " · +5 puncte, o singură dată" : ""}</span><i class="bi">i</i></div>`; }).join("") + (emp.length ? `<div class="badge-empty"><b>Încă nu le are nimeni:</b> ${emp.map(r => esc(r.n)).join(" · ")}</div>` : "");
-    const bm = $("badgesMore"); if (bm) { bm.hidden = !hidN; bm.dataset.n = hidN; const on = $("badges").classList.contains("all"); bm.textContent = on ? "Ascunde insignele comune" : `Vezi toate insignele (încă ${hidN})`; } }
+  CUR_P = P; renderBadgeTabs(P);
   $("months").innerHTML = (S.motm || []).map(m => `<div class="month"><div class="mh"><b>${m.month}</b><span>${m.games} miercuri${m.partial ? " · în curs" : ""}</span></div>
     <div class="chips">${m.names.length ? m.names.map(n => `<button class="pchip" data-p="${esc(n)}">${esc(n)}</button>`).join("") : '<span class="muted" style="font-size:12px">nimeni la toate</span>'}</div></div>`).join("");
   renderTable();
@@ -1919,7 +2083,7 @@ function pfBadges(p, S) {
   step("legenda", "Legenda", "🏆", "40 de meciuri jucate în sezon", 40, p.games, "", ["meci", "meciuri"], { earned: has("legenda") });
   step("zid", "Zid de beton", "🧱", "20 de meciuri la rând, fără pauză", 20, p.best, "", ["meci la rând", "meciuri la rând"], { earned: has("zid") });
   L.push({ k: "perfect", n: "Perfectul", e: "💯", d: "Prezență 100% în sezon, din cel puțin 15 meciuri", earned: has("perfect"), date: "", vis: true });
-  L.push({ k: "racheta", n: "Rachetă", e: "🛰️", d: "Ai urcat 10 locuri sau mai mult în 4 săptămâni", earned: has("racheta"), date: "", vis: true });
+  L.push({ k: "racheta", n: "Rachetă", e: "🛰️", d: "Ai urcat 8 locuri sau mai mult în 4 săptămâni", earned: has("racheta"), date: "", vis: true });
   L.push({ k: "liderluna", n: "Lider de lună", e: "📅", d: "Ai încheiat o lună pe locul 1", earned: has("liderluna"), date: "", vis: true });
   L.push({ k: "top3luna", n: "Top 3 pe o lună", e: "🔝", d: "În primele 3 locuri în toate miercurile unei luni", earned: has("top3luna"), date: "", vis: true });
   L.push({ k: "top5luna", n: "Top 5 pe o lună", e: "⭐", d: "În primele 5 locuri în toate miercurile unei luni", earned: has("top5luna"), date: "", vis: true });
@@ -1945,7 +2109,7 @@ function pfBadgePanel(p, S) {
     const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag && b.tag !== "+5 puncte" ? b.tag : ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
     const rr = b.award ? '<small class="rr rare">Premiul sezonului</small>' : b.earned && R[b.k] ? `<small class="rr${rare(b) ? " rare" : ""}">${rare(b) ? "Rar · " : ""}${R[b.k]} din ${N} jucători</small>` : "";
     const b5 = BONUS_B.includes(b.k) || b.k === "serie4", pct = !b.earned && b.goal ? Math.round(100 * b.cur / b.goal) : -1;
-    return `<button type="button" class="pf2t${b.earned ? "" : " g"}${b.award ? " aw" : ""}${b5 ? " bon" : RARE_B.includes(b.k) ? " rare2" : ""}" aria-label="${esc(b.n)}"><span class="e">${b.e}</span>${b5 ? '<em class="p5">+5</em>' : ""}${pct >= 0 ? `<i class="pbm"><u style="width:${pct}%"></u></i>` : ""}
+    return `<button type="button" class="pf2bt${b.earned ? "" : " g"}${b.award ? " aw" : ""}${b5 ? " bon" : RARE_B.includes(b.k) ? " rare2" : ""}" aria-label="${esc(b.n)}"><span class="e">${b.e}</span>${b5 ? '<em class="p5">+5</em>' : ""}${pct >= 0 ? `<i class="pbm"><u style="width:${pct}%"></u></i>` : ""}
       <span class="tip"><b>${esc(b.n)}${b5 ? '<em class="p5">+5</em>' : ""}</b>${b.d ? `<small>${esc(b.d)}</small>` : ""}${sub ? `<small>${esc(sub)}</small>` : ""}${rr}${pct >= 0 ? `<i class="pb"><u style="width:${pct}%"></u></i>` : ""}</span></button>`; };
   const todo = [...base.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), ...base.filter(b => !b.earned && !b.goal)];
   const sec = (t, a) => a.length ? `<h4>${t}</h4><div class="pf2tiles">${a.map(tile).join("")}</div>` : "";
@@ -2182,13 +2346,12 @@ $("prof").addEventListener("click", e => { if (e.target === $("prof")) $("prof")
     let l = r.left - c.left + r.width / 2 - w / 2; l = Math.max(4, Math.min(l, c.width - w - 4));
     let tp = r.bottom - c.top + 8; if (r.bottom + pop.offsetHeight + 16 > innerHeight && r.top - pop.offsetHeight - 8 > 0) tp = r.top - c.top - pop.offsetHeight - 8;
     pop.style.left = l + "px"; pop.style.top = tp + "px"; };
-  document.addEventListener("click", e => { const t = e.target.closest(".pf2t");
+  document.addEventListener("click", e => { const t = e.target.closest(".pf2bt");
     if (!t) { if (!e.target.closest(".pf2pop")) hide(); return; }
     const pop = t.closest(".pf2bdg").querySelector(".pf2pop"); if (pop.classList.contains("on") && pop._t === t && !hov.matches) hide(); else { hide(); show(t); } });
-  document.addEventListener("mouseover", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2t"); if (t) show(t); });
-  document.addEventListener("mouseout", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2t"); if (t && !(e.relatedTarget && t.contains(e.relatedTarget))) hide(); });
+  document.addEventListener("mouseover", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2bt"); if (t) show(t); });
+  document.addEventListener("mouseout", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2bt"); if (t && !(e.relatedTarget && t.contains(e.relatedTarget))) hide(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
-  document.addEventListener("click", e => { if (e.target.closest("[data-p]")) return; const r = e.target.closest("#badges .brow"); if (r) r.classList.toggle("open"); });
 })();
 document.addEventListener("click", e => { const t = e.target.closest("[data-p]"); if (!t || t.closest("#prof .strip")) return; openProfile(t.dataset.p); $("sugg").hidden = true; });
 function fromHash() { const h = decodeURIComponent(location.hash); if (!h.startsWith("#p-")) return; const p = S_().players.find(x => slug(x.name) === h.slice(3)); if (p) openProfile(p.name, false); }
@@ -2417,6 +2580,107 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0B1018" : "#F3F5F8"; };
   if (b) b.addEventListener("click", () => { const t = cur() === "dark" ? "light" : "dark"; root.dataset.theme = t; try { localStorage.setItem("fm-theme", t); } catch (e) {} paint(); });
   mq.addEventListener?.("change", paint); paint();
+})();
+</script>
+<script>
+/* ADMIN: lăcăt în subsol, parolă criptată (AES-GCM, cheie din parolă), buton către echipe.html. Blocul poate fi înlocuit din fila "admin" a sheet-ului public. */
+(() => {
+  const TEST = /[?&](pwatest|admintest)=1/.test(location.search);
+  if (!TEST && location.hostname !== "sesinio-ro.github.io") return;
+  const EMB = "v1.rxHXcoB3VoRK2WxG7WIrkw==.XKeg+1IaNszcKx88.fdFNMPuAzmM81wbbP7bd35KheZSJcdvZwQ==", SHEET = "1qZwefpegumzPD9McRsfmnqfDgDzyUzwJKEQi65y3i3g", RX = /^v1\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+\.[A-Za-z0-9+\/=]+$/;
+  const norm = s => String(s || "").trim().toLowerCase();
+  const ub = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function openBlock(blk, pw) {
+    try { const p = blk.split("."); if (p[0] !== "v1" || p.length !== 4 || !pw) return false;
+      const m = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+      const k = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: ub(p[1]), iterations: 200000, hash: "SHA-256" }, m, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      const t = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub(p[2]) }, k, ub(p[3]));
+      return new TextDecoder().decode(t) === "echipe-ok"; } catch (e) { return false; } }
+  function sheetBlock() {
+    return new Promise(ok => { const cb = "__ad" + Date.now(), sc = document.createElement("script"), t = setTimeout(() => { delete window[cb]; sc.remove(); ok(null); }, 3500);
+      window[cb] = res => { clearTimeout(t); delete window[cb]; sc.remove(); try { const r = res.table.rows.map(r => (r.c || []).map(c => c == null || c.v == null ? "" : String(c.v).trim())).find(r => r[0] === "blk"); ok(r && RX.test(r[1]) ? r[1] : null); } catch (e) { ok(null); } };
+      sc.onerror = () => { clearTimeout(t); delete window[cb]; sc.remove(); ok(null); };
+      sc.src = `https://docs.google.com/spreadsheets/d/${SHEET}/gviz/tq?tqx=responseHandler:${cb}&headers=0&sheet=admin&_=${Date.now()}`; document.head.appendChild(sc); }); }
+  let BLK = null; const getBlock = async () => BLK || (BLK = (await sheetBlock()) || EMB);
+  const kget = () => { try { return localStorage.getItem("fm_k") || ""; } catch (e) { return ""; } };
+  const kset = v => { try { v ? localStorage.setItem("fm_k", v) : localStorage.removeItem("fm_k"); } catch (e) {} };
+  const href = "echipe.html";
+  const box = document.createElement("div"); box.id = "adm";
+  const fab = document.createElement("a"); fab.id = "admfab"; fab.hidden = true; fab.href = href; fab.textContent = "⚽ Generează echipe";
+  const dlg = document.createElement("dialog"); dlg.id = "admdlg";
+  dlg.innerHTML = `<div class="lk"><svg viewBox="0 0 28 28" fill="none" stroke="#0b111b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><g class="sh"><path d="M8 12V8a6 6 0 0112 0v4"/></g><rect x="5" y="12" width="18" height="12" rx="3" fill="#0b111b"/><circle cx="14" cy="18" r="1.6" fill="#c6f432" stroke="none"/></svg></div>
+    <h3>Zona de admin</h3><p>Doar pentru cine organizează echipele.</p>
+    <form><div class="pw"><input id="admpw" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Parola" aria-label="Parola de admin"><button type="button" class="eye" aria-label="Arată parola">👁</button></div><div class="er" role="alert"></div>
+    <div class="bt"><button type="button" class="no">Anulează</button><button type="submit" class="go">Intră</button></div></form>`;
+  document.body.append(dlg, fab);
+  const foot = document.getElementById("foot"); foot.after(box);
+  const er = dlg.querySelector(".er"), inp = dlg.querySelector("#admpw"), go = dlg.querySelector(".go");
+  function paint(on) {
+    box.innerHTML = on ? `<span class="adm-on"><a href="${href}">⚽ Generează echipe</a><button type="button" data-o="1">Ieși din admin</button></span>` : `<button type="button" class="adm-lock" data-l="1">🔒 Admin</button>`;
+    fab.hidden = !on; }
+  box.addEventListener("click", e => { if (e.target.closest("[data-l]")) { dlg.classList.remove("ok", "bad"); er.textContent = ""; inp.value = ""; dlg.showModal(); inp.focus(); } else if (e.target.closest("[data-o]")) { kset(""); paint(false); } });
+  dlg.querySelector(".no").onclick = () => dlg.close();
+  dlg.querySelector(".eye").onclick = () => { inp.type = inp.type === "password" ? "text" : "password"; };
+  dlg.querySelector("form").addEventListener("submit", async e => { e.preventDefault(); const pw = norm(inp.value); if (!pw) return; go.disabled = true; er.textContent = "";
+    const ok = await openBlock(await getBlock(), pw);
+    if (ok) { kset(pw); dlg.classList.add("ok"); setTimeout(() => { dlg.close(); paint(true); go.disabled = false; }, 750); }
+    else { setTimeout(() => { dlg.classList.remove("bad"); void dlg.offsetWidth; dlg.classList.add("bad"); er.textContent = "Parolă greșită."; go.disabled = false; inp.select(); }, 500); } });
+  paint(false);
+  const saved = kset && kget(); if (saved) getBlock().then(b => openBlock(b, saved)).then(ok => { if (ok) paint(true); else kset(""); });
+})();
+/* PWA: instalare ca aplicație (pop-up de la prima deschidere, pe telefon) + contoare anonime (abacus) */
+(() => {
+  const TEST = /[?&]pwatest=1/.test(location.search);
+  if (!TEST && location.hostname !== "sesinio-ro.github.io") return;
+  const UA = navigator.userAgent, NS = "sesinio-fotbal-miercuri";
+  const hit = k => { if (TEST) return; try { fetch(`https://abacus.jasoncameron.dev/hit/${NS}/${k}`, { mode: "cors" }).catch(() => {}); } catch (e) {} };
+  const st = { get() { try { return JSON.parse(localStorage.getItem("fm-pwa") || "{}"); } catch (e) { return {}; } }, set(o) { try { localStorage.setItem("fm-pwa", JSON.stringify(o)); } catch (e) {} } };
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const iso = () => { const d = new Date(), t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return t.getUTCFullYear() + "-w" + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, "0"); };
+  if (!TEST && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  let o = st.get();
+  if (!TEST && !o.u) { o.u = 1; st.set(o); hit("pwa-dispozitive"); }
+  if (standalone) {
+    try { if (!sessionStorage.getItem("fm-pwa-open")) { sessionStorage.setItem("fm-pwa-open", "1"); hit("app-deschideri-" + iso()); } } catch (e) {}
+    if (!o.i) { o.i = 1; st.set(o); }
+    return;
+  }
+  const iOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const android = /Android/.test(UA);
+  const phone = iOS || android || (TEST && /[?&]pwatest=1/.test(location.search) && matchMedia("(pointer: coarse)").matches);
+  if (!phone) return;
+  const inApp = /FBAN|FBAV|Instagram|Messenger|WhatsApp|Snapchat|TikTok|Twitter|Line\/|; wv\)/.test(UA) || (iOS && !/Safari\//.test(UA));
+  let evt = null, built = false;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); evt = e; if (built) render(); });
+  window.addEventListener("appinstalled", () => { const x = st.get(); if (!x.i) { x.i = 1; st.set(x); hit("app-instalari"); } close(true); });
+  const DAY = 864e5;
+  const mayShow = () => { const x = st.get(); if (x.i) return false; if (!x.d) return true; return x.d < 3 && Date.now() - (x.t || 0) > 7 * DAY; };
+  if (!mayShow()) return;
+  const SHARE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>';
+  const DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+  const root = document.createElement("div"); root.id = "pwa"; root.hidden = true; root.setAttribute("role", "dialog"); root.setAttribute("aria-label", "Instalează aplicația");
+  document.body.appendChild(root);
+  const url = location.origin + location.pathname;
+  function body() {
+    if (inApp) return { sub: "Deschide linkul în browser, apoi o adaugi pe ecran.", steps: android ? ["Atinge „Deschide în Chrome”", "Apoi alege „Instalează”"] : [`Atinge ${DOTS} sau ${SHARE}, apoi „Deschide în Safari”`, "Apoi „Adaugă pe ecranul principal”"], acts: (android ? '<button class="go" data-a="chrome">Deschide în Chrome</button>' : "") + '<button data-a="copy">Copiază linkul</button>' };
+    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${SHARE} Partajează`, "Alege „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+    if (evt) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: null, acts: '<button class="go" data-a="inst">Instalează</button><button data-a="no">Nu acum</button>' };
+    return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge meniul ${DOTS} al browserului`, "Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+  }
+  function render() {
+    const b = body(); built = true;
+    root.innerHTML = `<div class="pw-card"><button type="button" class="pw-x" data-a="no" aria-label="Închide">×</button><div class="pw-head"><img src="icon-192.png" alt=""><div><b>Fotbal Miercuri 20:00 pe telefon</b><span>${b.sub}</span></div></div>${b.steps ? "<ol>" + b.steps.map(s => "<li><span>" + s + "</span></li>").join("") + "</ol>" : ""}<div class="pw-act">${b.acts}</div></div>`;
+  }
+  function close(done) { root.hidden = true; if (!done) { const x = st.get(); x.d = (x.d || 0) + 1; x.t = Date.now(); st.set(x); } }
+  root.addEventListener("click", async e => {
+    const a = e.target.closest("[data-a]"); if (!a) return; const k = a.dataset.a;
+    if (k === "no") close();
+    else if (k === "inst" && evt) { hit("app-click-instaleaza"); try { evt.prompt(); const r = await evt.userChoice; evt = null; if (r && r.outcome === "accepted") close(true); else close(); } catch (x) { close(); } }
+    else if (k === "copy") { try { await navigator.clipboard.writeText(url); } catch (x) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (y) {} t.remove(); } a.textContent = "Copiat ✓"; }
+    else if (k === "chrome") { location.href = "intent://" + location.host + location.pathname + "#Intent;scheme=https;package=com.android.chrome;end"; }
+  });
+  const show = () => { const d = document.getElementById("prof"); if (d && d.open) { setTimeout(show, 1500); return; } render(); root.hidden = false; if (!TEST && !st.get().s) { const x = st.get(); x.s = 1; st.set(x); hit("pwa-popup-afisat"); } };
+  setTimeout(show, android && !inApp ? 1800 : 1200);
 })();
 </script>
 </html>
