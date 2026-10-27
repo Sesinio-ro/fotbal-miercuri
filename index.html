@@ -276,6 +276,29 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
 .badge-empty b { color: var(--ink); }
 .badge.none { padding-block: 10px; }
 .badge.none:not(.bonus) { box-shadow: none; border-color: var(--line); background: var(--panel); opacity: .75; }
+
+/* insigne index: carduri compacte pe 2 coloane (27.10.2026) */
+#badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 8px; }
+#badges .brow { position: relative; display: grid; grid-template-columns: 34px minmax(0, 1fr); grid-template-areas: "ic bt" "ic bw" "bdd bdd"; gap: 2px 10px; align-items: center; padding: 8px 28px 8px 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); cursor: pointer; }
+#badges .brow:hover { border-color: color-mix(in oklab, var(--lime) 45%, var(--line)); }
+#badges .brow .ic { grid-area: ic; align-self: start; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(150deg, color-mix(in oklab, var(--lime) 28%, transparent), color-mix(in oklab, var(--lime) 9%, transparent)); color: var(--lime); border: 1px solid color-mix(in oklab, var(--lime) 35%, transparent); }
+#badges .brow .ic svg { width: 20px; height: 20px; }
+#badges .brow.rare .ic { background: linear-gradient(150deg, color-mix(in oklab, var(--t-aur) 32%, transparent), color-mix(in oklab, var(--t-aur) 10%, transparent)); color: var(--t-aur); border-color: color-mix(in oklab, var(--t-aur) 40%, transparent); }
+#badges .brow.none:not(.bonus) .ic { background: var(--panel-2); color: var(--mute); border-color: var(--line); }
+#badges .brow.bonus { border-color: color-mix(in oklab, var(--lime) 65%, var(--line)); background: linear-gradient(100deg, color-mix(in oklab, var(--lime) 15%, var(--panel)), var(--panel) 70%); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 30%, transparent), 0 0 18px -6px color-mix(in oklab, var(--lime) 60%, transparent); }
+#badges .brow.rare { border-color: color-mix(in oklab, var(--t-aur) 70%, var(--line)); background: linear-gradient(100deg, color-mix(in oklab, var(--t-aur) 12%, var(--panel)), var(--panel) 70%); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 30%, transparent), 0 0 16px -6px color-mix(in oklab, var(--t-aur) 65%, transparent); }
+#badges .brow .bt { grid-area: bt; display: flex; align-items: center; gap: 7px; min-width: 0; }
+#badges .brow .bt b { font-family: var(--f-display); font-size: 15px; font-weight: 800; text-transform: uppercase; line-height: 1.1; white-space: nowrap; }
+#badges .brow .bt small { font-size: 11px; color: var(--mute); font-weight: 700; }
+#badges .brow .b5 { font-style: normal; font-family: var(--f-body); font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); margin-left: 6px; vertical-align: middle; text-transform: none; }
+#badges .brow .bw { grid-area: bw; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-width: 0; }
+#badges .brow .bw .pchip { font-size: 11px; padding: 2px 8px; }
+#badges .brow .bw .muted { font-size: 11px; }
+#badges .brow .bdd { grid-area: bdd; display: none; font-size: 12px; color: var(--mute); line-height: 1.35; padding-top: 4px; }
+#badges .brow.open .bdd { display: block; }
+#badges .brow .bi { position: absolute; top: 8px; right: 8px; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--line); color: var(--mute); font: 700 9px/13px var(--f-body); text-align: center; font-style: normal; }
+#badges:not(.all) .brow.hid { display: none; }
+@media (max-width: 400px) { #badges { grid-template-columns: 1fr; } }
 .bmore { margin: 12px 0 0; padding: 11px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px; }
 .bmore:hover { border-color: var(--lime); }
 .bmore[hidden] { display: none; }
@@ -825,6 +848,42 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 :root[data-theme="light"] .pf2k .rr.rare, :root[data-theme="light"] .pf2sum .t span { color: #8a6514; }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .pf2k .rr.rare, :root:not([data-theme="dark"]) .pf2sum .t span { color: #8a6514; } }
 .pf2k .pb { margin-top: 6px; height: 5px; }
+
+/* insigne profil: iconițe mici, ca pe Steam (27.10.2026) */
+.pf2bdg { position: relative; }
+.pf2tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; max-width: 520px; }
+.pf2t { position: relative; aspect-ratio: 1; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--panel-2); border: 1.5px solid color-mix(in oklab, var(--lime) 55%, var(--line)); padding: 0; color: inherit; cursor: pointer; }
+.pf2t .tip { display: none; }
+.pf2t.g { border-color: var(--line); } .pf2t.g .e { filter: grayscale(1); opacity: .5; }
+.pf2t.aw { border-color: color-mix(in oklab, var(--t-aur) 60%, var(--line)); }
+.pf2t.rare2 { border-color: color-mix(in oklab, var(--t-aur) 75%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 30%, transparent), 0 0 14px -4px color-mix(in oklab, var(--t-aur) 70%, transparent); }
+.pf2t.bon { border-color: var(--lime); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 35%, transparent), 0 0 14px -3px color-mix(in oklab, var(--lime) 65%, transparent); }
+.pf2t .p5 { position: absolute; top: -6px; right: -6px; font: 800 10px/1 var(--f-body); padding: 3px 5px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); font-style: normal; }
+.pf2t .pbm { position: absolute; left: 6px; right: 6px; bottom: 5px; height: 4px; border-radius: 4px; background: color-mix(in oklab, var(--ink) 18%, transparent); overflow: hidden; }
+.pf2t .pbm u { display: block; height: 100%; background: var(--lime); text-decoration: none; }
+.pf2pop { position: absolute; z-index: 30; width: 230px; max-width: calc(100% - 8px); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; box-shadow: 0 12px 30px -8px rgba(0,0,0,.55); display: none; font-size: 13px; line-height: 1.35; }
+.pf2pop.on { display: grid; gap: 3px; }
+.pf2pop b { font-size: 14px; } .pf2pop small { color: var(--mute); font-size: 12px; } .pf2pop .rr.rare { color: var(--t-aur); font-weight: 700; }
+.pf2pop .p5 { font-style: normal; font: 800 10px/1 var(--f-body); padding: 3px 6px; border-radius: 999px; background: var(--lime); color: var(--lime-ink); margin-left: 6px; vertical-align: middle; }
+.pf2pop .pb { margin-top: 4px; height: 5px; }
+@media (max-width: 640px) { .pf2tiles { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 7px; } .pf2t { font-size: 22px; border-radius: 12px; } }
+@media (max-width: 640px) { .pf2ics { gap: 6px; } .pf2b { width: 38px; height: 38px; font-size: 17px; } .pf2more { padding: 9px 10px; } }
+
+/* duel: hexagoane suprapuse (27.10.2026) */
+.pf2hx { position: relative; max-width: 210px; margin: 0 auto; }
+.pf2hx svg { width: 100%; height: auto; display: block; overflow: visible; }
+.pf2hx .g { fill: none; stroke: var(--line); stroke-width: 1; }
+.pf2hx .lb { fill: var(--ink); font: 800 11px var(--f-body); }
+.pf2hx .s1 { fill: var(--lime); fill-opacity: .2; stroke: var(--lime); stroke-width: 2.4; stroke-linejoin: round; }
+.pf2hx .s2 { fill: var(--t-plat, #38bdf8); fill-opacity: .16; stroke: var(--t-plat, #38bdf8); stroke-width: 2.4; stroke-linejoin: round; stroke-dasharray: 6 3; }
+.pf2hx .d1 { fill: var(--lime); } .pf2hx .d2 { fill: var(--t-plat, #38bdf8); }
+.pf2hx.lock svg { filter: blur(6px); opacity: .5; pointer-events: none; user-select: none; }
+.pf2hx .lk2 { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 10px; }
+.pf2hx .lk2 div { background: color-mix(in oklab, var(--panel) 90%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; max-width: 190px; font-size: 12px; line-height: 1.3; }
+.pf2hx .lk2 b { display: block; font-size: 14px; margin-bottom: 2px; }
+.pf2hl { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 11px; font-weight: 700; margin: 0 0 4px; }
+.pf2hl u { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--lime); vertical-align: middle; margin-right: 6px; text-decoration: none; }
+.pf2hl u.b { border-top-color: var(--t-plat, #38bdf8); border-top-style: dashed; }
 /* Compară-te */
 .pf2cmp { gap: 12px; }
 .pf2tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
@@ -1130,7 +1189,16 @@ const BSVG = {
 const WINTER_B = ["wserie", "colind", "sanuan", "rege", "iarnafier"], BONUS_B = ["wserie", "colind"], RARE_B = ["perfect", "iarnafier", "legenda", "zid", "racheta", "liderluna", "rege"];
 const RANK_IDS = ["lider1", "urca", "racheta", "inlot", "titular", "liderluna", "top3luna", "top5luna"];
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("#badgesMore"); if (!b) return; const g = $("badges"); g.classList.toggle("all"); b.textContent = g.classList.contains("all") ? "Ascunde insignele comune" : `Vezi toate insignele (încă ${b.dataset.n})`; });
-function ensureBadges() { NEWB.forEach(nb => { if (!DATA.badges.some(b => b[0] === nb[0])) DATA.badges.push(nb); }); }
+function ensureBadges() { NEWB.forEach(nb => { if (!DATA.badges.some(b => b[0] === nb[0])) DATA.badges.push(nb); });
+  /* date de rezervă (fără Google): completează insignele care se pot deduce din coduri, ca să nu lipsească (ex. Zid de beton) */
+  Object.values(DATA.seasons).forEach(S => { if (S._eb || !S.players || !S.weeks) return; S._eb = 1;
+    const P_ = c => c === "J" || c === "J+", pl = S.weeks.filter(w => w.status === "Jucat").length;
+    const f12 = S.weeks.map((w, i) => w.status === "Jucat" && S.players.filter(q => P_((q.codes || [])[i])).length >= 12);
+    S.players.forEach(p => { p.badges = p.badges || []; const add = k => { if (!p.badges.includes(k)) p.badges.push(k); }, cd = p.codes || [];
+      const mp = cd.filter((c, i) => c === "M" && S.weeks[i] && S.weeks[i].status === "Jucat").length;
+      if (p.f12 == null) p.f12 = cd.filter((c, i) => f12[i] && P_(c)).length;
+      if (p.games >= 1) add("debut"); if (p.best >= 20) add("zid"); if (p.games >= 40) add("legenda");
+      if (p.games >= 15 && p.games === pl - mp) add("perfect"); if (p.f12 >= 5) add("complet"); }); }); }
 function applyRankBadges(S) { /* insigne din clasamentul pe săptămâni; se numără doar după 4 miercuri jucate în sezon */
   if (!S || !S.snaps || !S.weeks || !S.players) return;
   const n = S.snaps.length, sig = n + ":" + (S.snaps[n - 1] || []).map(r => r[0] + r[1] + r[2]).join("|");
@@ -1154,7 +1222,7 @@ function applyRankBadges(S) { /* insigne din clasamentul pe săptămâni; se num
       if (ks.length < 3 || !ks.every(ok)) return;
       if (R[ks[ks.length - 1]] === 1) lm = true;
       if (ks.every(k => R[k] != null && R[k] <= 3)) t3 = true; if (ks.every(k => R[k] != null && R[k] <= 5)) t5 = true; });
-    if (lm) add.push("liderluna"); else if (t3) add.push("top3luna"); else if (t5) add.push("top5luna");
+    if (lm) t3 = true; if (t3) t5 = true; if (lm) add.push("liderluna"); if (t3) add.push("top3luna"); if (t5) add.push("top5luna");
     p.rp = { lot, best, up, up4 };
     p.badges = (p.badges || []).filter(x => !RANK_IDS.includes(x)).concat(add); });
 }
@@ -1474,14 +1542,15 @@ function render() {
   $("awards").innerHTML = S.awards.map(([k, n, d, r]) => `<div class="award"><span class="ic">${ICON[AWARD_ICON[k] || "trophy"]}</span><span class="k">${esc(k)}</span>
     <button class="n" data-p="${esc(n)}">${esc(n)}</button><span class="d">${esc(d)}</span><span class="r">${esc(r || "")}</span></div>`).join("");
   { const wOn = pfToday() <= WINTER.to, rows = DATA.badges.map(([id, n, d]) => {
-      const who = P.filter(p => (p.badges || []).includes(id)), win = WINTER_B.includes(id), show = win ? wOn : who.length <= 5;
+      const who = P.filter(p => (p.badges || []).includes(id)), win = WINTER_B.includes(id), show = win ? wOn : who.length <= 2;
       return { id, n, d, who, win, show, k: (win ? 0 : 1) * 1000 + who.length }; }).sort((a, b) => (b.show - a.show) || (a.k - b.k)), hidN = rows.filter(r => !r.show).length;
     const emp = rows.filter(r => r.show && !r.who.length && !BONUS_B.includes(r.id));
     $("badges").innerHTML = rows.filter(r => !(r.show && !r.who.length && !BONUS_B.includes(r.id))).map(({ id, n, d, who, show }) => {
-      const bd = BONUS_B.includes(id) ? " bonus" : RARE_B.includes(id) ? " rare" : "";
-      return `<div class="badge ${who.length ? "" : "none"}${bd}${show ? "" : " hid"}"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span><span class="bn">${esc(n)}</span>
-      <span class="cnt num">${who.length}<small>${who.length === 1 ? "jucător" : "jucători"}</small></span><span class="bd">${esc(d)}</span>
-      <div class="who">${BONUS_B.includes(id) ? '<em class="b5">+5 puncte</em>' : ""}${who.length ? who.map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("") : '<span class="muted" style="font-size:12px;align-self:center">Încă nimeni.</span>'}</div></div>`; }).join("") + (emp.length ? `<div class="badge-empty"><b>Încă nu le are nimeni:</b> ${emp.map(r => esc(r.n)).join(" · ")}</div>` : "");
+      const bn = BONUS_B.includes(id), cls = bn ? " bonus" : RARE_B.includes(id) ? " rare" : "";
+      return `<div class="brow ${who.length ? "" : "none"}${cls}${show ? "" : " hid"}" data-b="${id}"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span>
+      <span class="bt"><b>${esc(n)}${bn ? '<em class="b5">+5</em>' : ""}</b><small>${who.length} ${who.length === 1 ? "jucător" : "jucători"}</small></span>
+      <span class="bw">${who.length ? who.map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("") : '<span class="muted">Încă nimeni</span>'}</span>
+      <span class="bdd">${esc(d)}${bn ? " · +5 puncte, o singură dată" : ""}</span><i class="bi">i</i></div>`; }).join("") + (emp.length ? `<div class="badge-empty"><b>Încă nu le are nimeni:</b> ${emp.map(r => esc(r.n)).join(" · ")}</div>` : "");
     const bm = $("badgesMore"); if (bm) { bm.hidden = !hidN; bm.dataset.n = hidN; const on = $("badges").classList.contains("all"); bm.textContent = on ? "Ascunde insignele comune" : `Vezi toate insignele (încă ${hidN})`; } }
   $("months").innerHTML = (S.motm || []).map(m => `<div class="month"><div class="mh"><b>${m.month}</b><span>${m.games} miercuri${m.partial ? " · în curs" : ""}</span></div>
     <div class="chips">${m.names.length ? m.names.map(n => `<button class="pchip" data-p="${esc(n)}">${esc(n)}</button>`).join("") : '<span class="muted" style="font-size:12px">nimeni la toate</span>'}</div></div>`).join("");
@@ -1818,7 +1887,7 @@ function pfBadges(p, S) {
   step("m10", "10 meciuri", "⚽", "10 meciuri jucate în sezon", 10, p.games, at(t => t.games >= 10), ["meci", "meciuri"]);
   step("maraton", "Maratonist", "🎯", "20 de meciuri jucate în sezon", 20, p.games, at(t => t.games >= 20), ["meci", "meciuri"]);
   step("m50", "50 de meciuri", "🏅", "50 de meciuri jucate în sezon", 50, p.games, at(t => t.games >= 50), ["meci", "meciuri"]);
-  step("serie4", "Serie de 4", "🔥", "4 meciuri jucate la rând", 4, p.best, at(t => t.run >= 4), ["meci la rând", "meciuri la rând"]);
+  step("serie4", "Serie de 4", "🔥", "4 meciuri jucate la rând · +5 puncte la fiecare serie de 4", 4, p.best, at(t => t.run >= 4), ["meci la rând", "meciuri la rând"]);
   const sets = []; tl.forEach(t => { if (t.pl && t.run % 4 === 0) sets.push(t.date); });
   step("serii3", "3 serii de 4", "♨️", "3 serii de 4 meciuri la rând, în total", 3, sets.length, sets[2] || "", ["serie de 4", "serii de 4"]);
   step("serii5", "5 serii de 4", "🌋", "5 serii de 4 meciuri la rând, în total", 5, sets.length, sets[4] || "", ["serie de 4", "serii de 4"]);
@@ -1869,20 +1938,21 @@ function pfBadgePanel(p, S) {
   const L = pfBadges(p, S).filter(b => b.vis), R = pfRarity(S), N = S.players.length;
   const AW = (S.awards || []).filter(a => a[1] === p.name).map(a => ({ k: "aw:" + a[0], n: a[0], e: PF_AWE[a[0]] || "🏆", d: PF_AWD[a[0]] || String(a[3] || "").split(". ")[0], tag: a[2], earned: true, vis: true, award: true }));
   const base = L.filter(b => !b.season), win = L.filter(b => b.season);
-  const earnedB = L.filter(b => b.earned), earned = [...AW, ...earnedB], rare = b => R[b.k] && R[b.k] / N <= .2;
-  const near = L.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal);
-  const sE = earned.slice(0, 5), sN = near.slice(0, Math.max(1, 6 - sE.length)), strip = [...sE, ...sN], more = L.length + AW.length - strip.length;
+  const earnedB = L.filter(b => b.earned), rare = b => R[b.k] && R[b.k] / N <= .2;
+  const earnedAll = [...AW, ...earnedB], near = L.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), sN = near.slice(0, 2), sE = earnedAll.slice(0, 5 - sN.length), strip = [...sE, ...sN], more = L.length + AW.length - strip.length;
   const rareN = earnedB.filter(rare).length, extra = [AW.length ? `${AW.length} ${AW.length === 1 ? "premiu" : "premii"} ale sezonului` : "", rareN ? `Rare: ${rareN}` : ""].filter(Boolean).join(" · ");
-  const card = b => {
-    const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag || ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
+  const tile = b => {
+    const sub = b.award ? (b.tag || "") : b.earned ? [b.date ? `Câștigată ${pfShort(b.date)}` : "", b.tag && b.tag !== "+5 puncte" ? b.tag : ""].filter(Boolean).join(" · ") : (b.goal ? `${b.cur} din ${b.goal}${b.note ? " · " + b.note : ""}` : (b.note || ""));
     const rr = b.award ? '<small class="rr rare">Premiul sezonului</small>' : b.earned && R[b.k] ? `<small class="rr${rare(b) ? " rare" : ""}">${rare(b) ? "Rar · " : ""}${R[b.k]} din ${N} jucători</small>` : "";
-    return `<div class="pf2k${b.earned ? "" : " g"}${b.award ? " aw" : ""}${BONUS_B.includes(b.k) ? " bon" : RARE_B.includes(b.k) ? " rare2" : ""}"><span class="e">${b.e}</span><b>${esc(b.n)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}${b.d ? `<small>${esc(b.d)}</small>` : ""}${rr}${!b.earned && b.goal ? `<i class="pb"><u style="width:${Math.round(100 * b.cur / b.goal)}%"></u></i>` : ""}</div>`; };
+    const b5 = BONUS_B.includes(b.k) || b.k === "serie4", pct = !b.earned && b.goal ? Math.round(100 * b.cur / b.goal) : -1;
+    return `<button type="button" class="pf2t${b.earned ? "" : " g"}${b.award ? " aw" : ""}${b5 ? " bon" : RARE_B.includes(b.k) ? " rare2" : ""}" aria-label="${esc(b.n)}"><span class="e">${b.e}</span>${b5 ? '<em class="p5">+5</em>' : ""}${pct >= 0 ? `<i class="pbm"><u style="width:${pct}%"></u></i>` : ""}
+      <span class="tip"><b>${esc(b.n)}${b5 ? '<em class="p5">+5</em>' : ""}</b>${b.d ? `<small>${esc(b.d)}</small>` : ""}${sub ? `<small>${esc(sub)}</small>` : ""}${rr}${pct >= 0 ? `<i class="pb"><u style="width:${pct}%"></u></i>` : ""}</span></button>`; };
   const todo = [...base.filter(b => !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), ...base.filter(b => !b.earned && !b.goal)];
-  const sec = (t, a) => a.length ? `<h4>${t}</h4><div class="pf2cards">${a.map(card).join("")}</div>` : "";
+  const sec = (t, a) => a.length ? `<h4>${t}</h4><div class="pf2tiles">${a.map(tile).join("")}</div>` : "";
   return `<div class="panel pf2bdg"><span class="eyebrow">Insigne</span>
     <button type="button" class="pf2sum" data-pf2tog="1" aria-expanded="false"><span class="t"><b>${earnedB.length} din ${L.length} insigne</b>${extra ? `<span>${extra}</span>` : ""}</span><i class="pb"><u style="width:${L.length ? Math.round(100 * earnedB.length / L.length) : 0}%"></u></i>
       <span class="pf2ics">${strip.map(b => `<span class="pf2b${b.earned ? "" : " g"}" title="${esc(b.n)}">${b.e}</span>`).join("")}${more > 0 ? `<span class="pf2more">+${more}</span>` : ""}</span></button>
-    <div class="pf2grid">${sec("Premiile sezonului", AW)}${sec("Câștigate", base.filter(b => b.earned))}${sec("Ce poți câștiga", todo)}${win.length ? sec(win[0].season, win) : ""}</div></div>`;
+    <div class="pf2grid">${sec("Premiile sezonului", AW)}${sec("Câștigate", base.filter(b => b.earned))}${win.length ? sec(win[0].season, win) : ""}${sec("Ce poți câștiga", todo)}</div><div class="pf2pop" role="tooltip"></div></div>`;
 }
 
 /* ---------- REZUMAT (știrile tale) ---------- */
@@ -1948,11 +2018,25 @@ function pfRival(p, S) {
   pool.sort((a, b) => Math.abs(a.pts - mePts) - Math.abs(b.pts - mePts) || Math.abs(pres(a.q) - pres(p)) - Math.abs(pres(b.q) - pres(p)) || (a.q.name < b.q.name ? -1 : 1));
   return pool[0].q;
 }
+function pfDuelHex(p, q) {
+  const K = ["Viteză", "Șut", "Pase", "Apărare", "Condiție", "Bere"], ph = [3.6, 3.2, 4.1, 3.4, 3.8, 4.3];
+  const ok = n => { const r = RATINGS[n]; return !!(r && r.n >= 1 && r.peer); }, vv = n => ok(n) ? RATINGS[n].peer : ph;
+  const a = vv(p.name), b = vv(q.name), oa = ok(p.name), ob = ok(q.name), lock = !(oa && ob);
+  const cx = 150, cy = 140, R = 92, pt = (i, s) => { const t = -Math.PI / 2 + i * Math.PI / 3; return [cx + Math.cos(t) * R * s / 5, cy + Math.sin(t) * R * s / 5]; };
+  const poly = f => K.map((_, i) => f(i).map(x => x.toFixed(1)).join(",")).join(" ");
+  let g = ""; for (let k = 1; k <= 5; k++) g += `<polygon class="g" points="${poly(i => pt(i, k))}"/>`;
+  K.forEach((_, i) => { const [x, y] = pt(i, 5); g += `<line class="g" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; });
+  g += `<polygon class="s2" points="${poly(i => pt(i, b[i]))}"/><polygon class="s1" points="${poly(i => pt(i, a[i]))}"/>`;
+  K.forEach((k, i) => { const [x, y] = pt(i, 6.1); g += `<text class="lb" x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle">${k}</text>`; });
+  const who = !oa && !ob ? "Niciunul nu are" : (!oa ? esc(pfNick(p.name)) : esc(pfNick(q.name))) + " nu are";
+  const msg = lock ? `<div class="lk2"><div>${who} încă voturi de la colegi</div></div>` : "";
+  return `<div class="pf2hl"><span><u></u>${esc(pfNick(p.name))}</span><span><u class="b"></u>${esc(pfNick(q.name))}</span></div><div class="pf2hx${lock ? " lock" : ""}"><svg viewBox="22 16 256 236" role="img" aria-label="Hexagoanele celor doi, suprapuse">${g}</svg>${msg}</div>`;
+}
 function pfDuelRows(p, q, S) {
   const gr = n => { const r = RATINGS[n]; return r && r.peer && r.n >= 1 ? r.peer.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : null; };
   const tog = S.weeks.reduce((a, w, i) => a + (w.status === "Jucat" && pfPl(p.codes[i]) && pfPl(q.codes[i]) ? 1 : 0), 0);
   const rows = [["Puncte", p.pts, q.pts, v => v], ["Prezență", p.rate, q.rate, v => pct(v) + "%"], ["Nota colegilor", gr(p.name), gr(q.name), v => pfRo(v.toFixed(1))]];
-  return `<div class="pf2dh"><span>${esc(pfNick(p.name))}</span><span></span><span>${esc(pfNick(q.name))}</span></div>` + rows.map(([l, a, b, f]) => {
+  return `<div class="pf2dh"><span>${esc(pfNick(p.name))}</span><span></span><span>${esc(pfNick(q.name))}</span></div>` + pfDuelHex(p, q) + rows.map(([l, a, b, f]) => {
     const cmp = a != null && b != null;
     return `<div class="pf2dr"><b class="${cmp && a > b ? "w" : ""}">${a == null ? "–" : f(a)}</b><span>${l}</span><b class="${cmp && b > a ? "w" : ""}">${b == null ? "–" : f(b)}</b></div>`; }).join("")
     + `<div class="pf2dr"><b>${tog}</b><span>Meciuri împreună</span><b>${tog}</b></div>`;
@@ -2088,6 +2172,24 @@ document.addEventListener("keydown", e => { const d = $("prof"); if (!d.open || 
     if (Math.abs(dx) > 70 && Math.abs(dx) > 1.8 * Math.abs(dy) && Date.now() - t0 < 700) stepProfile(dx < 0 ? 1 : -1); }, { passive: true }); })();
 $("prof").addEventListener("close", () => { document.documentElement.classList.remove("lockscroll"); if (location.hash.startsWith("#p-")) safeRS(null, "", location.pathname + location.search); });
 $("prof").addEventListener("click", e => { if (e.target === $("prof")) $("prof").close(); });
+
+/* popup insigne profil (ca pe Steam): apăsare pe iconiță, hover pe desktop */
+(function () { const hov = matchMedia("(hover: hover)");
+  const hide = () => document.querySelectorAll(".pf2pop.on").forEach(x => { x.classList.remove("on"); x._t = null; });
+  const show = t => { const bx = t.closest(".pf2bdg"), pop = bx.querySelector(".pf2pop"); if (!pop) return;
+    pop.innerHTML = t.querySelector(".tip").innerHTML; pop.classList.add("on"); pop._t = t;
+    const c = bx.getBoundingClientRect(), r = t.getBoundingClientRect(), w = pop.offsetWidth;
+    let l = r.left - c.left + r.width / 2 - w / 2; l = Math.max(4, Math.min(l, c.width - w - 4));
+    let tp = r.bottom - c.top + 8; if (r.bottom + pop.offsetHeight + 16 > innerHeight && r.top - pop.offsetHeight - 8 > 0) tp = r.top - c.top - pop.offsetHeight - 8;
+    pop.style.left = l + "px"; pop.style.top = tp + "px"; };
+  document.addEventListener("click", e => { const t = e.target.closest(".pf2t");
+    if (!t) { if (!e.target.closest(".pf2pop")) hide(); return; }
+    const pop = t.closest(".pf2bdg").querySelector(".pf2pop"); if (pop.classList.contains("on") && pop._t === t && !hov.matches) hide(); else { hide(); show(t); } });
+  document.addEventListener("mouseover", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2t"); if (t) show(t); });
+  document.addEventListener("mouseout", e => { if (!hov.matches) return; const t = e.target.closest && e.target.closest(".pf2t"); if (t && !(e.relatedTarget && t.contains(e.relatedTarget))) hide(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+  document.addEventListener("click", e => { if (e.target.closest("[data-p]")) return; const r = e.target.closest("#badges .brow"); if (r) r.classList.toggle("open"); });
+})();
 document.addEventListener("click", e => { const t = e.target.closest("[data-p]"); if (!t || t.closest("#prof .strip")) return; openProfile(t.dataset.p); $("sugg").hidden = true; });
 function fromHash() { const h = decodeURIComponent(location.hash); if (!h.startsWith("#p-")) return; const p = S_().players.find(x => slug(x.name) === h.slice(3)); if (p) openProfile(p.name, false); }
 window.addEventListener("hashchange", fromHash);
