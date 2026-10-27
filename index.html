@@ -987,8 +987,9 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .pf2k.aw { border-color: var(--t-aur); }
 .pf2k.bon { border-color: color-mix(in oklab, var(--lime) 65%, var(--line)); background: linear-gradient(150deg, color-mix(in oklab, var(--lime) 15%, var(--panel)), var(--panel) 75%); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lime) 30%, transparent), 0 0 18px -4px color-mix(in oklab, var(--lime) 55%, transparent); }
 .pf2k.rare2 { border-color: color-mix(in oklab, var(--t-aur) 70%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 28%, transparent), 0 0 16px -6px color-mix(in oklab, var(--t-aur) 60%, transparent); }
-.pf2tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; overflow: visible; }
-.pf2tab { padding: 9px 4px; text-align: center; }
+.pf2tabs { display: flex; gap: 0; overflow: visible; }
+.pf2tab { flex: 1 1 auto; padding: 9px 6px; text-align: center; }
+@media (min-width: 700px) { .pf2tab { flex: 0 0 auto; padding: 9px 18px; } }
 @media (max-width: 640px) { .pf2tab { font-size: 13px; padding: 9px 2px; } }
 @media (max-width: 380px) { .pf2tab { font-size: 12px; } }
 /* v3: lățime constantă la schimbarea taburilor */
@@ -1433,7 +1434,9 @@ function renderNav() {
     bar.querySelector("#bmoreBtn").addEventListener("click", e => { e.stopPropagation(); mo.classList.toggle("on"); });
     mo.addEventListener("click", () => mo.classList.remove("on"));
     document.addEventListener("keydown", e => { if (e.key === "Escape") mo.classList.remove("on"); }); }
-  const setOn = id => { document.querySelectorAll("#bnav [data-id], #bmore [data-id]").forEach(a => a.classList.toggle("on", a.dataset.id === id)); const mb = $("bmoreBtn"); if (mb) mb.classList.toggle("on", !PRIM.includes(id)); };
+  let lockT = 0;
+  const setOn = (id, force) => { if (!force && Date.now() < lockT) return; const pid = PRIM.includes(id) ? id : id === "inscrieri" ? "lot" : null; document.querySelectorAll("#bnav [data-id]").forEach(a => a.classList.toggle("on", a.dataset.id === pid)); document.querySelectorAll("#bmore [data-id]").forEach(a => a.classList.toggle("on", a.dataset.id === id)); const mb = $("bmoreBtn"); if (mb) mb.classList.toggle("on", !pid); };
+  document.addEventListener("click", e => { const a = e.target.closest("#bnav a[data-id], #bmore a[data-id]"); if (a) { lockT = Date.now() + 1200; setOn(a.dataset.id, true); } });
   const obs = new IntersectionObserver(es => {
     es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.toggle("on", a.dataset.id === e.target.id)); setOn(e.target.id); } });
   }, { rootMargin: "-30% 0px -60% 0px" });
