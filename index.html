@@ -2070,6 +2070,7 @@ function pfBadges(p, S) {
   step("m50", "50 de meciuri", "🏅", "50 de meciuri jucate în sezon", 50, p.games, at(t => t.games >= 50), ["meci", "meciuri"]);
   step("serie4", "Serie de 4", "🔥", "4 meciuri jucate la rând · +5 puncte la fiecare serie de 4", 4, p.best, at(t => t.run >= 4), ["meci la rând", "meciuri la rând"]);
   const sets = []; tl.forEach(t => { if (t.pl && t.run % 4 === 0) sets.push(t.date); });
+  { const s4 = L.find(x => x.k === "serie4"); if (s4 && s4.earned && sets.length > 1) s4.tag = `Ai făcut ${sets.length} serii de 4`; }
   step("serii3", "3 serii de 4", "♨️", "3 serii de 4 meciuri la rând, în total", 3, sets.length, sets[2] || "", ["serie de 4", "serii de 4"]);
   step("serii5", "5 serii de 4", "🌋", "5 serii de 4 meciuri la rând, în total", 5, sets.length, sets[4] || "", ["serie de 4", "serii de 4"]);
   step("foc", "Serie de foc", "🚀", "8 meciuri jucate la rând", 8, p.best, at(t => t.run >= 8), ["meci la rând", "meciuri la rând"]);
