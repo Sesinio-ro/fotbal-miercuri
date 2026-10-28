@@ -2141,8 +2141,8 @@ function pfNews(p, S) {
   const rows = [], k = S.snaps.length - 1, ev = DATA.settings.streak_every || 4, tl = pfTimeline(p, S);
   const lp = S.weeks.map((w, i) => i).filter(i => S.weeks[i].status === "Jucat").pop();
   const cs = lp != null && S.snaps[lp] && S.snaps[lp].find(r => r[0] === p.name), ps = lp > 0 && S.snaps[lp - 1].find(r => r[0] === p.name);
-  const dp = cs && ps ? cs[2] - ps[2] : 0;
-  if (dp > 0) rows.push(["⚡", `+${dp} puncte miercurea trecută`, `#${cs[1]}`]);
+  const vb = lp === k ? (p.voteBonus || 0) : 0, dp = cs && ps ? cs[2] - ps[2] - vb : 0, cur = lp != null && S.weeks[lp] && S.weeks[lp].date >= pfToday();
+  if (dp > 0) rows.push(["⚡", `+${dp} puncte ${cur ? "miercurea asta" : "miercurea trecută"}`, `#${cs[1]}`]);
   const t4 = tl.slice(-4)[0], nb = pfBadges(p, S).filter(b => b.vis && b.earned && b.date && t4 && b.date >= t4.date).sort((a, b) => a.date < b.date ? 1 : -1)[0];
   if (nb) rows.push([nb.e, `Insignă nouă: ${nb.n}`, pfShort(nb.date)]);
   if (p.cur >= 2) rows.push(["🔥", `${p.cur} miercuri la rând`, `bonus la ${p.cur + ev - p.cur % ev}`]);
@@ -2155,7 +2155,7 @@ function pfNews(p, S) {
   const sv = p.JP + p.guests;
   if (sv >= 1) rows.push(["🛟", sv === 1 ? "Ai salvat o miercuri" : `Ai salvat ${sv} miercuri`, `${sv}`]);
   const pw = S.weeks.map((w, i) => ({ w, i })).filter(x => x.w.status === "Jucat").pop();
-  if (pw && pfPl(p.codes[pw.i]) && !(dp > 0)) rows.push(["✅", "Ai jucat ultima miercuri", pw.w.label]);
+  if (pw && pfPl(p.codes[pw.i]) && !(dp > 0)) rows.push(["✅", (cur ? "Ești pe lista de miercurea asta" : "Ai jucat ultima miercuri"), pw.w.label]);
   if (p.best >= 4) rows.push(["🏆", `Cea mai lungă serie a ta: ${p.best} la rând`, `${p.best}`]);
   const row = (ic, tx, rt, bar, go) => `<div class="pf2n${go ? " goal" : ""}"${go ? ' data-pf2go="1" role="button" tabindex="0"' : ""}><span class="ic" aria-hidden="true">${ic}</span><span class="tx">${esc(tx)}</span><b class="rt">${esc(rt)}</b>${bar != null ? `<i class="pb"><u style="width:${bar}%"></u></i>` : ""}</div>`;
   const goals = pfBadges(p, S).filter(b => b.vis && !b.earned && b.goal).sort((a, b) => b.cur / b.goal - a.cur / a.goal), g = goals[0];
