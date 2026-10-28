@@ -336,6 +336,16 @@ tr.moved-up td { animation: flashUp 1.2s ease; } tr.moved-down td { animation: f
 .btabs { display: flex; flex-wrap: nowrap; gap: 6px; overflow: visible; }
 .btabs button { flex: 0 1 auto; min-width: 0; min-height: 40px; padding: 0 13px; border-radius: 999px; font-size: 14px; gap: 6px; }
 @media (max-width: 440px) { .btabs { gap: 5px; } .btabs button { padding: 0 11px; font-size: 13px; gap: 0; } .btabs button small { display: none; } }
+/* efecte pe index: rare = glow auriu care pulsează; iarnă = margine de gheață cu sclipire (28.10.2026) */
+#badges .brow.rare:not(.none) { border-color: color-mix(in oklab, var(--t-aur) 85%, var(--line)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 45%, transparent), 0 0 22px -3px color-mix(in oklab, var(--t-aur) 75%, transparent); animation: rglow 3.2s ease-in-out infinite; }
+#badges .brow.rare:not(.none) .ic { box-shadow: 0 0 14px color-mix(in oklab, var(--t-aur) 65%, transparent); }
+@keyframes rglow { 0%, 100% { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 40%, transparent), 0 0 14px -4px color-mix(in oklab, var(--t-aur) 60%, transparent); } 50% { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-aur) 65%, transparent), 0 0 30px 0 color-mix(in oklab, var(--t-aur) 85%, transparent); } }
+#badges .brow.wint { overflow: hidden; }
+#badges .brow.wint:not(.bonus) { border-color: color-mix(in oklab, var(--t-platina) 80%, var(--line)); background: linear-gradient(100deg, color-mix(in oklab, var(--t-platina) 16%, var(--panel)), var(--panel) 72%); box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-platina) 35%, transparent), 0 0 20px -4px color-mix(in oklab, var(--t-platina) 65%, transparent); }
+#badges .brow.wint:not(.bonus):not(.rare) .ic { color: var(--t-platina); border-color: color-mix(in oklab, var(--t-platina) 45%, transparent); background: linear-gradient(150deg, color-mix(in oklab, var(--t-platina) 30%, transparent), color-mix(in oklab, var(--t-platina) 8%, transparent)); }
+#badges .brow.wint::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.4) 50%, transparent 62%) 160% 0 / 260% 100% no-repeat; animation: wshine 5s ease-in-out infinite; }
+@keyframes wshine { 0%, 60% { background-position: 160% 0; } 100% { background-position: -60% 0; } }
+@media (prefers-reduced-motion: reduce) { #badges .brow.rare:not(.none) { animation: none; } #badges .brow.wint::after { animation: none; display: none; } }
 
 /* meniu mobil / aplicație: bară jos cu 4 secțiuni + „Mai mult” */
 #bnav, #bmore { display: none; }
@@ -905,7 +915,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .pf2sum .t { min-width: 150px; } .pf2sum .t b { display: block; font-size: 15px; }
 .pf2sum .t span { display: block; font-size: 12px; color: var(--t-aur); margin-top: 2px; font-weight: 700; }
 .pf2sum > .pb { flex: 1 1 100px; max-width: 240px; min-width: 80px; height: 9px; }
-.pf2ics { display: flex; gap: 8px; align-items: center; margin-left: auto; max-width: 100%; overflow-x: auto; padding: 2px; }
+.pf2ics { display: flex; gap: 8px; align-items: center; margin-left: auto; max-width: 100%; overflow: hidden; padding: 2px; }
 .pf2b { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--panel-2); border: 2px solid var(--lime); flex: none; }
 .pf2b.g { filter: grayscale(1); opacity: .45; border-color: var(--line); }
 .pf2more { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--mute); flex: none; }
@@ -980,6 +990,10 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
   .pf2cm { grid-template-columns: minmax(0, 1fr) auto; } .pf2cm .fb { grid-column: 1 / -1; grid-row: 2; }
   .pf2dh, .pf2dr { grid-template-columns: 1fr 96px 1fr; } .pf2rv { align-items: flex-start; }
   .pf2sum .t { min-width: 0; } .pf2ics { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow: visible; gap: 5px; } .pf2ics .pf2b { width: 32px; height: 32px; font-size: 15px; border-width: 1.5px; flex: 0 1 32px; min-width: 0; } .pf2ics .pf2more { padding: 7px 8px; font-size: 12px; }
+  .pf2ics { gap: 6px; } .pf2b { width: 40px; height: 40px; }
+}
+@media (max-width: 360px) {
+  .pf2ics { gap: 4px; } .pf2b { width: 34px; height: 34px; font-size: 16px; } .pf2more { padding: 8px 9px; font-size: 12px; }
 }
 /* v2 */
 .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1153,7 +1167,7 @@ function buildData(rows, base) {
       if (x.R + x.JP >= 3) b.push("gata"); if (x.games >= 10 && x.X + x.XT + x.NS === 0) b.push("cuvant");
       if (x.games >= 1) b.push("debut"); const lastD = weeks.length ? weeks[weeks.length - 1].date : ""; if (WSB[nm] && WSB[nm] <= lastD) b.push("wserie"); if (WCB[nm] && WCB[nm] <= lastD) b.push("colind");
       if (x.games >= 40) b.push("legenda"); if (x.best >= 20) b.push("zid");
-      if (x.games >= 15 && x.games === played.length - x.mp) b.push("perfect");
+      if (x.games >= 10 && x.rate >= 0.5) b.push("semizeu");
       if (codes.filter((c, i) => full12[i] && PLAYED(c)).length >= 5) b.push("complet");
       if (WK.fer[nm]) b.push("iarnafier"); if (WK.sa[nm]) b.push("sanuan"); if (WK.king === nm) b.push("rege");
       let gap = 0, seen = false;
@@ -1275,7 +1289,7 @@ const NEWB = [
   ["inlot", "În lot", "Ai fost în primele 12 locuri cel puțin 3 săptămâni"],
   ["titular", "Titular fix", "Ai stat 8 săptămâni la rând în primele 12 locuri"],
   ["complet", "Complet", "Ai jucat în 5 seri cu 12 din 12"],
-  ["perfect", "Perfectul", "Prezență 100% în sezon, din cel puțin 15 meciuri"],
+  ["semizeu", "Semi Zeu", "Prezență de cel puțin 50% la miercurile sezonului (minimum 10 meciuri)"],
   ["iarnafier", "Iarna de fier", "Ai jucat toate miercurile iernii (minimum 12)"],
   ["legenda", "Legenda", "40 de meciuri jucate în sezon"],
   ["zid", "Zid de beton", "20 de meciuri la rând, fără nicio pauză"],
@@ -1283,7 +1297,7 @@ const NEWB = [
   ["liderluna", "Lider de lună", "Ai încheiat o lună calendaristică pe locul 1"],
   ["top3luna", "Top 3 pe o lună", "Ai stat în primele 3 locuri în toate miercurile unei luni"],
   ["top5luna", "Top 5 pe o lună", "Ai stat în primele 5 locuri în toate miercurile unei luni"]];
-Object.assign(BADGE_ICON, { wserie: "flame", colind: "users", sanuan: "cal", rege: "crown", debut: "ball", lider1: "trophy", urca: "bolt", inlot: "pitch", titular: "shirt", complet: "full", perfect: "check", iarnafier: "iron", legenda: "medal", zid: "bench", racheta: "bolt", liderluna: "crown", top3luna: "medal", top5luna: "medal" });
+Object.assign(BADGE_ICON, { wserie: "flame", colind: "users", sanuan: "cal", rege: "crown", debut: "ball", lider1: "trophy", urca: "bolt", inlot: "pitch", titular: "shirt", complet: "full", semizeu: "check", iarnafier: "iron", legenda: "medal", zid: "bench", racheta: "bolt", liderluna: "crown", top3luna: "medal", top5luna: "medal" });
 const BI = (f, l) => `<svg viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${f}" fill="currentColor" fill-opacity=".22"/>${l ? `<path d="${l}" fill="none"/>` : ""}</svg>`;
 const BSVG = {
   maraton: BI("M5 14a7 7 0 1 0 14 0 7 7 0 1 0-14 0z", "M12 14l3-3M10 2.5h4M12 2.5V7"),
@@ -1303,7 +1317,7 @@ const BSVG = {
   inlot: BI("M3 5h18v14H3z", "M12 5v14M3 12h2.5M18.5 12H21M12 9.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6z"),
   titular: BI("M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z", "M12 7.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"),
   complet: BI("M6 8a3 3 0 1 0 6 0 3 3 0 1 0-6 0zM3 19c0-3 2.7-5 6-5s6 2 6 5z", "M16 5.5a3 3 0 0 1 0 5.8M17.5 14.2c2 .6 3.5 2.2 3.5 4.8"),
-  perfect: BI("M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0z", "M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"),
+  semizeu: BI("M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0z", "M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"),
   iarnafier: BI("M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", "M12 8v8M8.6 10l6.8 4M15.4 10l-6.8 4"),
   legenda: BI("M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z", ""),
   zid: BI("M3 5h18v14H3z", "M3 10h18M3 15h18M9 5v5M15 10v5M9 15v4"),
@@ -1311,10 +1325,10 @@ const BSVG = {
   liderluna: BI("M4 6h16v14H4z", "M4 10h16M8 3v4M16 3v4M12 12.6l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z"),
   top3luna: BI("M9 11h6v9H9z", "M3 20h18M3 15h6v5M15 13h6v7M12 4.5l.9 1.8 2 .3-1.4 1.4.3 2-1.8-.9-1.8.9.3-2-1.4-1.4 2-.3z"),
   top5luna: BI("M12 3.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12z", "M8.5 14.6L7 21l5-2.5 5 2.5-1.5-6.4M12 6.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z") };
-const WINTER_B = ["wserie", "colind", "sanuan", "rege", "iarnafier"], BONUS_B = ["wserie", "colind"], RARE_B = ["perfect", "iarnafier", "legenda", "zid", "racheta", "liderluna", "rege"];
+const WINTER_B = ["wserie", "colind", "sanuan", "rege", "iarnafier"], BONUS_B = ["wserie", "colind"], RARE_B = ["lider1", "iarnafier", "legenda", "zid", "racheta", "liderluna", "rege"];
 const RANK_IDS = ["lider1", "urca", "racheta", "inlot", "titular", "liderluna", "top3luna", "top5luna"];
 const BTABS = [["rare", "Rare"], ["prez", "Prezență"], ["clas", "Clasament"], ["iarna", "Iarnă"]];
-const BCAT = { rare: ["perfect", "legenda", "zid", "racheta", "liderluna"], prez: ["maraton", "foc", "gata", "cuvant", "faza", "complet", "salvator", "revenire", "debut"], clas: ["lider1", "urca", "inlot", "titular", "top3luna", "top5luna"], iarna: ["wserie", "colind", "sanuan", "rege", "iarnafier"] };
+const BCAT = { rare: ["lider1", "legenda", "zid", "racheta", "liderluna"], prez: ["semizeu", "maraton", "foc", "gata", "cuvant", "faza", "complet", "salvator", "revenire", "debut"], clas: ["urca", "inlot", "titular", "top3luna", "top5luna"], iarna: ["wserie", "colind", "sanuan", "rege", "iarnafier"] };
 let BTAB = "rare";
 let CUR_P = null; const STATE_P = () => CUR_P;
 function renderBadgeTabs(P) {
@@ -1329,7 +1343,7 @@ function renderBadgeTabs(P) {
   note.hidden = true; const nt = BTAB === "iarna" ? `<p class="bnote">${wait ? "Se deschid pe 1 noiembrie, odată cu bonusul de +20%. Până atunci sunt gri." : "Doar 1 noiembrie – 28 februarie."}</p>` : "";
   const rows = BCAT[BTAB].filter(id => rowsAll[id]).map(id => rowsAll[id]).sort((a, b) => (b.who.length > 0) - (a.who.length > 0) || a.who.length - b.who.length);
   box.innerHTML = rows.map(({ id, n, who }) => {
-    const bn = BONUS_B.includes(id), cls = bn ? " bonus" : RARE_B.includes(id) ? " rare" : "";
+    const bn = BONUS_B.includes(id), cls = (bn ? " bonus" : RARE_B.includes(id) ? " rare" : "") + (WINTER_B.includes(id) ? " wint" : "");
     return `<div class="brow ${who.length ? "" : "none"}${cls}${wait ? " wait" : ""}" data-b="${id}" role="button" tabindex="0"><span class="ic">${BSVG[id] || ICON[BADGE_ICON[id] || "trophy"]}</span>
       <span class="bt"><b>${esc(n)}${bn ? '<em class="b5">+5</em>' : ""}</b><small>${who.length} ${who.length === 1 ? "jucător" : "jucători"}</small></span>
       <span class="bw">${who.length ? who.slice(0, 3).map(p => `<button class="pchip" data-p="${esc(p.name)}">${esc(p.name)}</button>`).join("") + (who.length > 3 ? `<span class="more">+${who.length - 3}</span>` : "") : '<span class="muted">' + (wait ? "Încă neînceput" : "Încă nimeni") + "</span>"}</span></div>`; }).join("") + nt;
@@ -1362,7 +1376,7 @@ function ensureBadges() { NEWB.forEach(nb => { if (!DATA.badges.some(b => b[0] =
       const mp = cd.filter((c, i) => c === "M" && S.weeks[i] && S.weeks[i].status === "Jucat").length;
       if (p.f12 == null) p.f12 = cd.filter((c, i) => f12[i] && P_(c)).length;
       if (p.games >= 1) add("debut"); if (p.best >= 20) add("zid"); if (p.games >= 40) add("legenda");
-      if (p.games >= 15 && p.games === pl - mp) add("perfect"); if (p.f12 >= 5) add("complet"); }); }); }
+      if (p.games >= 10 && p.rate >= 0.5) add("semizeu"); if (p.f12 >= 5) add("complet"); }); }); }
 function applyRankBadges(S) { /* insigne din clasamentul pe săptămâni; se numără doar după 4 miercuri jucate în sezon */
   if (!S || !S.snaps || !S.weeks || !S.players) return;
   const n = S.snaps.length, sig = n + ":" + (S.snaps[n - 1] || []).map(r => r[0] + r[1] + r[2]).join("|");
@@ -1548,7 +1562,7 @@ function applySignup() {
   const S = S_(), G = SIGNUP[season];
   if (!DATA.badges.some(b => b[0] === "faza")) DATA.badges.push(["faza", "Pe fază", "De obicei e pe listă în primele 3 minute de la start (din cel puțin 8 înscrieri)"]);
   if (!G) return;
-  S.players.forEach(p => { const g = G.players[p.name]; p.badges = (p.badges || []).filter(b => b !== "faza"); if (g && g[0] <= 3 && g[1] >= 8) p.badges.push("faza"); });
+  S.players.forEach(p => { const g = G.players[p.name]; p.badges = (p.badges || []).filter(b => b !== "faza"); if (g && g[0] <= 3 && g[1] >= 8) p.badges.push("faza"); if (p.name === "Sese" && G.admin && G.admin.opened >= 8 && G.admin.medsec <= 180) p.badges.push("faza"); });
 }
 
 /* ===== share „Cât de repede ne strângem” (doar pentru admin: deschide o dată site-ul cu ?admin=1) ===== */
@@ -2085,7 +2099,7 @@ function pfBadges(p, S) {
   step("complet", "Complet", "🧩", "5 seri cu 12 din 12", 5, p.f12 || 0, "", ["seară", "seri"], { earned: has("complet") });
   step("legenda", "Legenda", "🏆", "40 de meciuri jucate în sezon", 40, p.games, "", ["meci", "meciuri"], { earned: has("legenda") });
   step("zid", "Zid de beton", "🧱", "20 de meciuri la rând, fără pauză", 20, p.best, "", ["meci la rând", "meciuri la rând"], { earned: has("zid") });
-  L.push({ k: "perfect", n: "Perfectul", e: "💯", d: "Prezență 100% în sezon, din cel puțin 15 meciuri", earned: has("perfect"), date: "", vis: true });
+  step("semizeu", "Semi Zeu", "🔱", "Prezență de cel puțin 50% la miercurile sezonului (minimum 10 meciuri)", 50, Math.round(100 * p.rate), "", ["% prezență", "% prezență"], { earned: has("semizeu"), note: "% prezență" });
   L.push({ k: "racheta", n: "Rachetă", e: "🛰️", d: "Ai urcat 8 locuri sau mai mult în 4 săptămâni", earned: has("racheta"), date: "", vis: true });
   L.push({ k: "liderluna", n: "Lider de lună", e: "📅", d: "Ai încheiat o lună pe locul 1", earned: has("liderluna"), date: "", vis: true });
   L.push({ k: "top3luna", n: "Top 3 pe o lună", e: "🔝", d: "În primele 3 locuri în toate miercurile unei luni", earned: has("top3luna"), date: "", vis: true });
@@ -2544,15 +2558,18 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     const at = k => H[k][i20] ?? 0;
     const win = k => [H[k][i20], H[k][i21]].map(v => v ?? 0);
     const max = a => Math.max(0, ...a); const sum = a => a.reduce((s, v) => s + v, 0);
-    const back = k => H[k].slice(Math.max(0, i20 - 24), i20).map(v => v ?? 0);
-    const rain24 = sum(back("precipitation")), snow24 = sum(back("snowfall"));
+    const back = k => H[k].slice(Math.max(0, i20 - 3), i20).map(v => v ?? 0);
+    const rain3 = sum(back("precipitation")), snow3 = sum(back("snowfall"));
+    const showers = H.weather_code.slice(Math.max(0, i20 - 3), i21 + 1).some(c => c >= 80 && c <= 82);
     const mmM = sum(win("precipitation")), snowM = sum(win("snowfall"));
     const prob = max(win("precipitation_probability")), code = max(win("weather_code"));
     const wind = max(win("wind_speed_10m")), gust = max(win("wind_gusts_10m"));
     const dir = DIR[Math.round(at("wind_direction_10m") / 45) % 8];
     let terr;
-    if (snow24 > 0 || snowM > 0) terr = "Cu zăpadă";
-    else if (rain24 > 0 || mmM > 0) terr = "Umed";
+    const snowCode = H.weather_code.slice(Math.max(0, i20 - 3), i21 + 1).some(c => c === 73 || c === 75 || c === 77 || c === 86);
+    /* zăpadă: prag 0,5 mm echivalent apă = 0,35 cm în datele Open-Meteo (1 mm apă ≈ 0,7 cm zăpadă) */
+    if (snow3 + snowM >= 0.35 || snowCode) terr = "Cu zăpadă";
+    else if (rain3 + mmM >= 0.5 || prob >= 70 || showers) terr = "Umed";
     else terr = "Uscat";
     document.getElementById("wxic").innerHTML = ICON(code);
     document.getElementById("wxwhen").textContent = `Miercuri ${pad(nx.getDate())}.${pad(nx.getMonth() + 1)} · 20:00–21:00`;
