@@ -16,6 +16,12 @@
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B1018">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fotbal 20:00">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -841,7 +847,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 
     <section id="statistici" aria-labelledby="h-st">
       <h2 id="h-st">Statistici</h2>
-      <div class="panel"><div class="sechead"><div><h3>Cursa pentru titlu</h3><p class="note">Locul fiecăruia din top 12 după fiecare miercuri. Cine urcă, cine scade. Treci peste un nume sau o linie ca să-l urmărești.</p></div>
+      <div class="panel"><div class="sechead"><div><h3>Cursa pentru titlu</h3><p class="note">Locul fiecăruia din top 12 după fiecare miercuri. Cine urcă, cine scade. Apasă pe un nume sau pe o linie ca să-l urmărești, apasă din nou ca să renunți.</p></div>
         <div class="tabs" id="racewin"><button data-n="12" aria-selected="false">12 săpt.</button><button data-n="20" aria-selected="true">20 săpt.</button><button data-n="0" aria-selected="false">Tot sezonul</button></div></div>
         <div class="racelegend" id="racelegend"></div><div class="chartbox" id="race"></div></div>
       <div class="panel"><h3>Miercuri de miercuri</h3><p class="note">Câți s-au înscris și câți au jucat în fiecare miercuri. Linia albă = 12 locuri.</p><div class="chartbox" id="chart"></div>
@@ -1032,6 +1038,8 @@ dialog#prof { scrollbar-gutter: stable; }
 #pwa .pw-act { display: flex; gap: 8px; margin-top: 12px; }
 #pwa .pw-act button { flex: 1; min-height: 44px; border-radius: 12px; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; border: 1px solid var(--line, #263247); background: transparent; color: var(--ink, #fff); }
 #pwa .pw-act button.go { background: var(--lime, #c6f432); border-color: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); }
+#pwabtn { text-align: center; margin: 2px auto 14px; } #pwabtn[hidden] { display: none !important; }
+#pwabtn button { background: transparent; border: 1.5px solid var(--lime, #c6f432); color: var(--ink, #fff); font: inherit; font-weight: 700; font-size: 13px; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
 </style>
 <style>
 #adm { margin: 6px auto 18px; text-align: center; font-size: 12px; }
@@ -1537,7 +1545,9 @@ function autoNews(S) {
   add("⏭️", `Următorul meci: miercuri ${String(nx.getDate()).padStart(2, "0")}.${String(nx.getMonth() + 1).padStart(2, "0")}, ora 20:00 · înscrieri de marți, 9:30`);
   return N;
 }
+let LIVE_READY = false; /* știrile apar abia după datele live (altfel se vede întâi varianta veche din pagină, apoi sare la cea actuală) */
 function renderTicker() {
+  if (!LIVE_READY) return;
   const S = S_(); if (!S || !S.snaps || !S.snaps.length) return;
   const items = [...MANUAL_NEWS.map(t => ({ e: "📣", html: esc(t), cls: "admin" })), ...autoNews(S)];
   const box = $("ticker"); if (!items.length) { box.hidden = true; return; }
@@ -1888,7 +1898,7 @@ function lineChart(box, labels, series, o = {}) {
 }
 
 const BUMP = ["#c4f042", "#3987e5", "#d95926", "#2bb3a3", "#c98500", "#d55181", "#9085e9", "#e6e8e1", "#4cc9f0", "#e56b6f", "#8d99ae", "#a47148"];
-let raceN = 20, raceHi = null;
+let raceN = 20, raceHi = null, racePin = null;
 try { const v = localStorage.getItem("fm-racen"); if (v != null) raceN = +v; } catch (e) {}
 function renderRace(S) {
   const box = $("race"), N = 12, MAXR = 12, top = S.players.slice(0, N);
@@ -1922,8 +1932,13 @@ function renderRace(S) {
   const svg = box.querySelector("svg"), tip = box.querySelector(".tip"), cross = box.querySelector(".xh");
   const hi = k => { raceHi = k; box.querySelectorAll(".bl").forEach(e => e.style.opacity = k == null || +e.dataset.k === k ? 1 : .12);
     $("racelegend").querySelectorAll("button").forEach(b => b.classList.toggle("dim", k != null && +b.dataset.k !== k)); };
-  box.querySelectorAll(".bl").forEach(e => { e.addEventListener("mouseenter", () => hi(+e.dataset.k)); e.addEventListener("mouseleave", () => hi(null)); });
-  $("racelegend").querySelectorAll("button").forEach(b => { b.onmouseenter = () => hi(+b.dataset.k); b.onmouseleave = () => hi(null); b.onclick = () => openProfile(series[+b.dataset.k].p.name); });
+  /* apăsarea pe un nume sau pe o linie îl urmărește (rămâne evidențiat); apăsat din nou, se renunță. Profilul se deschide din linkul de sub nume. */
+  let pk = $("racepick"); if (!pk) { pk = document.createElement("div"); pk.id = "racepick"; pk.className = "note"; pk.style.cssText = "min-height:22px;margin:6px 0 2px"; $("racelegend").after(pk); }
+  const pick = k => { racePin = k === racePin ? null : k; hi(racePin);
+    pk.innerHTML = racePin == null ? "" : `<button type="button" data-p="${esc(series[racePin].p.name)}" style="background:none;border:0;padding:0;color:var(--lime);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer">Vezi profilul lui ${esc(series[racePin].p.name)} →</button>`; };
+  box.querySelectorAll(".bl").forEach(e => { e.addEventListener("mouseenter", () => { if (racePin == null) hi(+e.dataset.k); }); e.addEventListener("mouseleave", () => { if (racePin == null) hi(null); }); e.addEventListener("click", () => pick(+e.dataset.k)); });
+  $("racelegend").querySelectorAll("button").forEach(b => { b.onmouseenter = () => { if (racePin == null) hi(+b.dataset.k); }; b.onmouseleave = () => { if (racePin == null) hi(null); }; b.onclick = () => pick(+b.dataset.k); });
+  if (racePin != null && racePin < series.length) { const k0 = racePin; racePin = null; pick(k0); } else { racePin = null; pk.innerHTML = ""; }
   const move = e => { const r = svg.getBoundingClientRect(), p0 = e.touches ? e.touches[0] : e;
     let k = Math.round(((p0.clientX - r.left) * w / r.width - pl) / (w - pl - pr) * (n - 1)); if (k < 0 || k > n - 1) { tip.hidden = true; cross.setAttribute("visibility", "hidden"); return; }
     cross.setAttribute("x1", X(k)); cross.setAttribute("x2", X(k)); cross.setAttribute("visibility", "visible");
@@ -2493,10 +2508,10 @@ function renderNotes() {
 }
 $("ntabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; nview = b.dataset.n; renderNotes(); });
 renderNav(); _rw = document.getElementById("pitch").clientWidth;
-loadLive().then(rows => { const d = buildData(rows, DATA); if (!Object.keys(d.seasons).length) return;
+loadLive().then(rows => { LIVE_READY = true; const d = buildData(rows, DATA); if (!Object.keys(d.seasons).length) { renderTicker(); return; }
   DATA = d; seasons = Object.keys(DATA.seasons).sort(); if (!DATA.seasons[season]) season = seasons[seasons.length - 1]; at = null;
   renderStatic(); render(); stopPlay(); if (location.hash.startsWith("#p-") && !$("prof").open) fromHash();
-}).catch(() => {});
+}).catch(() => { LIVE_READY = true; renderTicker(); });
 renderStatic();
 render();
 stopPlay();
@@ -2516,7 +2531,7 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     if (!d || typeof d.value !== "number") return; const el = $("views");
     el.textContent = `👀 ${d.value.toLocaleString("ro-RO")} ${d.value === 1 ? "vizualizare" : "vizualizări"}`; el.hidden = false; }).catch(() => {}); })();
 /* favicon: minge care se rotește (fundal transparent, merge pe tab-uri închise și deschise) */
-(() => {
+(() => { if (/iPhone|iPad|iPod/.test(navigator.userAgent)) return; /* pe iOS rămâne iconița statică */
   const B_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#f4f6f0" stroke="#11130c" stroke-width="3"/><path d="M32 22l9.5 6.9-3.6 11.2H26.1l-3.6-11.2z" fill="#11130c"/><path d="M32 22V7M41.5 28.9l13.6-4.5M37.9 40.1l8.6 11.6M26.1 40.1l-8.6 11.6M22.5 28.9 8.9 24.4" stroke="#11130c" stroke-width="3" stroke-linecap="round"/><path d="M26 6.5 32 9l6-2.5M55.5 22l-1 6.5 4 4.5M48 54l-6.5-.5-3.5 5M16 54l6.5-.5 3.5 5M8.5 22l1 6.5-4 4.5" fill="none" stroke="#11130c" stroke-width="3" stroke-linejoin="round"/></svg>`;
   const svgUrl = "data:image/svg+xml," + encodeURIComponent(B_SVG);
   let link = document.querySelector('link[rel="icon"]');
@@ -2676,7 +2691,7 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
   window.addEventListener("appinstalled", () => { const x = st.get(); if (!x.i) { x.i = 1; st.set(x); hit("app-instalari"); } close(true); });
   const DAY = 864e5;
   const mayShow = () => { const x = st.get(); if (x.i) return false; if (!x.d) return true; return x.d < 3 && Date.now() - (x.t || 0) > 7 * DAY; };
-  if (!mayShow()) return;
+  const FORCE = /[?&]instaleaza=1/.test(location.search);
   const SHARE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>';
   const DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
   const root = document.createElement("div"); root.id = "pwa"; root.hidden = true; root.setAttribute("role", "dialog"); root.setAttribute("aria-label", "Instalează aplicația");
@@ -2684,7 +2699,7 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
   const url = location.origin + location.pathname;
   function body() {
     if (inApp) return { sub: "Deschide linkul în browser, apoi o adaugi pe ecran.", steps: android ? ["Atinge „Deschide în Chrome”", "Apoi alege „Instalează”"] : [`Atinge ${DOTS} sau ${SHARE}, apoi „Deschide în Safari”`, "Apoi „Adaugă pe ecranul principal”"], acts: (android ? '<button class="go" data-a="chrome">Deschide în Chrome</button>' : "") + '<button data-a="copy">Copiază linkul</button>' };
-    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${SHARE} Partajează`, "Alege „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${DOTS} sau ${SHARE}, apoi „Partajează”`, "Derulează în jos și alege „Adaugă pe ecranul principal”", "Lasă „Deschide ca aplicație” pornit, apoi „Adaugă”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
     if (evt) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: null, acts: '<button class="go" data-a="inst">Instalează</button><button data-a="no">Nu acum</button>' };
     return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge meniul ${DOTS} al browserului`, "Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
   }
@@ -2700,8 +2715,12 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     else if (k === "copy") { try { await navigator.clipboard.writeText(url); } catch (x) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (y) {} t.remove(); } a.textContent = "Copiat ✓"; }
     else if (k === "chrome") { location.href = "intent://" + location.host + location.pathname + "#Intent;scheme=https;package=com.android.chrome;end"; }
   });
+  const btn = document.createElement("div"); btn.id = "pwabtn"; btn.innerHTML = '<button type="button">📲 Instalează aplicația</button>';
+  const fo = document.getElementById("foot"); if (fo) fo.after(btn);
+  if (st.get().i) btn.hidden = true;
+  btn.addEventListener("click", () => { render(); root.hidden = false; hit("pwa-buton"); });
   const show = () => { const d = document.getElementById("prof"); if (d && d.open) { setTimeout(show, 1500); return; } render(); root.hidden = false; if (!TEST && !st.get().s) { const x = st.get(); x.s = 1; st.set(x); hit("pwa-popup-afisat"); } };
-  setTimeout(show, android && !inApp ? 1800 : 1200);
+  if (mayShow() || FORCE) setTimeout(show, android && !inApp ? 1800 : 1200);
 })();
 </script>
 </html>
