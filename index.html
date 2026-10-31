@@ -16,12 +16,6 @@
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B1018">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Fotbal 20:00">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -675,6 +669,8 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 .wx>.wxbg{height:92px;right:-2px;opacity:.9}
 .wx .wxterr{min-height:72px;display:flex;align-items:flex-end}
 .wx .wxtt b{font-size:22px}.wx .wxtt span{font-size:11px}}
+.wx .wxshare{display:none}
+@media (max-width:640px){.wx .wxshare{display:inline-grid;position:absolute;top:10px;right:10px;width:40px;height:40px;z-index:2}.wx .wxshare svg{width:19px;height:19px}}
 
 .themebtn { order: 2; display: inline-grid; place-items: center; width: 42px; height: 42px; flex: none; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 50%; padding: 0; }
 .themebtn span { display: none; }
@@ -801,6 +797,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
       <div class="wxt"><span class="ic" id="wxic"></span><b>Vremea la meci</b><span id="wxwhen"></span></div>
       <div class="wxgrid" id="wxgrid"></div>
       <div class="wxterr"><img id="wxtimg" alt="" width="136" height="94"><div class="wxtt"><span>teren</span><b id="wxterr"></b></div></div>
+      <button class="sharebtn wxshare" id="wxshare" type="button" onclick="shareWeather()" aria-label="Distribuie vremea" title="Distribuie"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
     </div>
     <div class="kpis num" id="kpis"></div>
     </section>
@@ -847,7 +844,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; }
 
     <section id="statistici" aria-labelledby="h-st">
       <h2 id="h-st">Statistici</h2>
-      <div class="panel"><div class="sechead"><div><h3>Cursa pentru titlu</h3><p class="note">Locul fiecăruia din top 12 după fiecare miercuri. Cine urcă, cine scade. Apasă pe un nume sau pe o linie ca să-l urmărești, apasă din nou ca să renunți.</p></div>
+      <div class="panel"><div class="sechead"><div><h3>Cursa pentru titlu</h3><p class="note">Locul fiecăruia din top 12 după fiecare miercuri. Cine urcă, cine scade. Treci peste un nume sau o linie ca să-l urmărești.</p></div>
         <div class="tabs" id="racewin"><button data-n="12" aria-selected="false">12 săpt.</button><button data-n="20" aria-selected="true">20 săpt.</button><button data-n="0" aria-selected="false">Tot sezonul</button></div></div>
         <div class="racelegend" id="racelegend"></div><div class="chartbox" id="race"></div></div>
       <div class="panel"><h3>Miercuri de miercuri</h3><p class="note">Câți s-au înscris și câți au jucat în fiecare miercuri. Linia albă = 12 locuri.</p><div class="chartbox" id="chart"></div>
@@ -1038,8 +1035,6 @@ dialog#prof { scrollbar-gutter: stable; }
 #pwa .pw-act { display: flex; gap: 8px; margin-top: 12px; }
 #pwa .pw-act button { flex: 1; min-height: 44px; border-radius: 12px; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; border: 1px solid var(--line, #263247); background: transparent; color: var(--ink, #fff); }
 #pwa .pw-act button.go { background: var(--lime, #c6f432); border-color: var(--lime, #c6f432); color: var(--lime-ink, #0b111b); }
-#pwabtn { text-align: center; margin: 2px auto 14px; } #pwabtn[hidden] { display: none !important; }
-#pwabtn button { background: transparent; border: 1.5px solid var(--lime, #c6f432); color: var(--ink, #fff); font: inherit; font-weight: 700; font-size: 13px; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
 </style>
 <style>
 #adm { margin: 6px auto 18px; text-align: center; font-size: 12px; }
@@ -1545,9 +1540,7 @@ function autoNews(S) {
   add("⏭️", `Următorul meci: miercuri ${String(nx.getDate()).padStart(2, "0")}.${String(nx.getMonth() + 1).padStart(2, "0")}, ora 20:00 · înscrieri de marți, 9:30`);
   return N;
 }
-let LIVE_READY = false; /* știrile apar abia după datele live (altfel se vede întâi varianta veche din pagină, apoi sare la cea actuală) */
 function renderTicker() {
-  if (!LIVE_READY) return;
   const S = S_(); if (!S || !S.snaps || !S.snaps.length) return;
   const items = [...MANUAL_NEWS.map(t => ({ e: "📣", html: esc(t), cls: "admin" })), ...autoNews(S)];
   const box = $("ticker"); if (!items.length) { box.hidden = true; return; }
@@ -1607,6 +1600,55 @@ async function shareSignup() {
   x.fillStyle = MUTE; x.font = `600 28px ${B}`; x.fillText("Lista se deschide marți la 9:30 · cine e pe fază prinde loc", 72, H - 48);
   const url = location.origin + location.pathname, txt = `⏱️ Miercuri ${lab}: ${v != null && L.w.status === "Jucat" ? "lotul de 12 s-a strâns în " + fmtMin(v) : "lotul nu s-a strâns"}. De obicei: ${fmtMin(st.med)}. Record: ${fmtMin(st.rec)}.\nMarți la 9:30 fiți pe fază! ⚽\n${url}#inscrieri`;
   const blob = await new Promise(r => c.toBlob(r, "image/png")), file = new File([blob], `fotbal-${d}.png`, { type: "image/png" });
+  try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: txt }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) {}
+  window.open(WA_GROUP, "_blank", "noopener");
+}
+/* ===== share „Vremea la meci” (buton doar pe mobil): imagine cu aspectul cardului pe telefon, tema închisă ===== */
+async function shareWeather() {
+  const g = id => document.getElementById(id);
+  const cells = [...g("wxgrid").children].map(d => [d.querySelector("b").textContent, d.querySelector("span").textContent]);
+  if (cells.length < 4) return;
+  try { await document.fonts.ready; } catch (e) {}
+  const BG = "#0B1018", PANEL = "#121A26", INK = "#EEF2F7", MUTE = "#8A97AA", ICOL = "#8A97AA", D = '"Barlow Condensed", "Arial Narrow", sans-serif', B = 'Manrope, "Segoe UI", sans-serif';
+  const W = 1080, X0 = 50, Y0 = 48, CW = 980, CH = 855, H = CH + 2 * Y0, R = 42;
+  const c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+  x.fillStyle = BG; x.fillRect(0, 0, W, H);
+  /* fundal card: gradient 150deg, lime 20% -> panou la 60% */
+  const L = CW * 0.5 + CH * 0.866, mx = X0 + CW / 2, my = Y0 + CH / 2, dx = 0.5 * L / 2, dy = 0.866 * L / 2;
+  const gr = x.createLinearGradient(mx - dx, my - dy, mx + dx, my + dy); gr.addColorStop(0, "#303F34"); gr.addColorStop(0.6, PANEL); gr.addColorStop(1, PANEL);
+  x.beginPath(); x.roundRect(X0, Y0, CW, CH, R); x.fillStyle = gr; x.fill();
+  /* teren (imagine) în colțul din dreapta jos, cu estompare */
+  const tim = g("wxbg");
+  if (tim && tim.complete && tim.naturalWidth) {
+    const ih = 276, iw = Math.round(ih * tim.naturalWidth / tim.naturalHeight), o = document.createElement("canvas"); o.width = iw; o.height = ih; const ox = o.getContext("2d");
+    ox.drawImage(tim, 0, 0, iw, ih); ox.globalCompositeOperation = "destination-in";
+    let m1 = ox.createLinearGradient(0, 0, iw, 0); m1.addColorStop(0, "rgba(0,0,0,0)"); m1.addColorStop(0.35, "rgba(0,0,0,1)"); m1.addColorStop(1, "rgba(0,0,0,1)"); ox.fillStyle = m1; ox.fillRect(0, 0, iw, ih);
+    let m2 = ox.createLinearGradient(0, 0, 0, ih); m2.addColorStop(0, "rgba(0,0,0,1)"); m2.addColorStop(0.7, "rgba(0,0,0,1)"); m2.addColorStop(1, "rgba(0,0,0,0)"); ox.fillStyle = m2; ox.fillRect(0, 0, iw, ih);
+    x.save(); x.beginPath(); x.roundRect(X0, Y0, CW, CH, R); x.clip(); x.globalAlpha = 0.9; x.drawImage(o, X0 + CW + 6 - iw, Y0 + CH - ih); x.restore();
+  }
+  x.beginPath(); x.roundRect(X0 + 1.5, Y0 + 1.5, CW - 3, CH - 3, R - 1.5); x.strokeStyle = "#556F52"; x.lineWidth = 3; x.stroke();
+  /* iconiță vreme */
+  const svg = g("wxic").innerHTML.replace("<svg ", `<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="none" stroke="${ICOL}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" `);
+  const icon = await new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg); });
+  if (icon) x.drawImage(icon, 92, 90, 90, 90);
+  const sp = (t, X, Y, s) => { for (const ch of t) { x.fillText(ch, X, Y); X += x.measureText(ch).width + s; } };
+  const fit = (t, X, Y, wt, size, fam, col, maxW) => { let s = size; x.fillStyle = col; do { x.font = `${wt} ${s}px ${fam}`; s -= 1; } while (x.measureText(t).width > maxW && s > 18); x.fillText(t, X, Y); };
+  x.textBaseline = "alphabetic"; x.fillStyle = INK; x.font = `800 51px ${D}`; sp("VREMEA LA MECI", 92, 240, 1.5);
+  const when = g("wxwhen").textContent; fit(when, 92, 298, 400, 33, B, MUTE, CW - 84);
+  /* cele 4 casete */
+  const COL = [92, 552], TOP = [348, 492], CWID = 436;
+  cells.slice(0, 4).forEach((cl, i) => { const X = COL[i % 2], Y = TOP[Math.floor(i / 2)];
+    x.fillStyle = "#223044"; x.fillRect(X, Y, 3, 120);
+    fit(cl[0], X + 39, Y + 57, 800, 57, D, INK, CWID - 45); fit(cl[1], X + 39, Y + 107, 400, 33, B, MUTE, CWID - 45); });
+  /* teren */
+  const terr = g("wxterr").textContent;
+  x.fillStyle = MUTE; x.font = `700 33px ${B}`; sp("TEREN", 92, 778, 3.3);
+  x.fillStyle = INK; x.font = `800 66px ${D}`; x.fillText(terr.toUpperCase(), 92, 855);
+  const dm = (when.match(/\d{2}\.\d{2}/) || ["miercuri"])[0], url = location.origin + location.pathname;
+  const txt = `Vremea la meci, ${when.charAt(0).toLowerCase() + when.slice(1)}: ${cells[0][0]}, teren ${terr.toLowerCase()}.\n${url}`;
+  const blob = await new Promise(r => c.toBlob(r, "image/png")), file = new File([blob], `vreme-${dm.replace(".", "-")}.png`, { type: "image/png" });
   try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: txt }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
   try { navigator.clipboard.writeText(txt).catch(() => {}); } catch (e) {}
@@ -1898,7 +1940,7 @@ function lineChart(box, labels, series, o = {}) {
 }
 
 const BUMP = ["#c4f042", "#3987e5", "#d95926", "#2bb3a3", "#c98500", "#d55181", "#9085e9", "#e6e8e1", "#4cc9f0", "#e56b6f", "#8d99ae", "#a47148"];
-let raceN = 20, raceHi = null, racePin = null;
+let raceN = 20, raceHi = null;
 try { const v = localStorage.getItem("fm-racen"); if (v != null) raceN = +v; } catch (e) {}
 function renderRace(S) {
   const box = $("race"), N = 12, MAXR = 12, top = S.players.slice(0, N);
@@ -1932,13 +1974,8 @@ function renderRace(S) {
   const svg = box.querySelector("svg"), tip = box.querySelector(".tip"), cross = box.querySelector(".xh");
   const hi = k => { raceHi = k; box.querySelectorAll(".bl").forEach(e => e.style.opacity = k == null || +e.dataset.k === k ? 1 : .12);
     $("racelegend").querySelectorAll("button").forEach(b => b.classList.toggle("dim", k != null && +b.dataset.k !== k)); };
-  /* apăsarea pe un nume sau pe o linie îl urmărește (rămâne evidențiat); apăsat din nou, se renunță. Profilul se deschide din linkul de sub nume. */
-  let pk = $("racepick"); if (!pk) { pk = document.createElement("div"); pk.id = "racepick"; pk.className = "note"; pk.style.cssText = "min-height:22px;margin:6px 0 2px"; $("racelegend").after(pk); }
-  const pick = k => { racePin = k === racePin ? null : k; hi(racePin);
-    pk.innerHTML = racePin == null ? "" : `<button type="button" data-p="${esc(series[racePin].p.name)}" style="background:none;border:0;padding:0;color:var(--lime);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer">Vezi profilul lui ${esc(series[racePin].p.name)} →</button>`; };
-  box.querySelectorAll(".bl").forEach(e => { e.addEventListener("mouseenter", () => { if (racePin == null) hi(+e.dataset.k); }); e.addEventListener("mouseleave", () => { if (racePin == null) hi(null); }); e.addEventListener("click", () => pick(+e.dataset.k)); });
-  $("racelegend").querySelectorAll("button").forEach(b => { b.onmouseenter = () => { if (racePin == null) hi(+b.dataset.k); }; b.onmouseleave = () => { if (racePin == null) hi(null); }; b.onclick = () => pick(+b.dataset.k); });
-  if (racePin != null && racePin < series.length) { const k0 = racePin; racePin = null; pick(k0); } else { racePin = null; pk.innerHTML = ""; }
+  box.querySelectorAll(".bl").forEach(e => { e.addEventListener("mouseenter", () => hi(+e.dataset.k)); e.addEventListener("mouseleave", () => hi(null)); });
+  $("racelegend").querySelectorAll("button").forEach(b => { b.onmouseenter = () => hi(+b.dataset.k); b.onmouseleave = () => hi(null); b.onclick = () => openProfile(series[+b.dataset.k].p.name); });
   const move = e => { const r = svg.getBoundingClientRect(), p0 = e.touches ? e.touches[0] : e;
     let k = Math.round(((p0.clientX - r.left) * w / r.width - pl) / (w - pl - pr) * (n - 1)); if (k < 0 || k > n - 1) { tip.hidden = true; cross.setAttribute("visibility", "hidden"); return; }
     cross.setAttribute("x1", X(k)); cross.setAttribute("x2", X(k)); cross.setAttribute("visibility", "visible");
@@ -2508,10 +2545,10 @@ function renderNotes() {
 }
 $("ntabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; nview = b.dataset.n; renderNotes(); });
 renderNav(); _rw = document.getElementById("pitch").clientWidth;
-loadLive().then(rows => { LIVE_READY = true; const d = buildData(rows, DATA); if (!Object.keys(d.seasons).length) { renderTicker(); return; }
+loadLive().then(rows => { const d = buildData(rows, DATA); if (!Object.keys(d.seasons).length) return;
   DATA = d; seasons = Object.keys(DATA.seasons).sort(); if (!DATA.seasons[season]) season = seasons[seasons.length - 1]; at = null;
   renderStatic(); render(); stopPlay(); if (location.hash.startsWith("#p-") && !$("prof").open) fromHash();
-}).catch(() => { LIVE_READY = true; renderTicker(); });
+}).catch(() => {});
 renderStatic();
 render();
 stopPlay();
@@ -2531,7 +2568,7 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     if (!d || typeof d.value !== "number") return; const el = $("views");
     el.textContent = `👀 ${d.value.toLocaleString("ro-RO")} ${d.value === 1 ? "vizualizare" : "vizualizări"}`; el.hidden = false; }).catch(() => {}); })();
 /* favicon: minge care se rotește (fundal transparent, merge pe tab-uri închise și deschise) */
-(() => { if (/iPhone|iPad|iPod/.test(navigator.userAgent)) return; /* pe iOS rămâne iconița statică */
+(() => {
   const B_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#f4f6f0" stroke="#11130c" stroke-width="3"/><path d="M32 22l9.5 6.9-3.6 11.2H26.1l-3.6-11.2z" fill="#11130c"/><path d="M32 22V7M41.5 28.9l13.6-4.5M37.9 40.1l8.6 11.6M26.1 40.1l-8.6 11.6M22.5 28.9 8.9 24.4" stroke="#11130c" stroke-width="3" stroke-linecap="round"/><path d="M26 6.5 32 9l6-2.5M55.5 22l-1 6.5 4 4.5M48 54l-6.5-.5-3.5 5M16 54l6.5-.5 3.5 5M8.5 22l1 6.5-4 4.5" fill="none" stroke="#11130c" stroke-width="3" stroke-linejoin="round"/></svg>`;
   const svgUrl = "data:image/svg+xml," + encodeURIComponent(B_SVG);
   let link = document.querySelector('link[rel="icon"]');
@@ -2574,10 +2611,12 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     const at = k => H[k][i20] ?? 0;
     const win = k => [H[k][i20], H[k][i21]].map(v => v ?? 0);
     const max = a => Math.max(0, ...a); const sum = a => a.reduce((s, v) => s + v, 0);
-    const back = k => H[k].slice(Math.max(0, i20 - 3), i20).map(v => v ?? 0);
+    /* Open-Meteo: valoarea orei T = suma orei dinainte. 18:00, 19:00, 20:00 = ploaia 17:00-20:00; 21:00 = ploaia meciului 20:00-21:00 */
+    const back = k => H[k].slice(Math.max(0, i20 - 2), i20 + 1).map(v => v ?? 0);
     const rain3 = sum(back("precipitation")), snow3 = sum(back("snowfall"));
     const showers = H.weather_code.slice(Math.max(0, i20 - 3), i21 + 1).some(c => c >= 80 && c <= 82);
-    const mmM = sum(win("precipitation")), snowM = sum(win("snowfall"));
+    const mmM = H.precipitation[i21] ?? 0, snowM = H.snowfall[i21] ?? 0;
+    const probPre = max(H.precipitation_probability.slice(Math.max(0, i20 - 2), i21 + 1).map(v => v ?? 0));
     const prob = max(win("precipitation_probability")), code = max(win("weather_code"));
     const wind = max(win("wind_speed_10m")), gust = max(win("wind_gusts_10m"));
     const dir = DIR[Math.round(at("wind_direction_10m") / 45) % 8];
@@ -2585,7 +2624,8 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
     const snowCode = H.weather_code.slice(Math.max(0, i20 - 3), i21 + 1).some(c => c === 73 || c === 75 || c === 77 || c === 86);
     /* zăpadă: prag 0,5 mm echivalent apă = 0,35 cm în datele Open-Meteo (1 mm apă ≈ 0,7 cm zăpadă) */
     if (snow3 + snowM >= 0.35 || snowCode) terr = "Cu zăpadă";
-    else if (rain3 + mmM >= 0.5 || prob >= 70 || showers) terr = "Umed";
+    /* Umed: >=1 mm, sau >=0,5 mm cu sansa >=30% (17:00-21:00), sau sansa >=70% la meci, sau averse anuntate */
+    else if (rain3 + mmM >= 1 || (rain3 + mmM >= 0.5 && probPre >= 30) || prob >= 70 || showers) terr = "Umed";
     else terr = "Uscat";
     document.getElementById("wxic").innerHTML = ICON(code);
     document.getElementById("wxwhen").textContent = `Miercuri ${pad(nx.getDate())}.${pad(nx.getMonth() + 1)} · 20:00–21:00`;
@@ -3226,7 +3266,7 @@ return{
   window.addEventListener("appinstalled", () => { const x = st.get(); if (!x.i) { x.i = 1; st.set(x); hit("app-instalari"); } close(true); });
   const DAY = 864e5;
   const mayShow = () => { const x = st.get(); if (x.i) return false; if (!x.d) return true; return x.d < 3 && Date.now() - (x.t || 0) > 7 * DAY; };
-  const FORCE = /[?&]instaleaza=1/.test(location.search);
+  if (!mayShow()) return;
   const SHARE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>';
   const DOTS = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
   const root = document.createElement("div"); root.id = "pwa"; root.hidden = true; root.setAttribute("role", "dialog"); root.setAttribute("aria-label", "Instalează aplicația");
@@ -3234,7 +3274,7 @@ return{
   const url = location.origin + location.pathname;
   function body() {
     if (inApp) return { sub: "Deschide linkul în browser, apoi o adaugi pe ecran.", steps: android ? ["Atinge „Deschide în Chrome”", "Apoi alege „Instalează”"] : [`Atinge ${DOTS} sau ${SHARE}, apoi „Deschide în Safari”`, "Apoi „Adaugă pe ecranul principal”"], acts: (android ? '<button class="go" data-a="chrome">Deschide în Chrome</button>' : "") + '<button data-a="copy">Copiază linkul</button>' };
-    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${DOTS} sau ${SHARE}, apoi „Partajează”`, "Derulează în jos și alege „Adaugă pe ecranul principal”", "Lasă „Deschide ca aplicație” pornit, apoi „Adaugă”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
+    if (iOS) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge ${SHARE} Partajează`, "Alege „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
     if (evt) return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: null, acts: '<button class="go" data-a="inst">Instalează</button><button data-a="no">Nu acum</button>' };
     return { sub: "Un tap și ai clasamentul pe ecran, ca o aplicație.", steps: [`Atinge meniul ${DOTS} al browserului`, "Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”"], acts: '<button class="go" data-a="no">Am înțeles</button>' };
   }
@@ -3250,12 +3290,8 @@ return{
     else if (k === "copy") { try { await navigator.clipboard.writeText(url); } catch (x) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (y) {} t.remove(); } a.textContent = "Copiat ✓"; }
     else if (k === "chrome") { location.href = "intent://" + location.host + location.pathname + "#Intent;scheme=https;package=com.android.chrome;end"; }
   });
-  const btn = document.createElement("div"); btn.id = "pwabtn"; btn.innerHTML = '<button type="button">📲 Instalează aplicația</button>';
-  const fo = document.getElementById("foot"); if (fo) fo.after(btn);
-  if (st.get().i) btn.hidden = true;
-  btn.addEventListener("click", () => { render(); root.hidden = false; hit("pwa-buton"); });
   const show = () => { const d = document.getElementById("prof"); if (d && d.open) { setTimeout(show, 1500); return; } render(); root.hidden = false; if (!TEST && !st.get().s) { const x = st.get(); x.s = 1; st.set(x); hit("pwa-popup-afisat"); } };
-  if (mayShow() || FORCE) setTimeout(show, android && !inApp ? 1800 : 1200);
+  setTimeout(show, android && !inApp ? 1800 : 1200);
 })();
 </script>
 </html>
