@@ -2645,9 +2645,20 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
 .fmi-head b { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; line-height: 1; text-transform: uppercase; letter-spacing: .02em; color: var(--ink); }
 .fmi-head span { font-family: var(--f-body); font-size: .95rem; font-weight: 600; color: var(--mute); }
 .fmi-chat { position: absolute; left: 0; top: 0; z-index: 2; transform: translate(-50%, calc(-100% - 12px)) scale(.7); transform-origin: 50% 100%; opacity: 0; pointer-events: none;
-  transition: opacity .3s, transform .3s cubic-bezier(.2,1.4,.4,1); background: #D9FDD3; color: #111B21; border-radius: 12px 12px 12px 4px; padding: 7px 12px 8px; font-family: var(--f-body); font-size: .95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+  transition: opacity .3s, transform .3s cubic-bezier(.2,1.4,.4,1); display: flex; flex-direction: column; align-items: flex-start; gap: 5px; font-family: var(--f-body); font-size: .95rem; font-weight: 600; white-space: nowrap; }
+.fmi-chat .m { background: #D9FDD3; color: #111B21; border-radius: 12px 12px 12px 4px; padding: 7px 12px 8px; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.fmi-chat .m.in { background: #FFFFFF; align-self: flex-end; border-radius: 12px 12px 4px 12px; display: none; }
+.fmi-chat[data-step="3"] .m.in { display: block; }
+.fmi-chat .m.in small { color: #C2410C; }
 .fmi-chat.on { opacity: 1; transform: translate(-50%, calc(-100% - 12px)) scale(1); }
 .fmi-chat small { display: block; font-size: .72rem; font-weight: 700; color: #1F7A5C; margin-bottom: 1px; }
+.fmi-chat .l2 { display: none; margin-top: 2px; }
+.fmi-chat:not([data-step="1"]) .l2 { display: block; }
+.fmi-head { grid-template-columns: auto minmax(0, 1fr); column-gap: 11px; align-items: center; }
+.fmi-head b, .fmi-head span { grid-column: 2; }
+.fmi-head .fmi-spin { grid-column: 1; grid-row: 1 / span 2; }
+.fmi-spin { display: block; width: 26px; height: 26px; box-sizing: border-box; border-radius: 50%; border: 4px solid color-mix(in srgb, var(--lime) 30%, transparent); border-top-color: var(--lime); animation: fmiSpin .9s linear infinite; }
+@keyframes fmiSpin { to { transform: rotate(360deg); } }
 .fmi-chat i { font-style: normal; font-size: .7rem; color: #53BDEB; margin-left: 6px; }
 .fmi-cap { position: absolute; left: 50%; bottom: 14px; z-index: 3; transform: translateX(-50%);
   width: min(560px, calc(100% - 24px)); box-sizing: border-box; padding: 8px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); display: flex; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
@@ -2657,6 +2668,7 @@ loadHex().then(R => { RATINGS = R; HEX_ON = true; render(); renderNotes(); const
 .fmi-again { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--lime) 55%, var(--line)); background: var(--panel); color: var(--ink); font-family: var(--f-body); font-weight: 700; font-size: .9rem; cursor: pointer; white-space: nowrap; }
 .fmi-again:hover { border-color: var(--lime); }
 .fmi-again[hidden] { display: none !important; }
+@media (max-width: 960px) { .fmi-again { flex: none; width: 40px; min-height: 40px; height: 40px; padding: 0; justify-content: center; gap: 0; border-radius: 50%; } .fmi-again .fmi-at { display: none; } }
 html.fmi-lock, html.fmi-lock body { overflow: hidden; }
 @media (max-width: 700px) {
   .fmi { padding: 0; }
@@ -2665,9 +2677,9 @@ html.fmi-lock, html.fmi-lock body { overflow: hidden; }
   #fmiReplay { top: calc(10px + env(safe-area-inset-top, 0px)); right: calc(62px + env(safe-area-inset-right, 0px)); }
   .fmi-cap { flex-direction: column; gap: 8px; border-radius: 22px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
   .fmi-bubble b { font-size: 1.3rem; } .fmi-bubble span { font-size: .9rem; }
-  .fmi-head { top: calc(10px + env(safe-area-inset-top, 0px)); left: calc(10px + env(safe-area-inset-left, 0px)); padding: 7px 11px 8px; } .fmi-head b { font-size: 1.15rem; } .fmi-head span { font-size: .8rem; }
+  .fmi-head { top: calc(10px + env(safe-area-inset-top, 0px)); left: calc(10px + env(safe-area-inset-left, 0px)); padding: 7px 11px 8px; } .fmi-head b { font-size: 1.15rem; } .fmi-head span { font-size: .8rem; } .fmi-spin { width: 22px; height: 22px; border-width: 3px; }
 }
-@media (prefers-reduced-motion: reduce) { .fmi-bubble, .fmi-chat { transition: none; } .fmi:not([hidden]) { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .fmi-bubble, .fmi-chat { transition: none; } .fmi-spin { animation: none; border-color: var(--lime); } .fmi:not([hidden]) { animation: none; } }
 </style>
 <script>
 /* INTRO: scena voxel (Three.js r128, încărcat doar când rulează). Anotimpul după lună. „M-am înscris deja” = ascunsă pe acest telefon până săptămâna viitoare; ✕ = doar pentru vizita curentă. Test: ?intro=1 sau #intro, anotimp: ?sezon=iarna sau #intro-iarna (merge și în artifact, unde trec doar #) */
@@ -2796,7 +2808,8 @@ function netLine(x0,z0,x1,z1){const n=Math.max(1,Math.round(Math.hypot(x1-x0,z1-
   const dx=x1-x0,dz=z1-z0,len=Math.hypot(dx,dz),st=Math.ceil(len/.25);
   for(let s=0;s<st;s++){const x=x0+dx*s/st,z=z0+dz*s/st;box(A,x-.125,8,z-.125,x+.125,8.25,z+.125,NETC);box(A,x-.125,2,z-.125,x+.125,2.5,z+.125,0x1b3324)}
   return {x0,z0,x1,z1}}
-const nets=[netLine(1.5,1.5,58.5,1.5),netLine(1.5,1.5,1.5,25.5),netLine(58.5,1.5,58.5,25.5),netLine(1.5,25.5,58.5,25.5),netLine(21,1.5,21,25.5),netLine(39,1.5,39,25.5)];
+const nets=[netLine(1.5,1.5,58.5,1.5),netLine(1.5,1.5,1.5,25.5),netLine(58.5,1.5,58.5,25.5),netLine(1.5,25.5,23.5,25.5),netLine(25.5,25.5,58.5,25.5),netLine(21,1.5,21,25.5),netLine(39,1.5,39,25.5)];
+box(A,23.5,2.25,25.75,23.75,4.75,27.5,(i,j,k)=>(j%3===0||k%4===0)?0x23452f:null);box(A,23.5,4.5,25.75,23.75,4.75,27.5,0x23452f);
 // goals (middle pitch)
 function goal(z,dir){const x0=27.5,x1=32.5,c=0xf2f4f6;
   box(A,x0,2,z,x0+.25,4.25,z+.25,c);box(A,x1-.25,2,z,x1,4.25,z+.25,c);box(A,x0,4,z,x1,4.25,z+.25,c);
@@ -2895,7 +2908,7 @@ const PEOPLE={
   sese:{hair:0x2a1d14,skin:0xdba57f,shirt:0xeef0f3,shorts:0x1b2a4a,hairStyle:'quiff',beard:'full',beardC:0x2a1d14},
   tudor:{hair:0x6b4a2c,skin:SK,shirt:0x7fb3e6,shorts:0x2b2f38,hairStyle:'short',beard:null},
   ielciu:{hair:0x1d1712,skin:0xe6b28c,shirt:0xd5443b,shorts:0x16181d,hairStyle:'short',beard:null,belly:true},
-  silviu:{hair:0x2b2119,skin:SK,shirt:0x2f6c46,shorts:0x16181d,hairStyle:'short',beard:'short',beardC:0x3a2b20},
+  silviu:{hair:0x2b2119,skin:SK,shirt:0x2f6c46,shorts:0x16181d,hairStyle:'short',beard:'short',beardC:0x3a2b20,belly:true,big:true},
   scuty:{hair:0x6a5a4e,skin:0xe4b08a,shirt:0x24272d,shorts:0x6b7280,hairStyle:'bald',beard:'goatee',beardC:0x3b2e26},
   boss:{hair:0x5d4636,skin:0xebbb95,shirt:0xc6f24a,shorts:0x1b2a4a,hairStyle:'buzz',beard:null}
 };
@@ -2908,9 +2921,9 @@ function makeChar(o){
   const legL=part(leg,-.25,0,0,hip),legR=part(leg,.25,0,0,hip);
   const upper=new T.Group();hip.add(upper);
   part(g=>{for(let i=-3;i<=2;i++)for(let j=0;j<5;j++)for(let k=-2;k<=1;k++)g.set(i,j,k,j===0?o.shorts:o.shirt);
-    if(o.belly)for(let i=-2;i<=1;i++)for(let j=1;j<=3;j++)g.set(i,j,2,o.shirt)},0,0,0,upper);
+    if(o.belly)for(let i=-2;i<=1;i++)for(let j=1;j<=3;j++)g.set(i,j,2,o.shirt);if(o.big){for(let j=1;j<=4;j++)for(let k=-2;k<=1;k++){g.set(-4,j,k,o.shirt);g.set(3,j,k,o.shirt)}for(let i=-3;i<=2;i++)for(let j=1;j<=3;j++)g.set(i,j,3,o.shirt)}},0,0,0,upper);
   const arm=(g)=>{for(let i=-1;i<=0;i++)for(let k=-1;k<=0;k++)for(let j=-5;j<=-1;j++)g.set(i,j,k,(WIN?j>=-4:j>=-2)?o.shirt:o.skin)};
-  const armL=part(arm,-.8,.95,0,upper),armR=part(arm,.8,.95,0,upper);
+  const aw=o.big?1.0:.8;const armL=part(arm,-aw,.95,0,upper),armR=part(arm,aw,.95,0,upper);
   const head=part(g=>{const H=o.hair,S=o.skin;
     for(let i=-4;i<=3;i++)for(let j=0;j<8;j++)for(let k=-4;k<=3;k++){
       if((i===-4||i===3)&&(k===-4||k===3)&&(j===0||j===7))continue; g.set(i,j,k,S)}
@@ -2959,7 +2972,7 @@ const P={
   scuty:[[4.3,40.6,38.6],[5,36.6,38.6],[5.8,36.6,34.4],[7.2,29.6,30.6]],
   tudor:null,
   ielciu:[[5.0,21.5,46.8],[6.6,33.8,46.8],[7.5,36.3,39.2],[8.2,36.3,34.4],[8.9,32.3,33]],
-  silviu:[[5.0,54,30.6],[8.4,31.5,28.6]]
+  silviu:[[3.5,52,30.4],[5.4,40,26.2],[6.4,25.6,26.0],[6.8,24.5,25.0],[7.6,25.5,20],[8.6,28.8,15.5]]
 };
 P.tudor=[[5.0,TOUT[0],TOUT[1]],[5.9,34.5,38.8],[6.8,34.5,34.4],[8.9,23.4,31.9]];
 const FACE_PITCH=(x)=>x<30?2.0:-2.0;
@@ -3012,16 +3025,16 @@ function frame(t){
     if(!r.moving&&t>8.9){s.rot=.25;const u=clamp((t-8.9)/.3,0,1);s.lean=lerp(0,.62,u)-(t>9.6?ease(clamp((t-9.6)/.6,0,1))*.62:0);s.aLx=s.aRx=-.55*s.lean/.62;s.hx=-.3*s.lean;
       s.y=gy(s.x,s.z)+Math.sin(t*10)*.02;if(t>9.6)turnToPitch(s,t,.25)}
     apply(c,s)}
-  // Silviu — walks in with ball, juggles, holds it
-  {const c=C.silviu;const {s,r}=walker(c,P.silviu,t);let by=null;
-    if(!r.moving&&t>=8.4){s.rot=-.3;
-      if(t<9.7){const ph=(t-8.4)*3.2,f=ph%1;const kick=f<.2;s.lR=kick?-.9*Math.sin(f/.2*Math.PI):0;by=.55+Math.sin(f*Math.PI)*1.5}
-      else{s.aLx=-.5;s.aLz=.25;turnToPitch(s,t,-.3)}}
-    apply(c,s);c.root.updateMatrixWorld(true);const w=W(s.x,s.z);
-    if(by!=null){ball.position.set(w.x+Math.sin(s.rot)*.6+.25,gy(s.x,s.z)+by,w.z+Math.cos(s.rot)*.6)}
-    else if(t>=9.7){const v=new T.Vector3(-.95,.3,.2);c.upper.localToWorld(v);ball.position.copy(v)}
-    else{const v=new T.Vector3(.95,.2,.25);c.upper.localToWorld(v);ball.position.copy(v)}
-    c.root.visible=t>=5.0;ball.visible=t>=5.0}
+  // Silviu — already on the pitch, heavy and slow, keeps shooting at the front goal
+  {const c=C.silviu;const s=st();s.x=29.2;s.z=17.6;const GX=30,GZ=24.3;s.rot=Math.atan2(GX-s.x,GZ-s.z);
+    const CY=3.4,ph=t>=9.8?CY-.01:(t%CY);
+    const k=clamp(ph/.45,0,1),sk=Math.sin(k*Math.PI);s.lR=-1.0*sk;s.aLz=-.45*sk;s.aRz=.25*sk;s.lean=-.08*sk;
+    apply(c,s);const w=W(s.x,s.z),fx=Math.sin(s.rot),fz=Math.cos(s.rot),g=W(GX,GZ),sx=w.x+fx*.8,sz=w.z+fz*.8;
+    if(ph<.3)ball.position.set(sx,2.25,sz);
+    else if(ph<.95){const u=(ph-.3)/.65;ball.position.set(lerp(sx,g.x,u),2.25+Math.sin(u*Math.PI)*1.3,lerp(sz,g.z,u))}
+    else if(ph<2.0){const r2=clamp((ph-.95)/.5,0,1);ball.position.set(g.x,2.25+Math.abs(Math.sin(r2*Math.PI*2))*.25*(1-r2),g.z+.6*ease(r2))}
+    else{const u=ease((ph-2.0)/(CY-2.0));ball.position.set(lerp(g.x,sx,u),2.25,lerp(g.z+.6,sz,u))}
+    c.root.visible=true;ball.visible=true}
   // floodlights
   FL.forEach((f,i)=>{const t0=LIGHT_T[i];let on=0;if(t>=t0){const d=t-t0;on=d<.08?1:d<.16?0:d<.24?.7:d<.3?0:clamp((d-.3)/.35+.4,0,1)}
     f.sp.intensity=on*1.45;f.beam.material.opacity=on*.022;f.pm.color.setRGB(lerp(.16,1,on),lerp(.18,1,on),lerp(.21,1,on))});
@@ -3033,8 +3046,8 @@ function frame(t){
   if(t>=10.0){const u=ease(clamp((t-10)/.45,0,1));
     for(const k in C){const c=C[k];if(!c.root.visible)continue;const r=c.root.rotation.y;const d=((AZ-r+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;c.root.rotation.y=r+d*u;
       c.armR.rotation.set(lerp(c.armR.rotation.x,-1.75,u),0,lerp(c.armR.rotation.z,-.15,u));c.upper.rotation.x*=1-u;c.head.rotation.set(lerp(c.head.rotation.x,-.12,u),0,0);
-      if(k!=='silviu')c.armL.rotation.set(lerp(c.armL.rotation.x,0,u),0,lerp(c.armL.rotation.z,0,u));else{c.root.updateMatrixWorld(true);const v=new T.Vector3(-.95,.3,.2);c.upper.localToWorld(v);ball.position.copy(v)}}}
-  if(chatEl){const co=t>.5&&t<4.4;chatEl.classList.toggle('on',co);
+      c.armL.rotation.set(lerp(c.armL.rotation.x,0,u),0,lerp(c.armL.rotation.z,0,u))}}
+  if(chatEl){const co=t>.5&&t<7.6;chatEl.classList.toggle('on',co);chatEl.dataset.step=t>3.8?'3':t>1.9?'2':'1';
     if(co){C.sese.root.updateMatrixWorld(true);const v=new T.Vector3(0,3.75,0);C.sese.root.localToWorld(v);v.project(cam);
       const w=stage.clientWidth,h=stage.clientHeight,bw=chatEl.offsetWidth/2+8;chatEl.style.left=clamp((v.x+1)/2*w,bw,w-bw)+'px';chatEl.style.top=Math.max(chatEl.offsetHeight+64,(1-v.y)/2*h)+'px'}}
   const on=t>10.5;if(capEl)capEl.classList.toggle('on',on);if(bubble)bubble.classList.toggle('on',on);
@@ -3045,7 +3058,7 @@ function frame(t){
 
 /* ---------- framing ---------- */
 const mk=(X,Y,Z)=>{const r=[];for(const x of X)for(const y of Y)for(const z of Z)r.push(new T.Vector3(x,y,z));return r};
-const CW=mk([-31,24],[-3,8],[-6,24]),CP=mk([-19,8],[0,6],[4,21]),CT=mk([-14,6],[0,5],[7,19]);let corners=CW;
+const CW=mk([-31,24],[-3,8],[-6,24]),CP=mk([-19,8],[0,6],[4,21]),CT=mk([-13,10],[0,5],[5,19]);let corners=CW;
 function fit(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);corners=w/h<.72?CT:w/h<1.05?CP:CW;
   cam.updateMatrixWorld();let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const inv=cam.matrixWorldInverse;
   for(const c of corners){const p=c.clone().applyMatrix4(inv);x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)}
@@ -3091,14 +3104,14 @@ return{
     <div class="fmi-stage"></div>
     <button type="button" class="fmi-btn" id="fmiReplay" aria-label="Reia scena" title="Reia">↻</button>
     <button type="button" class="fmi-btn" id="fmiClose" aria-label="Închide" title="Închide">✕</button>
-    <div class="fmi-head"><b>Înscrieri pentru miercuri</b><span>${WHEN} · ora 20:00</span></div>
-    <div class="fmi-chat" aria-hidden="true"><small>Sese</small>1. Sese<i>✓✓</i></div>
+    <div class="fmi-head"><i class="fmi-spin" aria-hidden="true"></i><b>Înscrieri pentru miercuri</b><span>${WHEN} · ora 20:00</span></div>
+    <div class="fmi-chat" aria-hidden="true" data-step="1"><div class="m"><small>Sese</small><div>Start prezență</div><div class="l2">1. Sese<i>✓✓</i></div></div><div class="m in"><small>Tudor</small>2. Tudor</div></div>
     <div class="fmi-bubble" role="status"><b>Ce cauți aici?</b><span>Treci pe WhatsApp și înscrie-te.</span></div>
     <div class="fmi-cap"><a href="${GROUP}" target="_blank" rel="noopener">Deschide grupul de WhatsApp</a><button type="button" id="fmiDone">M-am înscris deja</button></div></div>`;
   document.body.appendChild(wrap);
   const box = wrap.querySelector(".fmi-box"), stage = wrap.querySelector(".fmi-stage"), bubble = wrap.querySelector(".fmi-bubble"), chat = wrap.querySelector(".fmi-chat");
 
-  const again = document.createElement("button"); again.type = "button"; again.className = "fmi-again"; again.textContent = "▶ Reia intro"; again.hidden = true;
+  const again = document.createElement("button"); again.type = "button"; again.className = "fmi-again"; again.setAttribute("aria-label", "Reia intro"); again.title = "Reia intro"; again.innerHTML = '<span aria-hidden="true">▶</span><span class="fmi-at">Reia intro</span>'; again.hidden = true;
   const tools = document.querySelector(".titlerow .tools");
   if (tools) tools.prepend(again); else { const lot = document.getElementById("pitch"); if (lot) { again.style.cssText = "position:absolute;top:12px;right:12px;z-index:31"; lot.append(again); } }
 
@@ -3113,7 +3126,7 @@ return{
   function show() {
     lastFocus = document.activeElement;
     wrap.hidden = false; again.hidden = true; document.documentElement.classList.add("fmi-lock");
-    bubble.classList.remove("on"); chat.classList.remove("on"); box.focus({ preventScroll: true });
+    bubble.classList.remove("on"); chat.classList.remove("on"); chat.dataset.step = "1"; box.focus({ preventScroll: true });
     loadThree(() => {
       if (wrap.hidden) return;
       try { if (api) api.dispose(); api = window.FMIntroBuild(stage, { season: SEASON, bubble, chat }); api.start(0.8); if (document.hidden) api.pause(); }
