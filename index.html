@@ -162,7 +162,7 @@ h1 span { color: var(--lime); }
 .mvs:not(.hz) .vh::before { content: ""; order: 3; flex-basis: 100%; height: 0; }
 .mvs:not(.hz) .vh .vl { order: 1; } .mvs:not(.hz) .vh .xx { order: 2; }
 .mvs:not(.hz) .vh .md { order: 4; margin-right: auto; } .mvs:not(.hz) .vh .pv { order: 5; } .mvs:not(.hz) .vh .nx { order: 6; }
-.mvs:not(.hz) .nt, .mvs:not(.hz) .ls { top: 84px; height: calc(var(--ch, 100%) - 92px); }
+.mvs:not(.hz) .nt, .mvs:not(.hz) .ls { top: 98px; height: calc(var(--ch, 100%) - 106px); }
 .mvs .vh { left: var(--ox, 0px); right: var(--ox, 0px); }
 .mvs .nt, .mvs .ls { left: var(--ox, 0px) !important; right: var(--ox, 0px) !important; bottom: auto !important; height: calc(var(--ch, 100%) - 48px); }
 .mvs .zone { position: absolute; border: 1px solid rgba(238,242,247,.16); border-radius: 16px; pointer-events: none; z-index: 1; display: none; }
@@ -3617,7 +3617,7 @@ return{
   function geo(W, Hn) {
     const L = FORM.length, maxN = Math.max(...FORM);
     if (W < 560) {
-      let head = 84, ban = 34, rowH = 57, mid = 140, foot = 8;
+      let head = 104, ban = 34, rowH = 57, mid = 140, foot = 8;
       const need = head + 2 * (ban + L * rowH) + mid + foot, H = Math.max(need, Hn); let extra = H - need;
       const add = Math.min(10, extra / (2 * L + 2)); rowH += add; mid += 2 * add; extra -= add * (2 * L + 2); head += extra / 2;
       const hh = ban + L * rowH, ym = head + hh + mid / 2;
