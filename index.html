@@ -215,6 +215,7 @@ h1 span { color: var(--lime); }
 .mvs .ls .ft i { font-style: normal; }
 .mvs:not(.hz) .ls { align-content: start; padding-top: 4px; gap: 14px; }
 .mvs:not(.hz) .vsb { font-size: 60px; }
+.mvs.tt .tk .in { top: -14px; } .mvs.tt .tk .c { width: 28px; height: 28px; font-size: 12px; } .mvs.tt .tk .nm { margin-top: 3px; font-size: 10px; }
 .mvs:not(.hz) .rib { transform: translate(-50%, -50%) rotate(-2deg); padding: 4px 12px 5px; }
 .mvs:not(.hz) .rib b { font-size: 17px; } .mvs:not(.hz) .rib small { font-size: 11px; margin-left: 6px; }
 .mvs.flip .vsb .v::after { background-image: linear-gradient(180deg, #EAF3FF 0%, #B5D3FF 30%, #8DBBFF 55%, #2F64C8 100%); }
@@ -3622,15 +3623,19 @@ return{
   function geo(W, Hn) {
     const L = FORM.length, maxN = Math.max(...FORM);
     if (W < 560) {
-      let head = 100, ban = 30, rowH = 62, mid = 104, foot = 8;
+      let head = 100, ban = 30, rowH = 62, mid = 104, foot = 8, tt = false;
+      if (Hn > 0 && head + 2 * (ban + L * rowH) + mid + foot > Hn) { /* cât Lotul de 12: rânduri mai strânse, jucători mai mici (min. 54 px pe rând) */
+        head = 96; ban = 28; mid = 92; foot = 6; tt = true;
+        rowH = Math.max(54, Math.min(62, (Hn - head - 2 * ban - mid - foot) / (2 * L)));
+      }
       const need = head + 2 * (ban + L * rowH) + mid + foot, H = Math.max(need, Hn); let extra = H - need;
       const add = Math.min(10, extra / (2 * L + 2)); rowH += add; mid += 2 * add; extra -= add * (2 * L + 2); head += extra / 2;
       const hh = ban + L * rowH, ym = head + hh + mid / 2;
-      return { V: true, W, H, cw: W / maxN - 6,
+      return { V: true, tt, W, H, cw: W / maxN - 6,
         pa: (k, i, n) => [W * (i + .5) / n, head + ban + (k + .5) * rowH],
         pb: (k, i, n) => [W * (i + .5) / n, ym + mid / 2 + hh - ban - (k + .5) * rowH - 4],
         banA: [12, head, W - 24], banB: [12, ym + mid / 2 + hh - ban, W - 24],
-        vs: [W / 2, ym - 10], rib: [W / 2, ym + 36],
+        vs: [W / 2, ym - (tt ? 14 : 10)], rib: [W / 2, ym + (tt ? 28 : 36)],
         clipA: [0, 0, W, ym + 14, "polygon(0 0,100% 0,100% calc(100% - 28px),0 100%)"],
         clipB: [0, ym - 14, W, H - ym + 14, "polygon(0 28px,100% 0,100% 100%,0 100%)"],
         seam: [0, ym + 14, W, ym - 14] };
@@ -3715,7 +3720,7 @@ return{
     g = geo(W, nat);
     const HT = g.HT || g.H;
     pitch.style.minHeight = V.view === "match" && HT > nat + 1 ? HT + "px" : "";
-    el.style.height = HT + "px";
+    el.style.height = HT + "px"; el.classList.toggle("tt", !!g.tt);
     el.style.setProperty("--ox", (g.ox || 0) + "px"); el.style.setProperty("--ch", g.H + "px");
     el.style.setProperty("--swp", (sw.offsetWidth ? sw.offsetWidth + (g.V ? 4 : 10) : 0) + "px");
     if (g.zone) Object.assign(q(".zone").style, { left: g.zone[0] + "px", top: g.zone[1] + "px", width: g.zone[2] + "px", height: g.zone[3] + "px" });
