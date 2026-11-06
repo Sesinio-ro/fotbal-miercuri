@@ -144,12 +144,18 @@ h1 span { color: var(--lime); }
 .attack { position: absolute; top: 14px; right: 14px; z-index: 30; font-size: 11px; color: rgba(255,255,255,.75); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .lineup { position: absolute; inset: 0; z-index: 1; }
 /* ULTIMUL MECI: ecranul VS ca sticlă peste terenul Lotului de 12 (06.11.2026). Arată la fel în ambele teme, ca terenul. */
-.lotsw { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 3px; gap: 3px; max-width: 420px; margin-top: 10px; }
+.lotsw { flex: 0 0 100%; min-width: 0; }
+.lotsw-in { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 3px; gap: 3px; max-width: 420px; }
 .lotsw[hidden] { display: none; }
 .lotsw button { font: 700 13px var(--f-body); color: var(--ink); background: transparent; border: 0; border-radius: 9px; min-height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .lotsw button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
 .lotsw button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
 .lotsw button small { font-weight: 600; opacity: .75; }
+.mvs .vh { left: var(--ox, 0px); right: var(--ox, 0px); }
+.mvs .nt, .mvs .ls { left: var(--ox, 0px) !important; right: var(--ox, 0px) !important; bottom: auto !important; height: calc(var(--ch, 100%) - 48px); }
+.mvs .zone { position: absolute; border: 1px solid rgba(238,242,247,.16); border-radius: 16px; pointer-events: none; z-index: 1; display: none; }
+.mvs.hz .zone { display: block; }
+.mvs.hz .ha { border-radius: 16px 0 0 16px; } .mvs.hz .hb { border-radius: 0 16px 16px 0; }
 .mvs { --on: #EEF2F7; --on-2: #B4C0CF; --night: #0B1018; --team-a: #C8F03C; --team-b: #8DBBFF; }
 .mvs [data-p] { cursor: pointer; }
 .mvs { position: absolute; left: 0; right: 0; top: 0; z-index: 20; overflow: hidden; color: var(--on); user-select: none; background: linear-gradient(180deg, rgba(238,242,247,.07), rgba(238,242,247,0) 30%), rgba(8,13,18,.46); backdrop-filter: blur(9px) saturate(1.3); -webkit-backdrop-filter: blur(9px) saturate(1.3); box-shadow: inset 0 1px 0 rgba(238,242,247,.18); transition: opacity .35s ease-out, transform .35s ease-out; }
@@ -1036,7 +1042,7 @@ dialog#grpdlg::backdrop { background: rgba(5, 8, 14, .7); }
     </section>
 
     <section id="lot" aria-labelledby="h-lot">
-      <div class="sechead"><h2 id="h-lot">Lotul de 12</h2><p class="note">Jucătorii sunt așezați după clasament: locurile 1–3 în atac, 4–7 la mijloc, 8–11 în apărare, iar locul 12 în poartă. Apasă pe un cartonaș ca să vezi profilul.</p><div class="lotsw" id="lotsw" role="group" aria-label="Ce arată terenul" hidden><button type="button" data-v="match" aria-pressed="false"><span class="swl">Ultimul meci</span> <small class="num"></small></button><button type="button" data-v="lot" aria-pressed="true">Lotul de 12</button></div></div>
+      <div class="sechead"><h2 id="h-lot">Lotul de 12</h2><p class="note">Jucătorii sunt așezați după clasament: locurile 1–3 în atac, 4–7 la mijloc, 8–11 în apărare, iar locul 12 în poartă. Apasă pe un cartonaș ca să vezi profilul.</p><div class="lotsw" id="lotsw" hidden><div class="lotsw-in" role="group" aria-label="Ce arată terenul"><button type="button" data-v="match" aria-pressed="false"><span class="swl">Ultimul meci</span> <small class="num"></small></button><button type="button" data-v="lot" aria-pressed="true">Lotul de 12</button></div></div></div>
       <div class="pitchwrap">
         
         <div class="pitch" id="pitch">
@@ -3612,17 +3618,19 @@ return{
         clipB: [0, ym - 14, W, H - ym + 14, "polygon(0 28px,100% 0,100% 100%,0 100%)"],
         seam: [0, ym + 14, W, ym - 14] };
     }
-    const head = 42, ban = 46, rowH = 74, foot = 16, pad = 26;
-    const H = Math.max(head + ban + maxN * rowH + foot, 400, Hn), area = H - head - ban - foot, colW = (W / 2 - pad - 100) / L;
+    const head = 42, ban = 46, rowH = 74, foot = 16, pad = 26, W0 = W, Wc = Math.min(W, 760), ox = (W0 - Wc) / 2; W = Wc;
+    const H = Math.max(head + ban + maxN * rowH + foot, 400), area = H - head - ban - foot, colW = (W / 2 - pad - 100) / L;
     const yy = (i, n) => head + ban + area * (i + .5) / n - 10, cy = head + ban + area / 2;
-    return { V: false, W, H, cw: Math.min(colW - 8, 120),
-      pa: (k, i, n) => [pad + (k + .5) * colW, yy(i, n)],
-      pb: (k, i, n) => [W - pad - (k + .5) * colW, yy(i, n)],
-      banA: [18, head, W / 2 - 84], banB: [W / 2 + 66, head, W / 2 - 84],
-      vs: [W / 2, H / 2], rib: [W / 2, H / 2 + 80],
-      clipA: [0, 0, W / 2 + 22, H, "polygon(0 0,100% 0,calc(100% - 44px) 100%,0 100%)"],
-      clipB: [W / 2 - 22, 0, W / 2 + 22, H, "polygon(44px 0,100% 0,100% 100%,0 100%)"],
-      seam: [W / 2 + 22, 0, W / 2 - 22, H] };
+    const zc = head + (H - head) / 2; /* centrul zonei de joc, sub bara de sus */
+    return { V: false, W: W0, H, HT: Math.max(H, Hn), ox, cw: Math.min(colW - 8, 120),
+      pa: (k, i, n) => [ox + pad + (k + .5) * colW, yy(i, n)],
+      pb: (k, i, n) => [ox + W - pad - (k + .5) * colW, yy(i, n)],
+      banA: [ox + 18, head, W / 2 - 84], banB: [ox + W / 2 + 66, head, W / 2 - 84],
+      vs: [ox + W / 2, zc], rib: [ox + W / 2, zc + 80],
+      zone: [ox + 6, head - 2, W - 12, H - head - 4],
+      clipA: [ox + 6, head - 2, W / 2 + 16, H - head - 4, "polygon(0 0,100% 0,calc(100% - 44px) 100%,0 100%)"],
+      clipB: [ox + W / 2 - 22, head - 2, W / 2 + 16, H - head - 4, "polygon(44px 0,100% 0,100% 100%,0 100%)"],
+      seam: [ox + W / 2 + 22, head - 2, ox + W / 2 - 22, H - 6] };
   }
 
   function radar(ha, hb) {
@@ -3639,7 +3647,7 @@ return{
   const q = s => el.querySelector(s), toks = new Map();
   function build() {
     el = document.createElement("div"); el.className = "mvs lifted"; el.setAttribute("aria-hidden", "true");
-    el.innerHTML = `<div class="lay"><div class="half ha"></div><div class="half hb"></div>
+    el.innerHTML = `<div class="lay"><div class="zone"></div><div class="half ha"></div><div class="half hb"></div>
       <svg class="seam" aria-hidden="true"><defs><linearGradient id="mvsg" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><line class="glow" stroke="rgba(255,255,255,.18)" stroke-width="7"/><line class="core" stroke="url(#mvsg)" stroke-width="2.5"/></svg></div>
       <div class="vh"><span class="vl num"></span>
         <div class="md" role="group" aria-label="Ce arată"><button type="button" data-v="teams" aria-pressed="true">Teren</button><button type="button" data-v="list" aria-pressed="false">Listă</button><button type="button" data-v="notes" aria-pressed="false">Note</button></div>
@@ -3686,13 +3694,16 @@ return{
     if (!el || !MATCHES.length) return null;
     const c = current(), W = pitch.clientWidth || 343, nat = field.getBoundingClientRect().height || 0;
     g = geo(W, nat);
-    pitch.style.minHeight = V.view === "match" && g.H > nat + 1 ? g.H + "px" : "";
-    el.style.height = g.H + "px";
+    const HT = g.HT || g.H;
+    pitch.style.minHeight = V.view === "match" && HT > nat + 1 ? HT + "px" : "";
+    el.style.height = HT + "px";
+    el.style.setProperty("--ox", (g.ox || 0) + "px"); el.style.setProperty("--ch", g.H + "px");
+    if (g.zone) Object.assign(q(".zone").style, { left: g.zone[0] + "px", top: g.zone[1] + "px", width: g.zone[2] + "px", height: g.zone[3] + "px" });
     el.classList.toggle("hz", !g.V);
     el.style.setProperty("--cw", g.cw + "px");
     const half = (n, [x, y, w, h, cp]) => Object.assign(q(n).style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px", clipPath: cp, webkitClipPath: cp });
     half(".ha", g.clipA); half(".hb", g.clipB);
-    const sv = q("svg.seam"); sv.setAttribute("width", W); sv.setAttribute("height", g.H);
+    const sv = q("svg.seam"); sv.setAttribute("width", W); sv.setAttribute("height", HT);
     sv.querySelectorAll("line").forEach(ln => ["x1", "y1", "x2", "y2"].forEach((a, i) => ln.setAttribute(a, g.seam[i])));
     const lg = sv.querySelector("linearGradient"); ["x1", "y1", "x2", "y2"].forEach((a, i) => lg.setAttribute(a, g.seam[i]));
     const ban = (n, [x, y, w], team, L) => {
