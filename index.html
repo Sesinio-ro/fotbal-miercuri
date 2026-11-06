@@ -25,7 +25,7 @@
 <!-- PWA: head (nu șterge) -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800;1,900&family=Roboto:wght@900&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
 :root {
   color-scheme: dark;
@@ -143,6 +143,134 @@ h1 span { color: var(--lime); }
 .formation { position: absolute; top: 12px; left: 14px; z-index: 30; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .06em; background: rgba(12,13,11,.75); border: 1px solid rgba(255,255,255,.12); padding: 3px 10px; border-radius: 999px; }
 .attack { position: absolute; top: 14px; right: 14px; z-index: 30; font-size: 11px; color: rgba(255,255,255,.75); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .lineup { position: absolute; inset: 0; z-index: 1; }
+/* ULTIMUL MECI: ecranul VS ca sticlă peste terenul Lotului de 12 (06.11.2026). Arată la fel în ambele teme, ca terenul. */
+.lotsw { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 3px; gap: 3px; max-width: 420px; margin-top: 10px; }
+.lotsw[hidden] { display: none; }
+.lotsw button { font: 700 13px var(--f-body); color: var(--ink); background: transparent; border: 0; border-radius: 9px; min-height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.lotsw button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
+.lotsw button:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.lotsw button small { font-weight: 600; opacity: .75; }
+.mvs { --on: #EEF2F7; --on-2: #B4C0CF; --night: #0B1018; --team-a: #C8F03C; --team-b: #8DBBFF; }
+.mvs [data-p] { cursor: pointer; }
+.mvs { position: absolute; left: 0; right: 0; top: 0; z-index: 20; overflow: hidden; color: var(--on); user-select: none; background: linear-gradient(180deg, rgba(238,242,247,.07), rgba(238,242,247,0) 30%), rgba(8,13,18,.46); backdrop-filter: blur(9px) saturate(1.3); -webkit-backdrop-filter: blur(9px) saturate(1.3); box-shadow: inset 0 1px 0 rgba(238,242,247,.18); transition: opacity .35s ease-out, transform .35s ease-out; }
+.mvs.lifted { opacity: 0; transform: translateY(18px); pointer-events: none; }
+.mvs .half { position: absolute; }
+.mvs .ha { background: linear-gradient(160deg, rgba(200,240,60,.26), rgba(200,240,60,.04) 72%); }
+.mvs .hb { background: linear-gradient(340deg, rgba(141,187,255,.28), rgba(141,187,255,.04) 72%); }
+.mvs svg.seam { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
+.mvs .vh { position: absolute; left: 0; right: 0; top: 0; height: 40px; display: flex; align-items: center; gap: 4px; padding: 0 4px 0 14px; z-index: 8; }
+.mvs .vl { flex: 1; min-width: 0; font: 800 16px var(--f-display); letter-spacing: .03em; text-transform: uppercase; color: var(--on-2); white-space: nowrap; }
+.mvs .ib { all: unset; box-sizing: border-box; width: 36px; height: 38px; display: grid; place-items: center; color: var(--on); cursor: pointer; border-radius: 10px; }
+.mvs .ib:hover { background: rgba(238,242,247,.08); }
+.mvs .ib:focus-visible, .mvs .md button:focus-visible { outline: 2px solid var(--team-a); outline-offset: -2px; }
+.mvs .ib[disabled] { color: rgba(238,242,247,.22); cursor: default; background: none; }
+.mvs .ib svg { width: 16px; height: 16px; }
+.mvs .md { display: flex; border: 1px solid rgba(238,242,247,.22); border-radius: 9px; padding: 2px; gap: 2px; }
+.mvs .md button { font: 700 12px var(--f-body); color: var(--on); background: none; border: 0; border-radius: 7px; padding: 0 9px; min-height: 30px; cursor: pointer; }
+.mvs .md button[aria-pressed="true"] { background: var(--on); color: var(--night); }
+.mvs .lay { transition: opacity .3s ease-out; }
+.mvs.notes .lay, .mvs.list .lay { opacity: 0; pointer-events: none; }
+/* lista celor două echipe, ca tabela de dinaintea meciului */
+.mvs .ls { position: absolute; left: 0; right: 0; top: 40px; bottom: 8px; padding: 6px 12px 0; display: grid; align-content: start; gap: 12px; opacity: 0; pointer-events: none; transition: opacity .3s ease-out; z-index: 7; }
+.mvs.list .ls { opacity: 1; pointer-events: auto; }
+.mvs .ls .sb { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; }
+.mvs .ls .tb { height: 36px; display: flex; align-items: center; padding: 0 12px; font: italic 800 19px/1 var(--f-display); text-transform: uppercase; color: var(--night); white-space: nowrap; min-width: 0; }
+.mvs .ls .tb.a { background: linear-gradient(180deg, #E8FF9A, #C8F03C 58%, #9CC21F); clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%); border-radius: 8px 0 0 8px; }
+.mvs .ls .tb.b { justify-content: flex-end; background: linear-gradient(180deg, #D6E7FF, #8DBBFF 58%, #5F95E8); clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%); border-radius: 0 8px 8px 0; }
+.mvs .ls .tb.lost { filter: grayscale(.7); opacity: .6; }
+.mvs .ls .mid { position: relative; z-index: 1; margin: 0 -4px; min-width: 100px; height: 50px; padding: 0 10px; background: var(--night); border: 2px solid rgba(238,242,247,.38); border-radius: 10px; display: grid; place-items: center; align-content: center; text-align: center; color: var(--mc); box-shadow: 0 3px 0 rgba(0,0,0,.45); }
+.mvs .ls .mid b { font: italic 800 21px/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.mvs .ls .mid small { font: 700 10px var(--f-body); color: var(--on-2); margin-top: 3px; }
+.mvs .ls .cl { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mvs .ls ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; align-content: start; transition: opacity .3s; }
+.mvs .ls ol.a { --tm: var(--team-a); --x: -18px; } .mvs .ls ol.b { --tm: var(--team-b); --x: 18px; }
+.mvs .ls ol.lost { opacity: .55; }
+.mvs .ls li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 7px; min-height: 33px; padding-right: 8px; background: linear-gradient(180deg, rgba(238,242,247,.17), rgba(238,242,247,.07)); border: 1px solid rgba(238,242,247,.15); border-radius: 7px; overflow: hidden; opacity: 0; transform: translateX(var(--x)); transition: opacity .3s ease-out var(--d), transform .4s cubic-bezier(.2,.75,.25,1) var(--d); }
+.mvs.list .ls li { opacity: 1; transform: none; }
+.mvs .ls .no { align-self: stretch; display: grid; place-items: center; font: 800 13px/1 var(--f-display); color: var(--night); background: var(--tm); }
+.mvs .ls .pn { font: 700 12px/1.2 var(--f-body); color: var(--on); min-width: 0; overflow-wrap: anywhere; padding-block: 4px; }
+.mvs .ls .pn .cc { display: inline-block; font: 800 10px/1 var(--f-display); background: var(--on); color: var(--night); border-radius: 3px; padding: 2px 3px 1px; margin-left: 3px; vertical-align: 1px; }
+.mvs .ls .pn .iv { font: 600 10px var(--f-body); color: var(--on-2); margin-left: 3px; }
+.mvs .ls .pr { font: 800 15px/1 var(--f-display); color: var(--on); }
+.mvs .ls .ft { display: flex; justify-content: space-between; font: 600 11px var(--f-body); color: var(--on-2); }
+.mvs .ls .ft b { font: 800 18px/1 var(--f-display); color: var(--on); margin-left: 3px; }
+.mvs .ls .ft i { font-style: normal; }
+.mvs:not(.hz) .ls { align-content: center; padding-bottom: 24px; gap: 16px; }
+.mvs:not(.hz) .ls li { min-height: 42px; }
+.mvs:not(.hz) .ls ol { gap: 7px; }
+.mvs.hz .ls { padding: 10px 44px 0; gap: 14px; }
+.mvs.hz .ls .cl { gap: 28px; }
+.mvs.hz .ls .pn { font-size: 13px; }
+.mvs .ban { position: absolute; display: flex; align-items: center; gap: 8px; height: 34px; z-index: 4; transition: opacity .4s; }
+.mvs .ban.r { flex-direction: row-reverse; }
+.mvs .ban .ch { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font: 800 15px/1 var(--f-display); color: var(--night); background: var(--tc); flex: none; }
+.mvs .ban .bn { font: italic 800 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; white-space: nowrap; min-width: 0; }
+.mvs .ban .cc { font: 800 12px/1 var(--f-display); color: var(--night); background: var(--on); border-radius: 4px; padding: 3px 4px 2px; flex: none; }
+.mvs .ban .ov { margin-left: auto; font: 600 11px var(--f-body); color: var(--on-2); white-space: nowrap; }
+.mvs .ban.r .ov { margin: 0 auto 0 0; }
+.mvs .ban .ov b { font: 800 19px/1 var(--f-display); color: var(--on); margin-left: 3px; }
+.mvs .ban.lost { opacity: .5; }
+
+/* VS în stil de joc: raze în spate, litere groase cu contur și relief */
+.mvs .burst { position: absolute; left: 0; top: 0; width: 230px; height: 230px; margin: -115px 0 0 -115px; z-index: 4; pointer-events: none; opacity: .7;
+  background: radial-gradient(circle, rgba(255,255,255,.55) 0 8%, rgba(255,255,255,.12) 22%, transparent 48%), repeating-conic-gradient(from 8deg, rgba(255,255,255,.26) 0 5deg, transparent 5deg 22deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0 18%, transparent 64%); mask-image: radial-gradient(circle, #000 0 18%, transparent 64%); }
+.mvs .vsb { position: absolute; left: 0; top: 0; z-index: 5; display: flex; align-items: center; transform: translate(-50%, -50%); font: italic 900 86px/.8 var(--f-display); letter-spacing: 0; pointer-events: none; }
+.mvs .vsb span { position: relative; display: block; padding: 6px 6px 10px; color: var(--night); -webkit-text-stroke: 10px var(--night); text-shadow: 0 5px 0 var(--night), 0 9px 0 var(--night); }
+.mvs .vsb span::after { content: attr(data-t); position: absolute; inset: 0; padding: inherit; color: transparent; -webkit-text-stroke: 1.5px rgba(11,16,24,.6); text-shadow: none; -webkit-background-clip: text; background-clip: text; }
+.mvs .vsb .v { transform: translateY(-13px) rotate(-5deg); z-index: 1; }
+.mvs .vsb .v::after { background-image: linear-gradient(180deg, #F6FFC4 0%, #DDFF6A 30%, #C8F03C 55%, #6E9A0E 100%); }
+.mvs .vsb .s { transform: translateY(13px) rotate(-5deg); margin-left: -18px; z-index: 2; }
+.mvs .vsb .s::after { background-image: linear-gradient(180deg, #EAF3FF 0%, #B5D3FF 30%, #8DBBFF 55%, #2F64C8 100%); }
+.mvs .rib { position: absolute; left: 0; top: 0; z-index: 6; transform: translate(-50%, -50%) rotate(-4.5deg); background: var(--rc); color: var(--night); padding: 5px 16px 6px; white-space: nowrap; text-align: center; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); box-shadow: 0 3px 0 rgba(11,16,24,.6); }
+.mvs .rib b { font: italic 800 21px/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.mvs .rib small { font: 700 12px var(--f-body); margin-left: 8px; }
+.mvs .rib[hidden] { display: none; }
+.mvs.hz .rib { padding: 6px 18px 7px; }
+.mvs.hz .rib small { display: block; margin: 3px 0 0; font-size: 11px; }
+
+.mvs .tk { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 3; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.mvs .tk .in { position: absolute; left: 0; top: -16px; transition: opacity .4s ease-out, filter .4s ease-out; }
+.mvs .tk .bx { transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; width: max-content; }
+.mvs .tk .c { position: relative; width: 32px; height: 32px; border-radius: 50%; background: var(--tc); color: var(--night); display: grid; place-items: center; font: 800 13px/1 var(--f-display); letter-spacing: .02em; }
+.mvs .tk .r { position: absolute; top: -6px; right: -12px; min-width: 22px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--night); color: var(--on); border: 1px solid rgba(238,242,247,.28); font: 700 10px/14px var(--f-body); text-align: center; }
+.mvs .tk .k { position: absolute; top: -6px; left: -10px; width: 16px; height: 16px; border-radius: 4px; background: var(--on); color: var(--night); font: 800 11px/16px var(--f-display); text-align: center; }
+.mvs .tk .k[hidden], .mvs .tk .r[hidden] { display: none; }
+.mvs .tk.inv .c { color: var(--on); outline: 2px dashed rgba(238,242,247,.7); outline-offset: 2px; }
+.mvs .tk .nm { margin-top: 4px; font: 600 11px/1.15 var(--f-body); color: var(--on); white-space: nowrap; text-align: center; }
+.mvs.hz .tk .nm { white-space: normal; width: var(--cw, 90px); }
+.mvs .tk.lost .in { opacity: .45; filter: grayscale(.85); }
+
+/* notele din hexagon */
+.mvs .nt { position: absolute; left: 0; right: 0; top: 40px; bottom: 8px; padding: 4px 14px 0; display: grid; align-content: start; gap: 10px; opacity: 0; pointer-events: none; transition: opacity .3s ease-out; z-index: 7; }
+.mvs.notes .nt { opacity: 1; pointer-events: auto; }
+.mvs .nt .ovv { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 8px; }
+.mvs .nt .ovv div { display: grid; gap: 1px; }
+.mvs .nt .ovv div:last-child { text-align: right; }
+.mvs .nt .ovv span { font: 700 11px var(--f-body); color: var(--on-2); text-transform: uppercase; letter-spacing: .05em; }
+.mvs .nt .ovv b { font: italic 800 34px/1 var(--f-display); }
+.mvs .nt .ovv i { font: 600 11px var(--f-body); color: var(--on-2); font-style: normal; padding-bottom: 4px; }
+.mvs .nt .body { display: grid; gap: 10px; }
+.mvs.hz .nt .body { grid-template-columns: 210px minmax(0, 1fr); gap: 22px; align-items: center; }
+.mvs .nt svg.vrad { display: block; width: 100%; max-width: 210px; height: auto; margin: 0 auto; overflow: visible; }
+.mvs .nt .poly { transform-box: fill-box; transform-origin: center; transform: scale(.05); opacity: 0; transition: transform .6s cubic-bezier(.2,.75,.25,1), opacity .3s; }
+.mvs.notes .nt .poly { transform: scale(1); opacity: 1; }
+.mvs.notes .nt .poly.pb { transition-delay: .12s; }
+.mvs .nt .rows { display: grid; gap: 6px; }
+.mvs .nt .row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 66px minmax(0, 1fr) 34px; align-items: center; gap: 6px; font-size: 12px; }
+.mvs .nt .row .lb { text-align: center; font: 600 11px var(--f-body); color: var(--on-2); }
+.mvs .nt .row .va { text-align: right; font: 700 13px var(--f-display); color: var(--on-2); }
+.mvs .nt .row .vb { font: 700 13px var(--f-display); color: var(--on-2); }
+.mvs .nt .row .w { color: var(--on); font-weight: 800; }
+.mvs .nt .bar { height: 7px; border-radius: 4px; background: rgba(238,242,247,.08); overflow: hidden; display: flex; }
+.mvs .nt .bar.l { justify-content: flex-end; }
+.mvs .nt .bar i { display: block; height: 100%; border-radius: 4px; width: var(--p); transform: scaleX(0); transition: transform .5s cubic-bezier(.2,.75,.25,1); }
+.mvs .nt .bar.l i { background: var(--team-a); transform-origin: 100% 50%; }
+.mvs .nt .bar.r i { background: var(--team-b); transform-origin: 0 50%; }
+.mvs.notes .nt .bar i { transform: scaleX(1); }
+.mvs .nt .fn { font-size: 11px; color: var(--on-2); }
+@media (prefers-reduced-motion: reduce) { .mvs, .mvs *, .mvs .tk { transition: none !important; } }
+
 .slot { position: absolute; transform: translate(-50%, -100%); }
 .slot .shadow { position: absolute; left: 50%; bottom: -5%; width: 120%; height: 14%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.6), transparent); z-index: -1; }
 .slot .card { width: calc(11.5cqw * var(--s)); }
@@ -908,7 +1036,7 @@ dialog#grpdlg::backdrop { background: rgba(5, 8, 14, .7); }
     </section>
 
     <section id="lot" aria-labelledby="h-lot">
-      <div class="sechead"><h2 id="h-lot">Lotul de 12</h2><p class="note">Jucătorii sunt așezați după clasament: locurile 1–3 în atac, 4–7 la mijloc, 8–11 în apărare, iar locul 12 în poartă. Apasă pe un cartonaș ca să vezi profilul.</p></div>
+      <div class="sechead"><h2 id="h-lot">Lotul de 12</h2><p class="note">Jucătorii sunt așezați după clasament: locurile 1–3 în atac, 4–7 la mijloc, 8–11 în apărare, iar locul 12 în poartă. Apasă pe un cartonaș ca să vezi profilul.</p><div class="lotsw" id="lotsw" role="group" aria-label="Ce arată terenul" hidden><button type="button" data-v="match" aria-pressed="false"><span class="swl">Ultimul meci</span> <small class="num"></small></button><button type="button" data-v="lot" aria-pressed="true">Lotul de 12</button></div></div>
       <div class="pitchwrap">
         
         <div class="pitch" id="pitch">
@@ -3403,6 +3531,293 @@ return{
     document.readyState === "complete" ? go() : window.addEventListener("load", go, { once: true }); }
 })();
 </script>
+
+<script>
+/* ULTIMUL MECI: ecran VS ca sticlă peste terenul Lotului de 12. Echipele vin din fila ascunsă „echipe” a sheet-ului public:
+   A data (~AAAA-LL-ZZ), B jucător, C „invitat”, E echipa (A/B), F căpitan („Da”), G scorul echipei (diferența de goluri; gol = netrimis).
+   Marți 9:30 – miercuri 18:00 (intro-ul) comutatorul pornește pe Lotul de 12, fără animație. În rest pornește pe ultimul meci, cu animație. */
+(() => {
+  const pitch = document.getElementById("pitch"), field = document.getElementById("field"), sw = document.getElementById("lotsw");
+  if (!pitch || !field || !sw || !window.ResizeObserver || !window.Intl) return;
+  const h2 = document.getElementById("h-lot"), note = h2 && h2.parentNode.querySelector(".note");
+  const LOT_T = h2 ? h2.textContent : "", LOT_N = note ? note.textContent : "";
+  const CRIT = ["Viteză", "Șut", "Pase", "Apărare", "Condiție", "Bere"], FORM = [1, 3, 2], MIN_V = 5;
+  const p = {}; new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Bucharest", weekday: "short", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+    .formatToParts(new Date()).forEach(x => p[x.type] = x.value);
+  const hm = (+p.hour) * 60 + (+p.minute), TODAY = `${p.year}-${p.month}-${p.day}`;
+  const IN_WIN = (p.weekday === "Tue" && hm >= 570) || (p.weekday === "Wed" && hm < 1080);
+  const V = { idx: 0, view: "lot", mode: "teams" };
+  let MATCHES = [], el = null, g = null, armed = false;
+  const reduced = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
+  const ini = n => { const w = n.replace(/\(.*?\)/g, "").trim().split(/\s+/); return (w.length > 1 ? w[0][0] + w[1][0] : w[0].slice(0, 2)).toUpperCase(); };
+  const dec = v => v.toFixed(1).replace(".", ",");
+  const introOpen = () => document.documentElement.classList.contains("fmi-lock");
+  const SVGI = { prev: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg>',
+    next: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>' };
+
+  function load() {
+    return new Promise((ok, no) => {
+      const cb = "__fmvs" + Date.now(), sc = document.createElement("script"), t = setTimeout(() => { delete window[cb]; sc.remove(); no(new Error("timeout")); }, 9000);
+      window[cb] = res => { clearTimeout(t); delete window[cb]; sc.remove();
+        try { if (res.status === "error") throw new Error("sheet"); ok(res.table.rows.map(r => (r.c || []).map(c => c == null || c.v == null ? "" : String(c.v)))); } catch (e) { no(e); } };
+      sc.onerror = () => { clearTimeout(t); delete window[cb]; no(new Error("net")); };
+      sc.src = `https://docs.google.com/spreadsheets/d/${LIVE_SHEET}/gviz/tq?tqx=responseHandler:${cb}&headers=0&sheet=echipe&_=${Date.now()}`;
+      document.head.appendChild(sc);
+    });
+  }
+  function parse(rows) {
+    const by = {};
+    rows.forEach(r => { const d = (r[0] || "").replace(/^~/, "").trim(), n = (r[1] || "").trim(); if (!/^\d{4}-\d\d-\d\d$/.test(d) || !n) return; (by[d] = by[d] || []).push(r); });
+    return Object.keys(by).sort().map(d => {
+      const rs = by[d]; if (!rs.every(r => /^[AB]$/i.test((r[4] || "").trim()))) return null; /* echipele nu sunt încă stabilite */
+      const pl = side => rs.filter(r => r[4].trim().toUpperCase() === side).map(r => ({ n: r[1].trim(), role: /^da$/i.test((r[5] || "").trim()) ? "c" : /^i/i.test((r[2] || "").trim()) ? "i" : "" }));
+      const sb = rs.find(r => r[4].trim().toUpperCase() === "B" && String(r[6]).trim() !== ""), diff = sb ? parseFloat(String(sb[6]).replace(",", ".")) : null;
+      return { iso: d, d: d.slice(8) + "." + d.slice(5, 7), a: pl("A"), b: pl("B"), diff: isNaN(diff) ? null : diff };
+    }).filter(m => m && m.a.length && m.b.length);
+  }
+
+  function current() {
+    const m = MATCHES[V.idx], P = {}; try { (S_().players || []).forEach(q => P[q.name] = q); } catch (e) {}
+    const fix = t => t.map(q => { const x = P[q.n]; return { n: q.n, role: q.role, r: x ? x.rating : 0, tc: x ? `var(${TIERS[x.tier] || "--t-bronz"})` : "#2A3446", mem: !!x }; });
+    return { d: m.d, newest: V.idx === MATCHES.length - 1, today: m.iso === TODAY, a: fix(m.a), b: fix(m.b), diff: m.diff };
+  }
+  const sortT = team => [...team].sort((x, y) => (y.r - x.r) || (x.role === "c" ? -1 : y.role === "c" ? 1 : 0));
+  function lines(team) {
+    const s = sortT(team), out = FORM.map(() => []); let k = 0;
+    for (let li = FORM.length - 1; li >= 0; li--) for (let j = 0; j < FORM[li]; j++) if (s[k]) out[li].push(s[k++]);
+    while (k < s.length) out[FORM.length - 1].push(s[k++]); /* mai mult de 6 pe echipă: restul în atac */
+    return out;
+  }
+  const ovr = team => { const v = team.filter(q => q.r > 0); return v.length ? Math.round(v.reduce((s, q) => s + q.r, 0) / v.length) : "–"; };
+  function hex(team) {
+    const R = typeof RATINGS === "object" && RATINGS ? RATINGS : {};
+    const v = team.filter(q => q.role !== "i" && R[q.n] && R[q.n].peer && R[q.n].n >= MIN_V);
+    return { n: v.length, of: team.length, avg: CRIT.map((_, i) => v.length ? v.reduce((s, q) => s + R[q.n].peer[i], 0) / v.length : 0) };
+  }
+  const capOf = team => team.find(q => q.role === "c");
+
+  function geo(W, Hn) {
+    const L = FORM.length, maxN = Math.max(...FORM);
+    if (W < 560) {
+      let head = 40, ban = 34, rowH = 57, mid = 140, foot = 8;
+      const need = head + 2 * (ban + L * rowH) + mid + foot, H = Math.max(need, Hn); let extra = H - need;
+      const add = Math.min(10, extra / (2 * L + 2)); rowH += add; mid += 2 * add; extra -= add * (2 * L + 2); head += extra / 2;
+      const hh = ban + L * rowH, ym = head + hh + mid / 2;
+      return { V: true, W, H, cw: W / maxN - 6,
+        pa: (k, i, n) => [W * (i + .5) / n, head + ban + (k + .5) * rowH],
+        pb: (k, i, n) => [W * (i + .5) / n, ym + mid / 2 + hh - ban - (k + .5) * rowH],
+        banA: [12, head, W - 24], banB: [12, ym + mid / 2 + hh - ban, W - 24],
+        vs: [W / 2, ym], rib: [W / 2, ym + 60],
+        clipA: [0, 0, W, ym + 14, "polygon(0 0,100% 0,100% calc(100% - 28px),0 100%)"],
+        clipB: [0, ym - 14, W, H - ym + 14, "polygon(0 28px,100% 0,100% 100%,0 100%)"],
+        seam: [0, ym + 14, W, ym - 14] };
+    }
+    const head = 42, ban = 46, rowH = 74, foot = 16, pad = 26;
+    const H = Math.max(head + ban + maxN * rowH + foot, 400, Hn), area = H - head - ban - foot, colW = (W / 2 - pad - 100) / L;
+    const yy = (i, n) => head + ban + area * (i + .5) / n - 10, cy = head + ban + area / 2;
+    return { V: false, W, H, cw: Math.min(colW - 8, 120),
+      pa: (k, i, n) => [pad + (k + .5) * colW, yy(i, n)],
+      pb: (k, i, n) => [W - pad - (k + .5) * colW, yy(i, n)],
+      banA: [18, head, W / 2 - 84], banB: [W / 2 + 66, head, W / 2 - 84],
+      vs: [W / 2, H / 2], rib: [W / 2, H / 2 + 80],
+      clipA: [0, 0, W / 2 + 22, H, "polygon(0 0,100% 0,calc(100% - 44px) 100%,0 100%)"],
+      clipB: [W / 2 - 22, 0, W / 2 + 22, H, "polygon(44px 0,100% 0,100% 100%,0 100%)"],
+      seam: [W / 2 + 22, 0, W / 2 - 22, H] };
+  }
+
+  function radar(ha, hb) {
+    const cx = 105, cy = 100, Rr = 74, pt = (i, v) => { const a = -Math.PI / 2 + i * Math.PI / 3, r = v / 5 * Rr; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+    const ring = v => CRIT.map((_, i) => pt(i, v).map(n => n.toFixed(1)).join(",")).join(" ");
+    let s = `<svg class="vrad" viewBox="0 0 210 200" aria-hidden="true">`;
+    [1, 2, 3, 4, 5].forEach(v => { s += `<polygon points="${ring(v)}" fill="none" stroke="rgba(238,242,247,${v === 5 ? .3 : .12})" stroke-width="1"/>`; });
+    CRIT.forEach((c, i) => { const [x, y] = pt(i, 5); s += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(238,242,247,.12)"/>`;
+      const [lx, ly] = pt(i, 6.15); s += `<text x="${lx.toFixed(1)}" y="${(ly + 4).toFixed(1)}" text-anchor="middle" fill="#B4C0CF" font-size="10.5" font-weight="600" font-family="Manrope, Segoe UI, sans-serif">${c}</text>`; });
+    const poly = (h, col, cls) => h.n ? `<polygon class="poly ${cls}" points="${h.avg.map((v, i) => pt(i, v).map(n => n.toFixed(1)).join(",")).join(" ")}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>` : "";
+    return s + poly(ha, "#C8F03C", "pa") + poly(hb, "#8DBBFF", "pb") + "</svg>";
+  }
+
+  const q = s => el.querySelector(s), toks = new Map();
+  function build() {
+    el = document.createElement("div"); el.className = "mvs lifted"; el.setAttribute("aria-hidden", "true");
+    el.innerHTML = `<div class="lay"><div class="half ha"></div><div class="half hb"></div>
+      <svg class="seam" aria-hidden="true"><defs><linearGradient id="mvsg" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><line class="glow" stroke="rgba(255,255,255,.18)" stroke-width="7"/><line class="core" stroke="url(#mvsg)" stroke-width="2.5"/></svg></div>
+      <div class="vh"><span class="vl num"></span>
+        <div class="md" role="group" aria-label="Ce arată"><button type="button" data-v="teams" aria-pressed="true">Teren</button><button type="button" data-v="list" aria-pressed="false">Listă</button><button type="button" data-v="notes" aria-pressed="false">Note</button></div>
+        <button type="button" class="ib pv" aria-label="Meciul anterior">${SVGI.prev}</button><button type="button" class="ib nx" aria-label="Meciul următor">${SVGI.next}</button></div>
+      <div class="lay">
+        <div class="ban ba"><span class="ch" style="--tc:var(--team-a)">A</span><span class="bn"></span><span class="cc" title="căpitan">C</span><span class="ov">OVR<b class="num"></b></span></div>
+        <div class="ban bb"><span class="ch" style="--tc:var(--team-b)">B</span><span class="bn"></span><span class="cc" title="căpitan">C</span><span class="ov">OVR<b class="num"></b></span></div>
+        <div class="toks"></div>
+        <div class="burst" aria-hidden="true"></div>
+        <div class="vsb" aria-label="versus"><span class="v" data-t="V">V</span><span class="s" data-t="S">S</span></div>
+        <div class="rib"><b></b><small></small></div>
+      </div>
+      <div class="nt"></div><div class="ls"></div>`;
+    pitch.appendChild(el);
+    el.querySelectorAll(".md button").forEach(b => b.addEventListener("click", () => { if (b.dataset.v !== V.mode) setMode(b.dataset.v); }));
+    q(".pv").addEventListener("click", () => go(-1)); q(".nx").addEventListener("click", () => go(1));
+    let sx = null;
+    el.addEventListener("pointerdown", e => { sx = e.clientX; });
+    el.addEventListener("pointerup", e => { if (sx === null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 50) go(dx > 0 ? -1 : 1); });
+    let lw = 0; new ResizeObserver(() => { const w = pitch.clientWidth; if (w && w !== lw) { lw = w; place(false); } }).observe(pitch);
+  }
+
+  function notes(c) {
+    const ha = hex(c.a), hb = hex(c.b);
+    const rows = CRIT.map((cr, i) => { const a = ha.avg[i], b = hb.avg[i];
+      return `<div class="row"><span class="va num${a > b ? " w" : ""}">${ha.n ? dec(a) : "–"}</span><span class="bar l"><i style="--p:${a / 5 * 100}%;transition-delay:${.15 + i * .05}s"></i></span><span class="lb">${cr}</span><span class="bar r"><i style="--p:${b / 5 * 100}%;transition-delay:${.15 + i * .05}s"></i></span><span class="vb num${b > a ? " w" : ""}">${hb.n ? dec(b) : "–"}</span></div>`; }).join("");
+    q(".nt").innerHTML = `<div class="ovv"><div><span>Echipa A · OVR</span><b class="num" style="color:var(--team-a)">${ovr(c.a)}</b></div><i>media ratingului</i><div><span>OVR · Echipa B</span><b class="num" style="color:var(--team-b)">${ovr(c.b)}</b></div></div>
+      <div class="body">${radar(ha, hb)}<div class="rows">${rows}</div></div>
+      <p class="fn">Notele colegilor, de la 1 la 5. Intră jucătorii cu minimum ${MIN_V} voturi: ${ha.n} din ${ha.of} la A, ${hb.n} din ${hb.of} la B.</p>`;
+  }
+  function list(c) {
+    const lostSide = c.diff > 0 ? "a" : c.diff < 0 ? "b" : null;
+    const col = (team, side) => `<ol class="${side}${lostSide === side ? " lost" : ""}">` + sortT(team).map((x, i) =>
+      `<li style="--d:${(.08 + i * .05).toFixed(2)}s"${x.mem ? ` data-p="${esc(x.n)}"` : ""}><span class="no num">${i + 1}</span><span class="pn">${esc(x.n)}${x.role === "c" ? '<span class="cc" title="căpitan">C</span>' : ""}${x.role === "i" ? '<span class="iv">invitat</span>' : ""}</span><span class="pr num">${x.r || "–"}</span></li>`).join("") + "</ol>";
+    const n = Math.abs(c.diff || 0), L = c.diff > 0 ? "B" : "A";
+    const mid = c.diff === null ? "<b>VS</b><small>scor netrimis</small>" : c.diff === 0 ? "<b>Egal</b>" : `<b>${L} câștigă</b><small>${n === 1 ? "cu un gol" : `cu ${n} goluri`}</small>`;
+    const mc = c.diff > 0 ? "var(--team-b)" : c.diff < 0 ? "var(--team-a)" : "var(--on)";
+    q(".ls").innerHTML = `<div class="sb"><div class="tb a${lostSide === "a" ? " lost" : ""}">Echipa A</div><div class="mid" style="--mc:${mc}">${mid}</div><div class="tb b${lostSide === "b" ? " lost" : ""}">Echipa B</div></div>
+      <div class="cl">${col(c.a, "a")}${col(c.b, "b")}</div>
+      <div class="ft"><span>OVR<b class="num">${ovr(c.a)}</b></span><i>media ratingului</i><span><b class="num" style="margin:0 3px 0 0">${ovr(c.b)}</b>OVR</span></div>`;
+  }
+
+  function place(anim) {
+    if (!el || !MATCHES.length) return null;
+    const c = current(), W = pitch.clientWidth || 343, nat = field.getBoundingClientRect().height || 0;
+    g = geo(W, nat);
+    pitch.style.minHeight = V.view === "match" && g.H > nat + 1 ? g.H + "px" : "";
+    el.style.height = g.H + "px";
+    el.classList.toggle("hz", !g.V);
+    el.style.setProperty("--cw", g.cw + "px");
+    const half = (n, [x, y, w, h, cp]) => Object.assign(q(n).style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px", clipPath: cp, webkitClipPath: cp });
+    half(".ha", g.clipA); half(".hb", g.clipB);
+    const sv = q("svg.seam"); sv.setAttribute("width", W); sv.setAttribute("height", g.H);
+    sv.querySelectorAll("line").forEach(ln => ["x1", "y1", "x2", "y2"].forEach((a, i) => ln.setAttribute(a, g.seam[i])));
+    const lg = sv.querySelector("linearGradient"); ["x1", "y1", "x2", "y2"].forEach((a, i) => lg.setAttribute(a, g.seam[i]));
+    const ban = (n, [x, y, w], team, L) => {
+      const b = q(n); Object.assign(b.style, { left: x + "px", top: y + "px", width: w + "px" });
+      b.classList.toggle("r", !g.V && L === "B");
+      const cap = capOf(team);
+      b.querySelector(".bn").textContent = cap ? cap.n : `Echipa ${L}`;
+      b.querySelector(".cc").hidden = !cap;
+      b.querySelector(".ov b").textContent = ovr(team);
+    };
+    ban(".ba", g.banA, c.a, "A"); ban(".bb", g.banB, c.b, "B");
+    [".vsb", ".burst"].forEach(s => { q(s).style.left = g.vs[0] + "px"; q(s).style.top = g.vs[1] + "px"; });
+    const rib = q(".rib"); rib.style.left = g.rib[0] + "px"; rib.style.top = g.rib[1] + "px";
+    rib.hidden = c.diff === null;
+    const n = Math.abs(c.diff || 0);
+    rib.querySelector("b").textContent = c.diff === 0 ? "Egal" : `${c.diff > 0 ? "B" : "A"} câștigă`;
+    rib.querySelector("small").textContent = c.diff ? (n === 1 ? "cu un gol diferență" : `cu ${n} goluri diferență`) : "";
+    rib.style.setProperty("--rc", c.diff > 0 ? "var(--team-b)" : c.diff < 0 ? "var(--team-a)" : "var(--on)");
+    q(".vl").textContent = c.d;
+    q(".pv").disabled = V.idx === 0; q(".nx").disabled = c.newest;
+    const seen = new Set();
+    [["a", c.a, g.pa], ["b", c.b, g.pb]].forEach(([side, team, pos]) => lines(team).forEach((row, k) => row.forEach((x, i) => {
+      seen.add(x.n);
+      let t = toks.get(x.n), fresh = !t;
+      if (fresh) {
+        t = document.createElement("div"); t.className = "tk";
+        t.innerHTML = `<div class="in"><div class="bx"><span class="c"><span class="i"></span><span class="r num"></span><span class="k" title="căpitan">C</span></span><span class="nm">${esc(x.n)}</span></div></div>`;
+        q(".toks").appendChild(t); toks.set(x.n, t);
+      }
+      t.dataset.side = side;
+      if (x.mem) t.dataset.p = x.n; else delete t.dataset.p;
+      t.style.setProperty("--tc", x.tc);
+      t.classList.toggle("inv", x.role === "i");
+      t.querySelector(".k").hidden = x.role !== "c";
+      t.querySelector(".i").textContent = ini(x.n);
+      const r = t.querySelector(".r"); r.textContent = x.r || ""; r.hidden = !x.r;
+      const [px, py] = pos(k, i, row.length);
+      if (fresh || !anim) { t.style.transition = "none"; t.style.transform = `translate(${px}px, ${py}px)`; void t.offsetWidth; t.style.transition = ""; }
+      else t.style.transform = `translate(${px}px, ${py}px)`;
+      if (fresh && anim && !reduced()) t.querySelector(".in").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 250 });
+    })));
+    toks.forEach((t, nm) => { if (!seen.has(nm)) { toks.delete(nm); t.querySelector(".in").style.opacity = "0"; setTimeout(() => t.remove(), 400); } });
+    notes(c); list(c);
+    if (el.dataset.intro !== "1") lose(c);
+    return c;
+  }
+  function lose(c, clear) {
+    const lostSide = clear ? null : c.diff > 0 ? "a" : c.diff < 0 ? "b" : null;
+    toks.forEach(t => t.classList.toggle("lost", t.dataset.side === lostSide));
+    q(".ba").classList.toggle("lost", lostSide === "a"); q(".bb").classList.toggle("lost", lostSide === "b");
+  }
+  function setMode(m) {
+    V.mode = m;
+    el.classList.toggle("notes", m === "notes"); el.classList.toggle("list", m === "list");
+    el.querySelectorAll(".md button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === m));
+  }
+  const ribIn = d => { if (!reduced() && MATCHES[V.idx].diff !== null) q(".rib").animate([{ transform: "translate(-50%,-50%) rotate(-4.5deg) scaleX(0)", opacity: 0 }, { transform: "translate(-50%,-50%) rotate(-4.5deg) scaleX(1)", opacity: 1 }], { duration: 260, delay: d, easing: "cubic-bezier(.2,.75,.25,1)", fill: "backwards" }); };
+  function intro() {
+    if (V.mode !== "teams") setMode("teams");
+    el.dataset.intro = "1";
+    const c = place(false);
+    if (reduced()) { el.dataset.intro = ""; lose(c); return; }
+    lose(c, true);
+    const from = side => [{ transform: `translateX(${side === "a" ? -90 : 90}px)`, opacity: 0 }, { transform: "translateX(0)", opacity: 1 }];
+    const ease = "cubic-bezier(.2,.75,.25,1)";
+    [".ha", ".ba"].forEach(s => q(s).animate(from("a"), { duration: 420, easing: ease, fill: "backwards" }));
+    [".hb", ".bb"].forEach(s => q(s).animate(from("b"), { duration: 420, easing: ease, fill: "backwards" }));
+    let ia = 0, ib = 0;
+    toks.forEach(t => { const s = t.dataset.side; t.querySelector(".in").animate(from(s), { duration: 420, delay: 60 + (s === "a" ? ia++ : ib++) * 40, easing: ease, fill: "backwards" }); });
+    q("svg.seam").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 380, fill: "backwards" });
+    q(".vsb .v").animate([{ transform: "translate(-60px,-70px) rotate(-5deg) scale(2.4)", opacity: 0 }, { transform: "translateY(-13px) rotate(-5deg) scale(1)", opacity: 1 }], { duration: 230, delay: 520, easing: "ease-in", fill: "backwards" });
+    q(".vsb .s").animate([{ transform: "translate(60px,70px) rotate(-5deg) scale(2.4)", opacity: 0 }, { transform: "translateY(13px) rotate(-5deg) scale(1)", opacity: 1 }], { duration: 230, delay: 600, easing: "ease-in", fill: "backwards" });
+    q(".burst").animate([{ transform: "scale(.2) rotate(-30deg)", opacity: 0 }, { transform: "scale(1.25) rotate(0deg)", opacity: 1, offset: .55 }, { transform: "scale(1) rotate(6deg)", opacity: .7 }], { duration: 650, delay: 800, easing: "ease-out", fill: "backwards" });
+    el.animate([{ transform: "translate(0,0)" }, { transform: "translate(-5px,2px)" }, { transform: "translate(4px,-2px)" }, { transform: "translate(-2px,1px)" }, { transform: "translate(0,0)" }], { duration: 220, delay: 830 });
+    ribIn(1150);
+    clearTimeout(el._t); el._t = setTimeout(() => { el.dataset.intro = ""; lose(c); }, 1450);
+  }
+  function go(d) {
+    const n = V.idx + d; if (n < 0 || n >= MATCHES.length) return;
+    V.idx = n; place(true);
+    if (V.mode === "teams") ribIn(450); else { el.classList.remove(V.mode); void el.offsetWidth; el.classList.add(V.mode); }
+    paint();
+  }
+  function paint() {
+    const c = MATCHES[V.idx], newest = MATCHES[MATCHES.length - 1], m = V.view === "match";
+    const head = newest.iso === TODAY ? "Meciul de azi" : "Ultimul meci";
+    sw.querySelector(".swl").textContent = head;
+    sw.querySelector("small").textContent = newest.d;
+    sw.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === V.view));
+    if (h2) h2.textContent = m ? (c.iso === TODAY ? "Meciul de azi" : c === newest ? "Ultimul meci" : `Meciul din ${c.d}`) : LOT_T;
+    if (note) note.textContent = m ? (c.iso === TODAY && c.diff === null ? "Echipele de diseară. Rezultatul apare după ce e trimis scorul." : "Echipele de miercuri, după rating, cu rezultatul și notele colegilor.") : LOT_N;
+    el.classList.toggle("lifted", !m);
+    el.setAttribute("aria-hidden", m ? "false" : "true");
+    if ("inert" in el) el.inert = !m;
+  }
+  function setView(v, anim) {
+    V.view = v; place(false); paint();
+    if (v === "match" && anim) arm();
+  }
+  function arm() {
+    if (armed) return; armed = true;
+    const run = () => { armed = false; if (V.view === "match") intro(); };
+    const wait = () => {
+      if (introOpen()) { const mo = new MutationObserver(() => { if (!introOpen()) { mo.disconnect(); wait(); } }); mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] }); return; }
+      if (!("IntersectionObserver" in window)) return run();
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); if (introOpen()) { armed = true; wait(); } else run(); } }, { threshold: .35 });
+      io.observe(el);
+    };
+    wait();
+  }
+  sw.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    if (V.view === b.dataset.v || !MATCHES.length) return;
+    V.idx = MATCHES.length - 1; setView(b.dataset.v, false);
+    if (V.view === "match") intro();
+  }));
+  load().then(rows => {
+    MATCHES = parse(rows); if (!MATCHES.length) return;
+    V.idx = MATCHES.length - 1;
+    build(); sw.hidden = false;
+    setView(IN_WIN ? "lot" : "match", !IN_WIN);
+    if (typeof window.render === "function") { const r0 = window.render; window.render = function () { const out = r0.apply(this, arguments); try { place(false); } catch (e) {} return out; }; }
+  }).catch(() => {});
+})();
+</script>
+
 
 <script>
 /* ADMIN: lăcăt în subsol, parolă criptată (AES-GCM, cheie din parolă), buton către echipe.html. Blocul poate fi înlocuit din fila "admin" a sheet-ului public. */
