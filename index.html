@@ -214,7 +214,7 @@ h1 span { color: var(--lime); }
 .mvs .ls .ft b { font: 800 18px/1 var(--f-display); color: var(--on); margin-left: 3px; }
 .mvs .ls .ft i { font-style: normal; }
 .mvs:not(.hz) .ls { align-content: start; padding-top: 4px; gap: 14px; }
-.mvs:not(.hz) .vsb { font-size: 76px; }
+.mvs:not(.hz) .vsb { font-size: 60px; }
 .mvs:not(.hz) .rib { transform: translate(-50%, -50%) rotate(-2deg); padding: 4px 12px 5px; }
 .mvs:not(.hz) .rib b { font-size: 17px; } .mvs:not(.hz) .rib small { font-size: 11px; margin-left: 6px; }
 .mvs.flip .vsb .v::after { background-image: linear-gradient(180deg, #EAF3FF 0%, #B5D3FF 30%, #8DBBFF 55%, #2F64C8 100%); }
@@ -3622,15 +3622,15 @@ return{
   function geo(W, Hn) {
     const L = FORM.length, maxN = Math.max(...FORM);
     if (W < 560) {
-      let head = 100, ban = 30, rowH = 52, mid = 128, foot = 8;
+      let head = 100, ban = 30, rowH = 62, mid = 104, foot = 8;
       const need = head + 2 * (ban + L * rowH) + mid + foot, H = Math.max(need, Hn); let extra = H - need;
       const add = Math.min(10, extra / (2 * L + 2)); rowH += add; mid += 2 * add; extra -= add * (2 * L + 2); head += extra / 2;
       const hh = ban + L * rowH, ym = head + hh + mid / 2;
       return { V: true, W, H, cw: W / maxN - 6,
         pa: (k, i, n) => [W * (i + .5) / n, head + ban + (k + .5) * rowH],
-        pb: (k, i, n) => [W * (i + .5) / n, ym + mid / 2 + hh - ban - (k + .5) * rowH],
+        pb: (k, i, n) => [W * (i + .5) / n, ym + mid / 2 + hh - ban - (k + .5) * rowH - 4],
         banA: [12, head, W - 24], banB: [12, ym + mid / 2 + hh - ban, W - 24],
-        vs: [W / 2, ym], rib: [W / 2, ym + 52],
+        vs: [W / 2, ym - 10], rib: [W / 2, ym + 36],
         clipA: [0, 0, W, ym + 14, "polygon(0 0,100% 0,100% calc(100% - 28px),0 100%)"],
         clipB: [0, ym - 14, W, H - ym + 14, "polygon(0 28px,100% 0,100% 100%,0 100%)"],
         seam: [0, ym + 14, W, ym - 14] };
