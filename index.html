@@ -144,7 +144,10 @@ h1 span { color: var(--lime); }
 .attack { position: absolute; top: 14px; right: 14px; z-index: 30; font-size: 11px; color: rgba(255,255,255,.75); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .lineup { position: absolute; inset: 0; z-index: 1; }
 /* ULTIMUL MECI: ecranul VS ca sticlă peste terenul Lotului de 12 (06.11.2026). Arată la fel în ambele teme, ca terenul. */
-.lotsw { flex: 0 0 100%; min-width: 0; }
+#lot .sechead { display: grid; justify-items: start; gap: 8px; }
+#lot .sechead .note { max-width: 70ch; }
+.pitch { isolation: isolate; }
+.lotsw { min-width: 0; width: 100%; }
 .lotsw-in { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 3px; gap: 3px; max-width: 420px; }
 .lotsw[hidden] { display: none; }
 .lotsw button { font: 700 13px var(--f-body); color: var(--ink); background: transparent; border: 0; border-radius: 9px; min-height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -3647,11 +3650,11 @@ return{
   const q = s => el.querySelector(s), toks = new Map();
   function build() {
     el = document.createElement("div"); el.className = "mvs lifted"; el.setAttribute("aria-hidden", "true");
-    el.innerHTML = `<div class="lay"><div class="zone"></div><div class="half ha"></div><div class="half hb"></div>
+    el.innerHTML = `<div class="zone"></div><div class="lay"><div class="half ha"></div><div class="half hb"></div>
       <svg class="seam" aria-hidden="true"><defs><linearGradient id="mvsg" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><line class="glow" stroke="rgba(255,255,255,.18)" stroke-width="7"/><line class="core" stroke="url(#mvsg)" stroke-width="2.5"/></svg></div>
       <div class="vh"><span class="vl num"></span>
         <div class="md" role="group" aria-label="Ce arată"><button type="button" data-v="teams" aria-pressed="true">Teren</button><button type="button" data-v="list" aria-pressed="false">Listă</button><button type="button" data-v="notes" aria-pressed="false">Note</button></div>
-        <button type="button" class="ib pv" aria-label="Meciul anterior">${SVGI.prev}</button><button type="button" class="ib nx" aria-label="Meciul următor">${SVGI.next}</button></div>
+        <button type="button" class="ib pv" aria-label="Meciul anterior">${SVGI.prev}</button><button type="button" class="ib nx" aria-label="Meciul următor">${SVGI.next}</button><button type="button" class="ib xx" aria-label="Închide și arată Lotul de 12" title="Lotul de 12"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
       <div class="lay">
         <div class="ban ba"><span class="ch" style="--tc:var(--team-a)">A</span><span class="bn"></span><span class="cc" title="căpitan">C</span><span class="ov">OVR<b class="num"></b></span></div>
         <div class="ban bb"><span class="ch" style="--tc:var(--team-b)">B</span><span class="bn"></span><span class="cc" title="căpitan">C</span><span class="ov">OVR<b class="num"></b></span></div>
@@ -3664,6 +3667,7 @@ return{
     pitch.appendChild(el);
     el.querySelectorAll(".md button").forEach(b => b.addEventListener("click", () => { if (b.dataset.v !== V.mode) setMode(b.dataset.v); }));
     q(".pv").addEventListener("click", () => go(-1)); q(".nx").addEventListener("click", () => go(1));
+    q(".xx").addEventListener("click", () => { V.idx = MATCHES.length - 1; setView("lot", false); frame(); });
     let sx = null;
     el.addEventListener("pointerdown", e => { sx = e.clientX; });
     el.addEventListener("pointerup", e => { if (sx === null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 50) go(dx > 0 ? -1 : 1); });
@@ -3680,7 +3684,8 @@ return{
   }
   function list(c) {
     const lostSide = c.diff > 0 ? "a" : c.diff < 0 ? "b" : null;
-    const col = (team, side) => `<ol class="${side}${lostSide === side ? " lost" : ""}">` + sortT(team).map((x, i) =>
+    const capFirst = team => sortT(team).sort((x, y) => (y.role === "c") - (x.role === "c"));
+    const col = (team, side) => `<ol class="${side}${lostSide === side ? " lost" : ""}">` + capFirst(team).map((x, i) =>
       `<li style="--d:${(.08 + i * .05).toFixed(2)}s"${x.mem ? ` data-p="${esc(x.n)}"` : ""}><span class="no num">${i + 1}</span><span class="pn">${esc(x.n)}${x.role === "c" ? '<span class="cc" title="căpitan">C</span>' : ""}${x.role === "i" ? '<span class="iv">invitat</span>' : ""}</span><span class="pr num">${x.r || "–"}</span></li>`).join("") + "</ol>";
     const n = Math.abs(c.diff || 0), L = c.diff > 0 ? "B" : "A";
     const mid = c.diff === null ? "<b>VS</b><small>scor netrimis</small>" : c.diff === 0 ? "<b>Egal</b>" : `<b>${L} câștigă</b><small>${n === 1 ? "cu un gol" : `cu ${n} goluri`}</small>`;
@@ -3803,6 +3808,12 @@ return{
     V.view = v; place(false); paint();
     if (v === "match" && anim) arm();
   }
+  function frame() { /* aduce începutul terenului în ecran, sub bara de sus de pe telefon */
+    const side = document.querySelector(".side"), sb = side ? side.getBoundingClientRect() : null;
+    const off = sb && sb.width > innerWidth * .6 && sb.height < innerHeight * .5 ? sb.height : 0;
+    const top = pitch.getBoundingClientRect().top + scrollY - off - 12;
+    try { window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" }); } catch (e) { window.scrollTo(0, top); }
+  }
   function arm() {
     if (armed) return; armed = true;
     const run = () => { armed = false; if (V.view === "match") intro(); };
@@ -3817,6 +3828,7 @@ return{
   sw.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
     if (V.view === b.dataset.v || !MATCHES.length) return;
     V.idx = MATCHES.length - 1; setView(b.dataset.v, false);
+    frame();
     if (V.view === "match") intro();
   }));
   load().then(rows => {
