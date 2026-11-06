@@ -146,7 +146,7 @@ h1 span { color: var(--lime); }
 /* ULTIMUL MECI: ecranul VS ca sticlă peste terenul Lotului de 12 (06.11.2026). Arată la fel în ambele teme, ca terenul. */
 .pitch { isolation: isolate; }
 /* comutatorul stă pe teren, stânga sus; terenul primește o bandă de 44 px deasupra ca să nu acopere cartonașele */
-.lotsw { position: absolute; top: 5px; left: 8px; z-index: 25; }
+.lotsw { position: absolute; top: 3px; left: 8px; z-index: 25; }
 .lotsw[hidden] { display: none; }
 .lotsw-in { display: flex; border: 1px solid rgba(238,242,247,.22); background: rgba(8,13,18,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-radius: 10px; padding: 2px; gap: 2px; }
 .lotsw button { font: 700 12px var(--f-body); color: #EEF2F7; background: transparent; border: 0; border-radius: 8px; min-height: 32px; padding: 0 10px; cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
@@ -156,7 +156,9 @@ h1 span { color: var(--lime); }
 #pitch.hassw { padding-top: 44px; }
 #pitch.hassw .lineup { top: 44px; }
 .mvs .vl { margin-left: var(--swp, 0px); }
-.mvs:not(.hz) .vh { height: 84px; flex-wrap: wrap; align-content: center; row-gap: 8px; padding: 0 4px 0 12px; }
+.mvs:not(.hz) .vh { height: 84px; flex-wrap: wrap; align-content: flex-start; row-gap: 6px; padding: 3px 4px 0 12px; }
+.mvs.hz .vh { height: 44px; }
+.mvs.hz .nt, .mvs.hz .ls { top: 58px; height: calc(var(--ch, 100%) - 66px); }
 .mvs:not(.hz) .vh::before { content: ""; order: 3; flex-basis: 100%; height: 0; }
 .mvs:not(.hz) .vh .vl { order: 1; } .mvs:not(.hz) .vh .xx { order: 2; }
 .mvs:not(.hz) .vh .md { order: 4; margin-right: auto; } .mvs:not(.hz) .vh .pv { order: 5; } .mvs:not(.hz) .vh .nx { order: 6; }
@@ -3628,7 +3630,7 @@ return{
         clipB: [0, ym - 14, W, H - ym + 14, "polygon(0 28px,100% 0,100% 100%,0 100%)"],
         seam: [0, ym + 14, W, ym - 14] };
     }
-    const head = 42, ban = 46, rowH = 74, foot = 16, pad = 26, W0 = W, Wc = Math.min(W, 760), ox = (W0 - Wc) / 2; W = Wc;
+    const head = 58, ban = 46, rowH = 74, foot = 16, pad = 26, W0 = W, Wc = Math.min(W, 760), ox = (W0 - Wc) / 2; W = Wc;
     const H = Math.max(head + ban + maxN * rowH + foot, 400), area = H - head - ban - foot, colW = (W / 2 - pad - 100) / L;
     const yy = (i, n) => head + ban + area * (i + .5) / n - 10, cy = head + ban + area / 2;
     const zc = head + (H - head) / 2; /* centrul zonei de joc, sub bara de sus */
